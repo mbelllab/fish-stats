@@ -1,0 +1,3 @@
+# Building the site needs nothing beyond Python 3.
+# Transcribing and naming voices need PyTorch for your graphics card, then:
+whisperx==3.8.6

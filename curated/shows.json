@@ -1,0 +1,6 @@
+{
+  "_about": "The shows and who hosts each one. 'name' is the show's folder name under data/. 'hosts' are the regulars: counted as hosts (not guests) in the stats, and matched by voice more easily on that show.",
+  "shows": [
+    {"key": "fish", "name": "No Such Thing As A Fish", "hosts": ["James", "Andy", "Anna", "Dan"]}
+  ]
+}

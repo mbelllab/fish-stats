@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="robots" content="noindex, nofollow"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Time to penis · Fish Stats</title>
+<link rel="stylesheet" href="../site.css?v=27cc7df6">
+<link rel="stylesheet" href="stats.css?v=7e04a0ce">
+<link rel="stylesheet" href="../fishstats.css?v=c9963441">
+</head>
+<body>
+<nav class="sitebar" aria-label="Site"><a class="brand" href="../index.html">Fish Stats</a><a href="../index.html" aria-current="page">Stats</a><a href="../facts.html">Facts</a><a href="../episodes.html">Episodes</a></nav>
+<div class="page wide">
+  <div class="crumbs"><a href="../index.html">Fish Stats</a> / Time to penis</div>
+  <h1>Time to penis</h1>
+  <p class="lede">How long each episode of No Such Thing As A Fish takes to first mention a penis, timed from the start of the audio.</p>
+  <p class="built" id="built"></p>
+
+  <div class="controls">
+    <span class="ctl">Count<span class="seg" id="mode"></span></span>
+    <span class="ctl" id="kindCtl">Episodes<span class="seg" id="kind"></span></span>
+  </div>
+
+  <div class="tiles" id="tiles"></div>
+
+  <h2>Every episode, over the years</h2>
+  <div class="chart tall"><canvas id="scatter"></canvas></div>
+  <p class="note" id="pick">Each dot is an episode. Lower is faster. The colour shows who said it first. Tap a dot to see which episode, and tap it again to open <span class="full-site-only">the transcript at that moment</span><span class="stats-only-text">its page</span>.</p>
+
+  <div class="two">
+    <div><h2>Who gets there first</h2><div class="chart short"><canvas id="first"></canvas></div></div>
+    <div><h2>Median time, by year</h2><div class="chart short"><canvas id="byyear"></canvas></div></div>
+  </div>
+
+  <h2>All episodes with a mention</h2>
+  <div id="tbl"></div>
+  <h2 id="freeHead">Penis-free episodes</h2>
+  <div id="free"></div>
+  <p class="note" id="words"></p>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" integrity="sha384-bs/nf9FbdNouRbMiFcrcZfLXYPKiPaGVGplVbv7dLGECccEXDW+S3zjqSKR5ZEaD" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="../site.js?v=5ed52cef"></script>
+<script src="../episode-links.js?v=3767e14c"></script><script src="../site-config.js?v=3af975ec"></script><script src="stats.js?v=f6e16ff7"></script>
+<script>
+const { $ } = Site;
+let D, HOSTS = [], mode = S.state.get("mode", "strict"), kindSel = S.ALL_KINDS ? "all" : S.state.get("kind", "Main");
+const MODES = { strict: ["strict"], euph: ["strict", "euph"], ambig: ["strict", "euph", "ambig"] };
+const MODE_LABEL = { strict: 'The word "penis"', euph: "Plus euphemisms", ambig: "Plus maybe-words" };
+
+function firstHit(e) {
+  return MODES[mode].map(k => e.hit[k]).filter(Boolean).sort((a, b) => a.t - b.t)[0];
+}
+function render() {
+  const eps = D.episodes.filter(e => kindSel === "all" || e.k === kindSel);
+  const rows = eps.map(e => ({ ...e, h: firstHit(e), cnt: MODES[mode].reduce((s, k) => s + (e.count[k] || 0), 0) })).filter(r => r.h);
+  const free = eps.filter(e => !firstHit(e));
+  const ts = rows.map(r => r.h.t);
+  const fast = rows.reduce((a, r) => !a || r.h.t < a.h.t ? r : a, null);
+  const slow = rows.reduce((a, r) => !a || r.h.t > a.h.t ? r : a, null);
+  S.tiles($("tiles"), [
+    ["Episodes with a mention", `${S.num(rows.length)}`, `of ${S.num(eps.length)} (${S.pct(rows.length / (eps.length || 1))})`],
+    ["Median time to penis", S.mmss(S.median(ts)), "half the episodes get there sooner"],
+    ["Fastest", fast ? S.mmss(fast.h.t) : "–", fast ? `${S.esc(S.who(fast.h.who))}, ${S.esc(S.epLabel(fast))}` : ""],
+    ["Slowest", slow ? S.mmss(slow.h.t) : "–", slow ? S.esc(S.epLabel(slow)) : ""],
+    ["Mentions in total", S.num(rows.reduce((s, r) => s + r.cnt, 0)), "across these episodes"],
+  ]);
+
+  // scatter: x = date as a year fraction, y = minutes
+  // Hosts by name; everyone else, unknown speakers included, is "Guest". Same groups in both charts.
+  const grp = r => HOSTS.includes(r.h.who) ? r.h.who : "Guest";
+  const people = [...HOSTS, "Guest"].filter(p => rows.some(r => grp(r) === p));
+  const yr = d => { const [y, m, dd] = d.split("-").map(Number); return y + (m - 1) / 12 + (dd - 1) / 365; };
+  const xs = rows.map(r => yr(r.d));
+  S.chart("scatter", { type: "scatter",
+    data: { datasets: people.map(p => ({ label: p, backgroundColor: S.color(p), pointRadius: 3.5, pointHoverRadius: 6,
+      data: rows.filter(r => grp(r) === p).map(r => ({ x: yr(r.d), y: r.h.t / 60, r })) })) },
+    options: { ...S.dots("pick", r => ({ html: `${S.esc(S.epLabel(r))}: ${S.mmss(r.h.t)}, ${S.esc(S.who(r.h.who))}`, href: S.link(r.p, r.e, r.h.t) })),
+      scales: { x: { min: xs.length ? Math.floor(Math.min(...xs)) : undefined, max: xs.length ? Math.max(...xs) : undefined, ticks: { stepSize: 1, callback: v => Math.floor(v) } },
+                         y: { title: { display: true, text: "minutes in" }, beginAtZero: true } },
+      plugins: { tooltip: { callbacks: { label: c => `${S.epLabel(c.raw.r)}, ${S.mmss(c.raw.r.h.t)} (${S.who(c.raw.r.h.who)}: "${c.raw.r.h.w}")` } } } } });
+
+  const who = {}; rows.forEach(r => { const w = grp(r); who[w] = (who[w] || 0) + 1; });
+  const wl = Object.entries(who).sort((a, b) => b[1] - a[1]);
+  S.chart("first", { type: "bar", data: { labels: wl.map(x => x[0]), datasets: [{ data: wl.map(x => x[1]), backgroundColor: wl.map(x => S.color(x[0])) }] },
+    options: { indexAxis: "y", plugins: { legend: { display: false } } } });
+
+  const by = {}; rows.forEach(r => (by[S.year(r.d)] = by[S.year(r.d)] || []).push(r.h.t / 60));
+  const ys = Object.keys(by).sort();
+  S.chart("byyear", { type: "line", data: { labels: ys, datasets: [{ label: "median minutes", data: ys.map(y => S.median(by[y])), borderColor: S.one(), backgroundColor: S.one(), tension: .3 }] },
+    options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } } });
+
+  if (!window.T) window.T = S.table($("tbl"), [
+    { key: "t", label: "Time to penis", num: true, sort: r => r.h.t, fmt: r => `<a href="${S.link(r.p, r.e, r.h.t)}">${S.mmss(r.h.t)}</a>` },
+    { key: "d", label: "Date", fmt: r => S.fmtDate(r.d) },
+    { key: "e", label: "Episode", cls: "long", sort: r => S.epLabel(r), fmt: r => S.esc(S.epLabel(r)) },
+    { key: "who", label: "First said by", sort: r => r.h.who, fmt: r => `<span class="dot" style="background:${S.color(r.h.who)}"></span>${S.esc(S.who(r.h.who))}` },
+    { key: "w", label: "Word", cls: "lo", sort: r => r.h.w, fmt: r => S.esc(r.h.w) },
+    { key: "cnt", label: "Mentions", num: true, cls: "lo" },
+    { key: "line", label: "What was said", cls: "clip lo", sort: r => r.h.line, fmt: r => S.esc(r.h.line) },
+  ], rows, { sort: "t", dir: "asc" }); else T.set(rows);
+
+  $("freeHead").textContent = `Penis-free episodes (${free.length})`;
+  if (!window.F) window.F = S.table($("free"), [
+    { key: "d", label: "Date", fmt: r => S.fmtDate(r.d) },
+    { key: "e", label: "Episode", cls: "long", sort: r => S.epLabel(r), fmt: r => `<a href="${S.link(r.p, r.e, 0)}">${S.esc(S.epLabel(r))}</a>` },
+    { key: "len", label: "Length", num: true, fmt: r => S.mmss(r.len) },
+  ], free, { sort: "d", dir: "asc", page: 25 }); else F.set(free);
+}
+// The Fish hosts come from summary.json (curated/shows.json via build_stats.py).
+S.page(Promise.all([S.load("ttp"), S.load("summary")]), ([d, sum]) => {
+  D = d; HOSTS = (sum.hosts || {})[S.FISH] || []; S.built(d);
+  $("words").innerHTML = `Euphemisms: ${S.esc(d.words.penis_euphemisms.join(", "))}. Maybe-words, which often mean something else: ${S.esc(d.words.penis_ambiguous.join(", "))}. Not counted: ${S.esc(d.words.penis_not.join(", "))}.`;
+  S.seg($("mode"), Object.entries(MODE_LABEL), mode, v => { mode = v; S.state.set("mode", v); render(); });
+  if (S.ALL_KINDS) $("kindCtl").hidden = true;
+  else S.seg($("kind"), [["Main", "Main episodes"], ["all", "All, with bonus"]], kindSel, v => { kindSel = v; S.state.set("kind", v); render(); });
+  render();
+});
+</script>
+<footer class="fan">Fish Stats is an unofficial fan project. It isn't made or endorsed by No Such Thing As A Fish or QI. The numbers are worked out from automatic transcripts of the free public episodes. <a href="https://www.nosuchthingasafish.com/">Listen to the show</a>.</footer>
+</body>
+</html>

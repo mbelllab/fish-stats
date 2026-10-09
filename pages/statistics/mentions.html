@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="robots" content="noindex, nofollow"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Who and what they mention · Fish Stats</title>
+<link rel="stylesheet" href="../site.css?v=27cc7df6">
+<link rel="stylesheet" href="stats.css?v=7e04a0ce">
+<style>
+/* The detail panel under a chart (or under a row of the table): who said the chosen name, how often */
+.pick { background: var(--panel); border: 1px solid var(--line); border-top: 3px solid var(--accent-line); border-radius: 12px; padding: 12px 14px; margin-top: 8px; }
+.pick[hidden] { display: none; }
+.pick-h { display: flex; align-items: baseline; gap: 4px 10px; flex-wrap: wrap; }
+.pick-h strong { font-size: 1.1rem; }
+.pick-h .s { color: var(--muted); font-size: .85rem; }
+.pick-h .x { margin-left: auto; align-self: center; background: none; border: 1px solid var(--line2); color: var(--muted); border-radius: 8px;
+  min-width: 36px; min-height: 36px; font-size: 1.2rem; line-height: 1; cursor: pointer; }
+.pick-h .x:hover { color: var(--text); border-color: var(--muted); }
+.pick .split { margin: 6px 0 0; font-size: .85rem; color: var(--muted); }
+.pick .split i { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin: 0 4px 0 8px; }
+.pick .split i:first-child { margin-left: 0; }
+.spk { list-style: none; margin: 10px 0 0; padding: 0; display: grid; grid-template-columns: minmax(0, max-content) 1fr auto; gap: 3px 10px; max-width: 44rem; align-items: center; font-size: .9rem; }
+.spk li { display: contents; }
+.spk .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 12rem; }
+.spk .bar { height: 8px; border-radius: 4px; min-width: 2px; }
+.spk .n { font-variant-numeric: tabular-nums; text-align: right; color: var(--muted); }
+.pick details { margin-top: 4px; font-size: .9rem; } .pick summary { cursor: pointer; color: var(--accent2); padding: 4px 0; }
+.pick .go { display: inline-block; margin-top: 10px; font-weight: 600; }
+.pick .empty { margin: 8px 0 0; }
+/* the table: a name is a button that opens the panel in a row under it */
+#tbl .nmb { background: none; border: 0; padding: 0; color: var(--accent2); font: inherit; font-weight: 600; cursor: pointer; text-align: left; }
+#tbl .nmb:hover { text-decoration: underline; }
+#tbl tr.detail td { padding: 0 0 10px; white-space: normal; }
+#tbl tr.detail .pick { margin-top: 0; position: sticky; left: 0; box-sizing: border-box; }
+@media (max-width: 760px) { #tbl td:first-child { white-space: normal; min-width: 7rem; } }
+#tbl .muted { color: var(--muted); }
+canvas.sel:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (max-width: 760px) { .spk .nm { max-width: 9rem; } }
+</style>
+<link rel="stylesheet" href="../fishstats.css?v=c9963441">
+</head>
+<body>
+<nav class="sitebar" aria-label="Site"><a class="brand" href="../index.html">Fish Stats</a><a href="../index.html" aria-current="page">Stats</a><a href="../facts.html">Facts</a><a href="../episodes.html">Episodes</a></nav>
+<div class="page wide">
+  <div class="crumbs"><a href="../index.html">Fish Stats</a> / Who and what they mention</div>
+  <h1>Who and what they mention</h1>
+  <p class="lede">Which cryptids and famous people come up most. Tap a bar, or a name in the table, to see everyone who said it.</p>
+  <p class="built" id="built"></p>
+  <div class="controls">
+    <span class="ctl">Show<span class="seg" id="show"></span></span>
+    <label class="ctl">Year <select id="year"></select></label>
+  </div>
+  <div class="tiles" id="tiles"></div>
+  <h2 id="cHead">Cryptids most mentioned</h2>
+  <div class="chart"><canvas id="cryptids" class="sel" tabindex="0"></canvas></div>
+  <div class="pick" id="cryptidsPick" hidden></div>
+  <div class="two">
+    <div><h2>Cryptids per hour, by show</h2><div class="chart mid"><canvas id="cYears"></canvas></div></div>
+    <div><h2>Who brings up cryptids</h2><div class="chart"><canvas id="cWho"></canvas></div><p class="note" id="cWhoNote"></p></div>
+  </div>
+  <h2>Famous names dropped</h2>
+  <div class="tiles" id="pTiles"></div>
+  <h2 id="pHead">Most mentioned people</h2>
+  <div class="chart"><canvas id="people" class="sel" tabindex="0"></canvas></div>
+  <div class="pick" id="peoplePick" hidden></div>
+  <h2>Who drops the most names</h2>
+  <div class="chart"><canvas id="pWho"></canvas></div>
+  <p class="note" id="pWhoNote"></p>
+  <h2>Every name</h2>
+  <div id="tbl"></div>
+  <p class="note">Counted from hand-made lists of about 30 cryptids and 170 famous people, with the spellings the transcripts use
+    ("Sasquatch" counts as Bigfoot, "Nessie" as the Loch Ness Monster). A surname on its own counts only when it can't mean anyone else
+    ("Einstein" yes, "Lincoln" no). "Per hour" is per hour of audio, or for a person, per hour of their own talking.</p>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" integrity="sha384-bs/nf9FbdNouRbMiFcrcZfLXYPKiPaGVGplVbv7dLGECccEXDW+S3zjqSKR5ZEaD" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="../site.js?v=5ed52cef"></script>
+<script src="../episode-links.js?v=3767e14c"></script><script src="../site-config.js?v=3af975ec"></script><script src="stats.js?v=f6e16ff7"></script>
+<script>
+const { $ } = Site;
+const SHOWS = S.SHOWS;          // the shows this site has (all three on the full site)
+let D, show = S.state.get("show", "all"), year = S.state.get("year", ""), sel = S.state.get("sel", "");
+const touch = matchMedia("(hover: none)").matches;
+const inShow = p => show === "all" || p === show;
+const inYear = y => !year || y === year;
+const where = () => (S.ONE_SHOW ? S.SHORT[S.SHOWS[0]] : show === "all" ? "all shows" : S.SHORT[show]) + (year ? ", " + year : "");
+// Times an item (or a who-said-it row) was counted, for one show or the current choice.
+const sum = (byYear) => Object.entries(byYear || {}).reduce((s, [y, n]) => s + (inYear(y) ? n : 0), 0);
+const total = (it, p) => p ? sum(it.c[p]) : SHOWS.filter(inShow).reduce((s, x) => s + sum(it.c[x]), 0);
+const hoursOf = p => sum(D.hours[p]);
+// The main search for an item, narrowed to the chosen show and year.
+const searchFor = it => S.searchUrl(Object.assign({ q: it.q }, show !== "all" ? { podcast: show } : {}, year ? { yf: year, yt: year } : {}));
+
+// Who said an item, most first, for one show or the current choice: [[name, n]]. it.w is
+// {show: {year: [speaker index, n, ...]}}; someone on several shows (Dan) adds up.
+function speakers(it, p) {
+  const c = {};
+  (p ? [p] : SHOWS.filter(inShow)).forEach(x => Object.entries(it.w[x] || {}).forEach(([y, a]) => {
+    if (inYear(y)) for (let i = 0; i < a.length; i += 2) c[D.spk[a[i]]] = (c[D.spk[a[i]]] || 0) + a[i + 1]; }));
+  return Object.entries(c).sort((a, b) => b[1] - a[1]);
+}
+// Tooltip lines: the top five speakers, then everyone else in one line.
+function topLines(list) {
+  const out = list.slice(0, 5).map(([s, n]) => `${s} ${S.num(n)}`), rest = list.slice(5);
+  if (rest.length) out.push(`+${S.plural(rest.length, "other")} ${S.num(rest.reduce((t, x) => t + x[1], 0))}`);
+  return out;
+}
+
+// The detail panel for one item: total, the split by show, every speaker with a thin bar, the search link.
+function panel(it) {
+  const t = total(it);
+  const head = `<div class="pick-h"><strong>${S.esc(it.n)}</strong><span class="s">${t ? S.plural(t, "mention") : "Not mentioned"} · ${where()}</span>
+    <button type="button" class="x" aria-label="Close">×</button></div>`;
+  if (!t) return head + `<p class="empty">Not mentioned here. Try another show or year.</p>`;
+  const split = show === "all" ? SHOWS.filter(p => total(it, p)) : [], list = speakers(it), max = list[0][1], K = 10;
+  const li = ([s, n]) => `<li><span class="nm" title="${S.esc(s)}">${S.esc(s)}</span><span class="bar" style="width:${(100 * n / max).toFixed(1)}%;background:${S.color(s)}"></span><span class="n">${S.num(n)}</span></li>`;
+  return head + (split.length > 1 ? `<p class="split">${split.map(p => `<i style="background:${S.showColor(p)}"></i>${S.SHORT[p]} ${S.num(total(it, p))}`).join(" ")}</p>` : "")
+    + `<ol class="spk">${list.slice(0, K).map(li).join("")}</ol>`
+    + (list.length > K ? `<details><summary>${S.plural(list.length - K, "more speaker")}</summary><ol class="spk">${list.slice(K).map(li).join("")}</ol></details>` : "")
+    + (searchFor(it) ? `<a class="go" href="${searchFor(it)}">Search for ${S.esc(it.n)} &rarr;</a>` : "");
+}
+
+// The chosen item (#sel=Bigfoot) gets its panel under whichever chart lists it, and an outline on its bar.
+const shown = {}, charts = {}, LIST = { cryptids: () => D.cryptids, people: () => D.people };
+function choose(name, scroll) {
+  sel = name || ""; S.state.set("sel", sel);
+  Object.keys(LIST).forEach(id => {
+    const box = $(id + "Pick"), it = sel ? LIST[id]().find(x => x.n === sel) : null;
+    box.hidden = !it; box.innerHTML = it ? panel(it) : "";
+    if (it) { box.querySelector(".x").onclick = () => { choose(""); $(id).focus({ preventScroll: true }); };
+      if (scroll) box.scrollIntoView({ block: "nearest" }); }
+    const ch = charts[id]; if (!ch) return;
+    ch.data.datasets.forEach(d => { d.borderWidth = shown[id].map(x => x.n === sel ? 2 : 0); d.borderColor = S.css("--text"); });
+    ch.update("none");
+  });
+}
+
+// Horizontal bars, one per item; with All shows each bar is split by show. Hovering shows who said
+// it; a click or tap anywhere on a bar's row (its label too) opens the panel; arrow keys step through.
+function bars(id, items) {
+  shown[id] = items;
+  const cv = $(id), box = cv.closest(".chart");
+  box.style.height = (items.length * 24 + 64) + "px";
+  const labels = items.map(it => it.n), n = matchMedia("(max-width: 760px)").matches ? 18 : 30;
+  const sets = (show === "all" ? SHOWS : [show]).map(p => ({ label: S.SHORT[p], backgroundColor: S.showColor(p), data: items.map(it => total(it, p)) }));
+  const ch = charts[id] = S.chart(id, { type: "bar", data: { labels, datasets: sets }, options: { indexAxis: "y",
+    plugins: { legend: { display: show === "all" }, tooltip: { enabled: !touch, callbacks: {
+      title: c => labels[c[0].dataIndex],
+      label: c => show === "all" ? `${c.dataset.label}: ${S.plural(c.raw, "mention")}` : S.plural(c.raw, "mention"),
+      afterLabel: c => topLines(speakers(items[c.dataIndex], show === "all" ? SHOWS[c.datasetIndex] : show)),
+      footer: c => { const i = c[0].dataIndex, many = sets.filter(d => d.data[i]).length > 1;
+        return [many ? `All shows: ${S.num(total(items[i]))}` : "", "Click for every speaker"].filter(Boolean); } } } },
+    scales: { x: { stacked: true }, y: { stacked: true, ticks: { autoSkip: false, callback: (_v, i) => S.clip(labels[i], n) } } } } });
+  const rowAt = ev => { const a = ch.chartArea, x = ev.offsetX, y = ev.offsetY;
+    if (y < a.top || y > a.bottom || x > a.right) return -1;
+    const i = Math.round(ch.scales.y.getValueForPixel(y)); return i >= 0 && i < items.length ? i : -1; };
+  cv.onmousemove = ev => { cv.style.cursor = rowAt(ev) >= 0 ? "pointer" : ""; };
+  cv.onclick = ev => { const i = rowAt(ev); if (i >= 0) choose(items[i].n === sel ? "" : items[i].n); };
+  cv.onkeydown = ev => {
+    const last = items.length - 1, i = items.findIndex(x => x.n === sel);
+    const to = { ArrowDown: Math.min(i + 1, last), ArrowUp: Math.max(i - 1, 0), Home: 0, End: last, Enter: Math.max(i, 0), " ": Math.max(i, 0) }[ev.key];
+    if (ev.key === "Escape" && sel) choose("");
+    else if (to === undefined || !items.length) return;
+    else choose(items[to].n);
+    ev.preventDefault();
+  };
+  cv.setAttribute("aria-label", `Bar chart: ${$(id === "people" ? "pHead" : "cHead").textContent}. Arrow keys pick a bar and show who said it.`);
+}
+
+// Mentions per hour of each host's own talking (all shows pooled when the choice is All). Each bar
+// is labelled with the hours behind it; under LOW hours the bar is paler and the note says why
+// (with All years, also the years they were on: a host who was only on one era isn't comparable).
+const LOW = 10;
+const fmtH = h => (h < LOW ? h.toFixed(1) : S.num(Math.round(h))) + " h";
+function whoChart(id, who) {
+  const cnt = {}, hrs = {}, yrs = {}, span = {};
+  SHOWS.filter(inShow).forEach(p => {
+    const showYrs = Object.keys(D.hours[p] || {}).filter(inYear);
+    Object.entries(who[p] || {}).forEach(([s, ys]) => { if (s !== "Others") cnt[s] = (cnt[s] || 0) + sum(ys); });
+    Object.entries(D.talk[p] || {}).forEach(([s, ys]) => { hrs[s] = (hrs[s] || 0) + sum(ys);
+      showYrs.forEach(y => (span[s] = span[s] || new Set()).add(y));
+      Object.keys(ys).filter(y => inYear(y) && ys[y]).forEach(y => (yrs[s] = yrs[s] || new Set()).add(y)); });
+  });
+  const rate = Object.keys(hrs).filter(s => hrs[s] >= 1).map(s => ({ s, r: (cnt[s] || 0) / hrs[s], h: hrs[s], y: [...yrs[s]].sort(), all: [...span[s]].sort() }))
+    .sort((a, b) => b.r - a.r);
+  const era = x => x.y[0] === x.y.at(-1) ? `in ${x.y[0]}` : `from ${x.y[0]}–${x.y.at(-1)}`;
+  const partly = x => x.y[0] !== x.all[0] || x.y.at(-1) !== x.all.at(-1);     // on only some of their shows' years
+  const pale = c => /^#[0-9a-f]{6}$/i.test(c) ? c + "66" : c;
+  const box = $(id).closest(".chart");
+  box.style.height = (rate.length * 30 + 60) + "px";
+  S.chart(id, { type: "bar", data: { labels: rate.map(x => `${x.s} · ${fmtH(x.h)}`),
+    datasets: [{ data: rate.map(x => +x.r.toFixed(2)), backgroundColor: rate.map(x => x.h < LOW ? pale(S.color(x.s)) : S.color(x.s)) }] },
+    options: { indexAxis: "y", plugins: { legend: { display: false }, tooltip: { callbacks: { title: c => rate[c[0].dataIndex].s,
+      label: c => `${c.raw} an hour of their talking`,
+      afterLabel: c => { const x = rate[c.dataIndex]; return `${fmtH(x.h)} of talk, ${era(x)}`; } } } },
+      scales: { x: { beginAtZero: true, title: { display: true, text: "per hour of their talking (h = hours of talk)" } }, y: { ticks: { autoSkip: false } } } } });
+  const low = rate.filter(x => x.h < LOW), odd = low.filter(partly);
+  $(id + "Note").textContent = low.length ? `Paler bars: under ${LOW} hours of talk${year ? " this year" : ""}, so less reliable.`
+    + (odd.length ? " " + odd.map(x => `${x.s} was only on episodes ${era(x)}.`).join(" ") : "") : "";
+  return rate;
+}
+
+// The table: a name opens the same panel in a row under it (tap again or Close to fold it away),
+// kept to the visible width of the table box so it doesn't scroll sideways with a wide table.
+function tableClick(e) {
+  const b = e.target.closest(".nmb"); if (!b) return;
+  const tr = b.closest("tr"), was = b.getAttribute("aria-expanded") === "true", tbl = $("tbl");
+  tbl.querySelectorAll("tr.detail").forEach(x => x.remove());
+  tbl.querySelectorAll(".nmb[aria-expanded=true]").forEach(x => x.setAttribute("aria-expanded", "false"));
+  if (was) return;
+  tr.insertAdjacentHTML("afterend", `<tr class="detail"><td colspan="${tr.children.length}"><div class="pick" style="max-width:${tr.closest(".tbl").clientWidth}px">${panel(D.people.find(x => x.n === b.dataset.n))}</div></td></tr>`);
+  b.setAttribute("aria-expanded", "true");
+  tr.nextElementSibling.querySelector(".x").onclick = () => { b.click(); b.focus(); };
+}
+
+function render() {
+  // cryptids
+  const cr = D.cryptids.filter(it => total(it)).sort((a, b) => total(b) - total(a));
+  const crAll = cr.reduce((s, it) => s + total(it), 0);
+  bars("cryptids", cr.slice(0, 15));
+  // Per hour on each show: the same list counted on every show, whatever the Show choice.
+  const perHour = p => { const h = hoursOf(p); return h ? D.cryptids.reduce((s, it) => s + sum(it.c[p]), 0) / h : 0; };
+  const every = r => r ? `an hour: one every ${r > 60 ? Math.round(3600 / r) + " sec" : Math.round(60 / r) + " min"}` : "an hour";
+  S.tiles($("tiles"), [
+    ["Cryptid mentions", S.num(crAll), where()],
+    ...SHOWS.slice().reverse().map(p => [S.SHORT[p], perHour(p).toFixed(1), every(perHour(p))]),
+    ["Top cryptid", cr[0] ? S.esc(cr[0].n) : "–", cr[0] ? S.plural(total(cr[0]), "mention") : ""],
+  ]);
+  const years = [...new Set(SHOWS.flatMap(p => Object.keys(D.hours[p] || {})))].sort();
+  S.chart("cYears", { type: "line", data: { labels: years, datasets: SHOWS.map(p => ({ label: S.SHORT[p], borderColor: S.showColor(p), tension: .3,
+    data: years.map(y => { const h = (D.hours[p] || {})[y]; return h >= 1 ? +(D.cryptids.reduce((s, it) => s + ((it.c[p] || {})[y] || 0), 0) / h).toFixed(2) : null; }) })) },
+    options: { scales: { y: { beginAtZero: true, title: { display: true, text: "cryptid mentions per hour" } } } } });
+  whoChart("cWho", D.cryptid_who);
+  // people
+  const pe = D.people.filter(it => total(it)).sort((a, b) => total(b) - total(a));
+  const top = pe.slice(0, 25);
+  $("pHead").textContent = `Top ${top.length} people mentioned`;
+  bars("people", top);
+  const pw = whoChart("pWho", D.people_who), big = pw.find(x => x.h >= LOW) || pw[0];
+  S.tiles($("pTiles"), [
+    ["Names dropped", S.num(pe.reduce((s, it) => s + total(it), 0)), `${S.num(pe.length)} different people, ${where()}`],
+    ["Most mentioned", pe[0] ? S.esc(pe[0].n) : "–", pe[0] ? S.plural(total(pe[0]), "mention") : ""],
+    ["Biggest name-dropper", big ? S.esc(big.s) : "–", big ? big.r.toFixed(1) + " an hour of their talking" : ""],
+  ]);
+  const rows = pe.map(it => { const [sp, spn] = speakers(it)[0] || [];
+    return { n: it.n, f: sum(it.c[S.FISH]), t: total(it), sp, spn }; });
+  const cols = [{ key: "n", label: "Name", fmt: r => `<button type="button" class="nmb" data-n="${S.esc(r.n)}" aria-expanded="false">${S.esc(r.n)}</button>` }];
+  cols.push({ key: "t", label: show === "all" && !S.ONE_SHOW ? "Total" : "Mentions", num: true, fmt: r => S.num(r.t) },
+    { key: "sp", label: "Top speaker", cls: "lo", fmt: r => r.sp ? `${S.esc(r.sp)} <span class="muted">${S.num(r.spn)}</span>` : "" });
+  S.table($("tbl"), cols, rows, { sort: "t", page: 25 });
+  choose(sel);
+}
+
+S.page(S.load("mentions"), d => { D = d; S.built(d);
+  const years = [...new Set(SHOWS.flatMap(p => Object.keys(d.hours[p] || {})))].sort().reverse();
+  const ysel = $("year");
+  ysel.innerHTML = `<option value="">All years</option>` + years.map(y => `<option>${y}</option>`).join("");
+  if (!years.includes(year)) year = "";
+  ysel.value = year;
+  ysel.onchange = () => { year = ysel.value; S.state.set("year", year); render(); };
+  S.seg($("show"), [["all", "All"], [S.FISH, "Fish"]], show, v => { show = v; S.state.set("show", v === "all" ? "" : v); render(); });
+  $("tbl").onclick = tableClick;
+  render();
+  if (sel) choose(sel, true); });
+</script>
+<footer class="fan">Fish Stats is an unofficial fan project. It isn't made or endorsed by No Such Thing As A Fish or QI. The numbers are worked out from automatic transcripts of the free public episodes. <a href="https://www.nosuchthingasafish.com/">Listen to the show</a>.</footer>
+</body>
+</html>

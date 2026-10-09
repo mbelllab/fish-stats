@@ -1,0 +1,4 @@
+/* Fish Stats' own bits, on top of the shared site.css and statistics/stats.css. */
+.fan { max-width: 72rem; margin: 40px auto 0; padding: 18px var(--gutter) 32px; border-top: 1px solid var(--line);
+       color: var(--faint); font-size: .8rem; line-height: 1.5; }
+.fan a { color: var(--muted); }

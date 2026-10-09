@@ -1,0 +1,2362 @@
+{
+ "_about": [
+  "The read behind statistics/pod.html (Friends and enemies of the pod), Fish only.",
+  "One entry per mention that stats_pod.py finds. e = episode, t = seconds, p = the phrase as matched (lower case),",
+  "q = the start of the line (just to help a reader). v = friend | enemy | acquaintance | not | unclear.",
+  "who = the names declared (a list: one line can declare several), written the same way every time.",
+  "why = a few words from what was said. 'not' = not a declaration (the Club Fish tier, sarcasm, a question...).",
+  "A mention with no entry, or v = unclear, shows under 'Not yet read' on the page. Reads match by episode,",
+  "phrase and nearest time within 20 s, so re-timed transcripts keep them. names = a better summary 'why' for a name."
+ ],
+ "names": {
+  "Mark Twain": {
+   "why": "Was rude about Jane Austen; also doubted Shakespeare wrote Shakespeare"
+  },
+  "Adolf Hitler": {
+   "why": "One of the two original enemies, with Mark Twain"
+  },
+  "Treaty of Versailles": {
+   "why": "\"We give it a right kicking on this show\"... and yet"
+  },
+  "Everard Digby": {
+   "why": "Gunpowder Plotter; everyone's first guess for a friend of the podcast"
+  },
+  "James Garfield": {
+   "why": "\"First and closest friend of the podcast\""
+  },
+  "Ötzi the Iceman": {
+   "why": "The 5,000-year-old mummy found in the Alps"
+  },
+  "Pope Pius XII": {
+   "why": "Ruled that anyone mentioning Jesus's foreskin is excommunicated"
+  },
+  "Zoe Williams": {
+   "why": "Guardian writer who asked why they're such bros (a listener's nomination; Andy isn't sure)"
+  },
+  "Gregg Wallace": {
+   "why": "\"A foe of the podcast... for a small amount of time\""
+  }
+ },
+ "mentions": [
+  {
+   "e": "2015-03-20 - 53 No Such Thing As A 3000km Tall Statue Of Liberty",
+   "t": 1027,
+   "p": "friend of the show",
+   "q": "Okay, some things on pets, maybe? Okay, so, Rudolf II, the Habsburg Emperor and King of Hu",
+   "v": "friend",
+   "who": [
+    "Tycho Brahe"
+   ],
+   "why": "The astronomer who read Rudolf II's horoscope and warned him about his pet lion"
+  },
+  {
+   "e": "2015-03-20 - 53 No Such Thing As A 3000km Tall Statue Of Liberty",
+   "t": 1075,
+   "p": "friend of the show",
+   "q": "During the Civil War, another friend of the show, Prince Rupert of the Rhine.",
+   "v": "friend",
+   "who": [
+    "Prince Rupert of the Rhine"
+   ],
+   "why": "Civil War royalist whose poodle Boy cocked his leg at the name of his enemy"
+  },
+  {
+   "e": "2018-05-25 - 218 No Such Thing As Tennis On The Moon",
+   "t": 1506,
+   "p": "friend of the podcast",
+   "q": "The thing is, some people think they may have done. Okay. And this is because we can work ",
+   "v": "friend",
+   "who": [
+    "Francis Galton"
+   ],
+   "why": "His old reaction-time studies; talked about lots of times"
+  },
+  {
+   "e": "2018-05-25 - 218 No Such Thing As Tennis On The Moon",
+   "t": 1522,
+   "p": "acquaintance of the podcast",
+   "q": "I mean, major eugenicist, probably an acquaintance of the podcast, I'd say.",
+   "v": "acquaintance",
+   "who": [
+    "Francis Galton"
+   ],
+   "why": "Downgraded on the spot: \"major eugenicist\""
+  },
+  {
+   "e": "2018-07-06 - 224 No Such Thing As Mixed-Species Martial Arts",
+   "t": 1410,
+   "p": "friend of the podcast",
+   "q": "Isn't that incredible? That's amazing. Yeah, so I got sent this fact in by a very good fri",
+   "v": "friend",
+   "who": [
+    "Lieven Scheire"
+   ],
+   "why": "Belgian scientist-comedian, been on a few times; sent the Vikings fact"
+  },
+  {
+   "e": "2019-06-21 - 274 No Such Thing As A Polite Baby",
+   "t": 1400,
+   "p": "friend of the podcast",
+   "q": "So, Ötzi the Iceman, long-standing friend of the podcast, dead mummy found in the Alps.",
+   "v": "friend",
+   "who": [
+    "Ötzi the Iceman"
+   ],
+   "why": "The 5,000-year-old mummy from the Alps"
+  },
+  {
+   "e": "2019-07-19 - 278 No Such Thing As A Herring-Okapi Hybrid",
+   "t": 2644,
+   "p": "friend of the show",
+   "q": "So Pliny the Elder. friend of the show. He said that... Keep writing in.",
+   "v": "friend",
+   "who": [
+    "Pliny the Elder"
+   ],
+   "why": "Said hyenas can call people by name"
+  },
+  {
+   "e": "2019-11-01 - 293 No Such Thing As A Sexy Ceiling Fan",
+   "t": 350,
+   "p": "friend of the podcast",
+   "q": "And then he's just like, So another performer at the Moulin Rouge is someone who's an old ",
+   "v": "friend",
+   "who": [
+    "Le Pétomane"
+   ],
+   "why": "The French farter of the Moulin Rouge"
+  },
+  {
+   "e": "2019-11-08 - 294 No Such Thing As A 15-Hour Working Week",
+   "t": 2144,
+   "p": "friend of the show",
+   "q": "So this is a fact from a podcast that's coming out very shortly, actually, and it's by a f",
+   "v": "friend",
+   "who": [
+    "Tim Harford"
+   ],
+   "why": "The Undercover Economist; Cautionary Tales"
+  },
+  {
+   "e": "2020-01-10 - 303 No Such Thing As Suckling's Column",
+   "t": 813,
+   "p": "friend of the podcast",
+   "q": "That was not the reason. That's a great theory. So, this fact actually comes from a friend",
+   "v": "friend",
+   "who": [
+    "Cariad Lloyd"
+   ],
+   "why": "Sent Andy the Suckling Nelson fact"
+  },
+  {
+   "e": "2020-04-03 - 315 No Such Thing As Tedious Moss",
+   "t": 1650,
+   "p": "buddy of the podcast",
+   "q": "just say about club mosque quickly oh yes i just want to i just want to formally apologize",
+   "v": "friend",
+   "who": [
+    "Steve Mould"
+   ],
+   "why": "\"Mutual buddy of the podcast\"; club moss powder video"
+  },
+  {
+   "e": "2020-04-24 - 318 No Such Thing As 'Of Quails and Men'",
+   "t": 494,
+   "p": "friend of the show",
+   "q": "Friend of the show.",
+   "v": "not",
+   "why": "The same declaration as the next line (William Hazlitt), counted there"
+  },
+  {
+   "e": "2020-04-24 - 318 No Such Thing As 'Of Quails and Men'",
+   "t": 495,
+   "p": "friend of the show",
+   "q": "Friend of the show.",
+   "v": "friend",
+   "who": [
+    "William Hazlitt"
+   ],
+   "why": "Critic who launched actor Edmund Kean"
+  },
+  {
+   "e": "2020-05-15 - 321 No Such Thing As A Frothy Beer",
+   "t": 2242,
+   "p": "friend of fish",
+   "q": "But yeah, so this was done by someone called Daisy Campbell, and it was told to me by a fr",
+   "v": "friend",
+   "who": [
+    "David Bramwell"
+   ],
+   "why": "Author, one of the 69 pilgrims to CERN"
+  },
+  {
+   "e": "2020-12-24 - 353 No Such Thing As Hans Gruber's Silent Night",
+   "t": 1342,
+   "p": "friend of the podcast",
+   "q": "but it was made by a friend of the podcast, St Francis of Assisi.",
+   "v": "friend",
+   "who": [
+    "St Francis of Assisi"
+   ],
+   "why": "Set up the first nativity scene"
+  },
+  {
+   "e": "2020-12-24 - 353 No Such Thing As Hans Gruber's Silent Night",
+   "t": 1349,
+   "p": "friend of the podcast",
+   "q": "Friend of the podcast, who could it be?",
+   "v": "friend",
+   "who": [
+    "St Francis of Assisi"
+   ],
+   "why": "\"Friend of the podcast, who could it be?\""
+  },
+  {
+   "e": "2020-12-24 - 353 No Such Thing As Hans Gruber's Silent Night",
+   "t": 1375,
+   "p": "friend of the podcast",
+   "q": "If anyone loves, Julian bans it . - No, it was St. Francis, a friend of the podcast.",
+   "v": "friend",
+   "who": [
+    "St Francis of Assisi"
+   ],
+   "why": "Set up the first nativity scene, 1223"
+  },
+  {
+   "e": "2021-01-08 - 355 No Such Thing As The Big Bad Virginia Woolf",
+   "t": 2442,
+   "p": "friend of the podcast",
+   "q": "Yes. Friend of the podcast. He was maybe the inspiration for Falstaff?",
+   "v": "friend",
+   "who": [
+    "Sir John Fastolf"
+   ],
+   "why": "Knight who may have inspired Falstaff"
+  },
+  {
+   "e": "2021-07-16 - 382 No Such Thing As A Waiter Made Of Potatoes",
+   "t": 622,
+   "p": "friend of the podcast",
+   "q": "And he wrote an essay on potatoes and it won. And then he hung out with friend of the podc",
+   "v": "friend",
+   "who": [
+    "Benjamin Franklin"
+   ],
+   "why": "Hung out with potato champion Parmentier"
+  },
+  {
+   "e": "2021-07-30 - 384 No Such Thing As Jiminy's Cricket Shop",
+   "t": 589,
+   "p": "friend of the podcast",
+   "q": "It's really the fish word. Friend of the podcast.",
+   "v": "friend",
+   "who": [
+    "the word \"thigmotactic\""
+   ],
+   "why": "Anna's favourite Fish word (grasshoppers rubbing together)"
+  },
+  {
+   "e": "2021-07-30 - 384 No Such Thing As Jiminy's Cricket Shop",
+   "t": 591,
+   "p": "friend of the podcast",
+   "q": "Friend of the podcast. Figmotactic.",
+   "v": "friend",
+   "who": [
+    "the word \"thigmotactic\""
+   ],
+   "why": "Anna's favourite Fish word (grasshoppers rubbing together)"
+  },
+  {
+   "e": "2021-09-03 - 389 No Such Thing As A Semen Chest",
+   "t": 2426,
+   "p": "friend of the podcast",
+   "q": "Was a big fan of Friend of the Podcast, Alistair Crowley. And then he went off poetry beca",
+   "v": "friend",
+   "who": [
+    "Aleister Crowley"
+   ],
+   "why": "The occultist"
+  },
+  {
+   "e": "2021-09-17 - 391 No Such Thing As A Sausage Swingboat",
+   "t": 1274,
+   "p": "friend of the show",
+   "q": "It was a record beaten by friend of the show, Ashreeta Furman.",
+   "v": "friend",
+   "who": [
+    "Ashrita Furman"
+   ],
+   "why": "Collector of random Guinness world records"
+  },
+  {
+   "e": "2021-09-24 - 392 No Such Thing As An Ancient Persian Badger",
+   "t": 2283,
+   "p": "friend of the podcast",
+   "q": "In old days, it's a friend of the podcast, Basianus, a.k.a. Elagabalus.",
+   "v": "friend",
+   "who": [
+    "Elagabalus"
+   ],
+   "why": "Roman emperor who invented the whoopee cushion"
+  },
+  {
+   "e": "2021-11-05 - 398 No Such Thing As An Upside-Down Upside-Down Bat",
+   "t": 2502,
+   "p": "friend of the podcast",
+   "q": "No? This is great. In fact, it's someone we've mentioned on this podcast, friend of the po",
+   "v": "friend",
+   "who": [
+    "Edward Payson Weston"
+   ],
+   "why": "Founder of pedestrianism; walked across America"
+  },
+  {
+   "e": "2022-01-14 - 409 No Such Thing As Reverend Christian Book",
+   "t": 2582,
+   "p": "friend of the podcast",
+   "q": "I got told the thing by a very good friend of ours, Jason Hais ley, who is a friend of the",
+   "v": "friend",
+   "who": [
+    "Jason Hazeley"
+   ],
+   "why": "Been on a couple of times; told Dan the flying saucers fact"
+  },
+  {
+   "e": "2022-01-21 - 410 No Such Thing As A Cheesus Christ",
+   "t": 376,
+   "p": "friend of the show",
+   "q": "which is also known as the Nazi Talking Dog Programme, which John Bonderson, you know, fri",
+   "v": "friend",
+   "who": [
+    "Jan Bondeson"
+   ],
+   "why": "Wrote about the Nazi talking dog programme"
+  },
+  {
+   "e": "2022-01-21 - 410 No Such Thing As A Cheesus Christ",
+   "t": 2166,
+   "p": "friend of the podcast",
+   "q": "St. Hildegard of Bingen who was a friend of the podcast , Mystic, from the 12th century.",
+   "v": "friend",
+   "who": [
+    "Hildegard of Bingen"
+   ],
+   "why": "12th-century mystic with views on cheese"
+  },
+  {
+   "e": "2022-03-04 - 416 No Such Thing As The Turin Towelette",
+   "t": 2228,
+   "p": "friend of the podcast",
+   "q": "Because these women were brought on with King Neptune, who was a one-handed inventor, brot",
+   "v": "friend",
+   "who": [
+    "Hiram Maxim"
+   ],
+   "why": "Inventor of the machine gun"
+  },
+  {
+   "e": "2022-03-11 - 417 No Such Thing As A Guide Dog Called Neil",
+   "t": 1097,
+   "p": "friend of the podcast",
+   "q": "they got married to a woman called Jennifer Sincock and they became the bastions and the o",
+   "v": "friend",
+   "who": [
+    "Segar Bastard"
+   ],
+   "why": "Football referee, Segar Richard Bastard"
+  },
+  {
+   "e": "2022-03-25 - 419 No Such Thing As SpongeBob with Worms",
+   "t": 1726,
+   "p": "friend of the podcast",
+   "q": "I think friend of the podcast, Roy Sullivan, was that his name",
+   "v": "friend",
+   "who": [
+    "Roy Sullivan"
+   ],
+   "why": "Struck by lightning seven times"
+  },
+  {
+   "e": "2022-06-17 - 431 No Such Thing As A Vampire From Devon",
+   "t": 1605,
+   "p": "friend of the show",
+   "q": "Medicine, there is an argument that it might not have been written by William Buchan and m",
+   "v": "friend",
+   "who": [
+    "William Smellie"
+   ],
+   "why": "First editor of the Encyclopaedia Britannica"
+  },
+  {
+   "e": "2022-08-18 - 440. No Such Thing As Death By 1000 Scallops",
+   "t": 1,
+   "p": "friend of the podcast",
+   "q": "everybody just to let you know we've got a very special guest on the podcast today to repl",
+   "v": "friend",
+   "who": [
+    "Steve Mould"
+   ],
+   "why": "Science presenter, Festival of the Spoken Nerd; stood in for Dan"
+  },
+  {
+   "e": "2022-08-25 - 441. No Such Thing As Spying With Ritz Crackers",
+   "t": 1226,
+   "p": "friend of the podcast",
+   "q": "matt parker a buddy of ours who's um who's a friend of the podcast steve mold who's on las",
+   "v": "not",
+   "why": "Steve Mould named in passing, about Matt Parker's group: not a declaration"
+  },
+  {
+   "e": "2022-08-25 - 441. No Such Thing As Spying With Ritz Crackers",
+   "t": 3147,
+   "p": "friend of the podcast",
+   "q": "only fan account is really really cool um this is a great explorer um he's a friend of the",
+   "v": "friend",
+   "who": [
+    "John Blashford-Snell"
+   ],
+   "why": "Explorer; sent Dan a photo of a very well-endowed bat"
+  },
+  {
+   "e": "2023-02-10 - 465. No Such Thing As An Itching Powder Guild",
+   "t": 2772,
+   "p": "friend of the podcast",
+   "q": "On people who refuse autographs , friend of the podcast, George Eliot.",
+   "v": "friend",
+   "who": [
+    "George Eliot"
+   ],
+   "why": "Refused all autographs"
+  },
+  {
+   "e": "2023-05-18 - 479. No Such Thing As Fake Coal",
+   "t": 2,
+   "p": "friend of the podcast",
+   "q": "Hey everybody, Dan and Andy here. Just wanted to let you know our special guest on this we",
+   "v": "friend",
+   "who": [
+    "Alex Bell"
+   ],
+   "why": "Back as a guest; behind every song and noise on the show"
+  },
+  {
+   "e": "2023-06-01 - 481. No Such Thing As Taming A Plane",
+   "t": 417,
+   "p": "friend of the podcast",
+   "q": "friend of the podcast, Peter Glazebrook, who we've mentioned several times before.",
+   "v": "friend",
+   "who": [
+    "Peter Glazebrook"
+   ],
+   "why": "Grower of record-breaking giant vegetables"
+  },
+  {
+   "e": "2023-06-29 - 485. No Such Thing As Ballet On A Staircase",
+   "t": 1274,
+   "p": "friend of the podcast",
+   "q": "Friend of the podcast, eryceph",
+   "v": "friend",
+   "who": [
+    "erysipelas"
+   ],
+   "why": "Pig skin condition Dan famously couldn't pronounce"
+  },
+  {
+   "e": "2023-11-30 - 507. No Such Thing As Fangtooth Boxing",
+   "t": 632,
+   "p": "friend of the podcast",
+   "q": ".\" Okay. She had what was effectively a lot of people claim was a rival. I don't think we ",
+   "v": "friend",
+   "who": [
+    "Murasaki Shikibu"
+   ],
+   "why": "Wrote The Tale of Genji"
+  },
+  {
+   "e": "2024-01-23 - Bonus Drop Us A Line - January 2024",
+   "t": 77,
+   "p": "friend of the show",
+   "q": "Great friend of the show. Hi, Ian.",
+   "v": "friend",
+   "who": [
+    "Ian Dunn"
+   ],
+   "why": "Listener who writes in with corrections"
+  },
+  {
+   "e": "2024-02-15 - 518. No Such Thing As Andrew Marvell's Cinematic Universe",
+   "t": 386,
+   "p": "enemy of the podcast",
+   "q": "But then enemy of the podcast, Mark Twain. Thank you. He really loved her.",
+   "v": "enemy",
+   "who": [
+    "Mark Twain"
+   ],
+   "why": "Liked Frances Trollope's rude book about Americans"
+  },
+  {
+   "e": "2024-05-02 - 529. No Such Thing As A Badger Love Note",
+   "t": 2115,
+   "p": "friend of the podcast",
+   "q": "That's not the only work of fiction that he's made it into. He also was in a story called ",
+   "v": "friend",
+   "who": [
+    "Wilkie Collins"
+   ],
+   "why": "Wrote Mrs Zant and the Ghost"
+  },
+  {
+   "e": "2024-05-30 - 533. No Such Thing As The Farto Phone",
+   "t": 1782,
+   "p": "foe of the podcast",
+   "q": "It's every girl's dream. Foe of the podcast. They went to the Eagles Nest, which is that, ",
+   "v": "enemy",
+   "who": [
+    "Adolf Hitler"
+   ],
+   "why": "Met Edward VIII and Wallis Simpson on their honeymoon"
+  },
+  {
+   "e": "2024-05-30 - 533. No Such Thing As The Farto Phone",
+   "t": 3410,
+   "p": "foe of the podcast",
+   "q": "I did find a bad review of his stuff. It mentions, foe of the podcast, Adolf Hitler, a fil",
+   "v": "enemy",
+   "who": [
+    "Adolf Hitler"
+   ],
+   "why": "Alec Guinness played him in Hitler: The Last Ten Days"
+  },
+  {
+   "e": "2024-06-13 - 535. No Such Thing As An Inside-Out Dolphin",
+   "t": 1697,
+   "p": "friend of the podcast",
+   "q": "Grace Kelly, friend of the podcast, she got a yacht. That's a nice gift.",
+   "v": "friend",
+   "who": [
+    "Grace Kelly"
+   ],
+   "why": "Got a yacht as a wedding present"
+  },
+  {
+   "e": "2024-06-20 - 536. No Such Thing As A Soaring Chinchilla",
+   "t": 1120,
+   "p": "friend of the podcast",
+   "q": "But there was a guy called Anois Pare, a friend of the podcast actually, we've mentioned h",
+   "v": "friend",
+   "who": [
+    "Ambroise Paré"
+   ],
+   "why": "Tested whether bezoars cure poison, on a condemned cook"
+  },
+  {
+   "e": "2024-06-27 - 537. No Such Thing As The Notorious British Institute of Graphologists",
+   "t": 1170,
+   "p": "foe of the podcast",
+   "q": "I think the Treaty of Versailles is a foe of the podcast because we give it a right kick o",
+   "v": "enemy",
+   "who": [
+    "Treaty of Versailles"
+   ],
+   "why": "\"We give it a right kicking on this show\""
+  },
+  {
+   "e": "2024-07-04 - 538. No Such Thing As A Sausage Cat",
+   "t": 2876,
+   "p": "foe of the podcast",
+   "q": "Pure breed as foe of the podcast, Adolf Hitler would approve.",
+   "v": "enemy",
+   "who": [
+    "Adolf Hitler"
+   ],
+   "why": "Would approve of a pure-bred cat"
+  },
+  {
+   "e": "2024-07-11 - 539. No Such Thing As Kimchi Pirates",
+   "t": 2028,
+   "p": "friend of the podcast",
+   "q": "Yeah. And he was working with Bing Crosby, friend of the podcast, I'd say.",
+   "v": "friend",
+   "who": [
+    "Bing Crosby"
+   ],
+   "why": "Pre-recorded his radio show on tape (Anna: more \"acquainted\")"
+  },
+  {
+   "e": "2024-08-01 - 542. No Such Thing As Darts Vader",
+   "t": 3105,
+   "p": "friend of the podcast",
+   "q": "But I only really bring it up because it was hosted by a friend of the podcast, Alan Thick",
+   "v": "friend",
+   "who": [
+    "Alan Thicke"
+   ],
+   "why": "Hosted Animal Crack-Ups; wrote the Diff'rent Strokes theme"
+  },
+  {
+   "e": "2024-08-15 - 544. No Such Thing As An Accidental Stuffed Crust",
+   "t": 2490,
+   "p": "friend of the podcast",
+   "q": "I don't think it's very tasty. Kenelm Digby, father of Everard Digby, friend of the podcas",
+   "v": "friend",
+   "who": [
+    "Everard Digby"
+   ],
+   "why": "His relative Kenelm Digby made viper wine"
+  },
+  {
+   "e": "2025-02-13 - 570. No Such Thing As Clay Valentines Cards",
+   "t": 144,
+   "p": "friend of the podcast",
+   "q": "They're grey? Grey-blue? They're grey. Bluey grey. This is a place that actually is a frie",
+   "v": "friend",
+   "who": [
+    "Shark Bay"
+   ],
+   "why": "Australian bay of dolphin research"
+  },
+  {
+   "e": "2025-02-27 - 572. No Such Thing As A Simon Cowell Bell",
+   "t": 1186,
+   "p": "enemies of the podcast",
+   "q": "You enemies of the podcast.",
+   "v": "enemy",
+   "who": [
+    "Amelia Earhart searchers"
+   ],
+   "why": "Anna's bête noire; Andy mock-declares them"
+  },
+  {
+   "e": "2025-03-20 - 575. No Such Thing As A Guinea Pig Saloon",
+   "t": 1331,
+   "p": "friend of the podcast",
+   "q": "And in fact, the earliest birthday celebration I could find in Germany was in 1801, and it",
+   "v": "friend",
+   "who": [
+    "Goethe"
+   ],
+   "why": "Germany's answer to Shakespeare; described an 1801 birthday cake"
+  },
+  {
+   "e": "2025-03-27 - 576. No Such Thing As A Cursed Cage",
+   "t": 451,
+   "p": "friend of the podcast",
+   "q": "As a friend of the podcast, I believe we've earned the right to be called the New England ",
+   "v": "friend",
+   "who": [
+    "New England Aquarium"
+   ],
+   "why": "Its historian wrote in asking to be called by name"
+  },
+  {
+   "e": "2025-04-03 - 577. No Such Thing As A Venetian Barge",
+   "t": 2930,
+   "p": "friend of the podcast",
+   "q": "Maggie Simpson was the baby. Her first word was \"Daddy\", and it was said by a friend of th",
+   "v": "friend",
+   "who": [
+    "Elizabeth Taylor"
+   ],
+   "why": "Said Maggie Simpson's first word, \"Daddy\""
+  },
+  {
+   "e": "2025-04-10 - 578. No Such Thing As A Pouched Rat On The Housing Ladder",
+   "t": 2763,
+   "p": "friend of the podcast",
+   "q": "No. This is a guy called John Cameron. He wrote it. And he also arranged the album Mellow ",
+   "v": "friend",
+   "who": [
+    "Donovan"
+   ],
+   "why": "The \"Mellow Yellow\" singer"
+  },
+  {
+   "e": "2025-05-08 - 582. No Such Thing As Siegfried Bassoon",
+   "t": 23,
+   "p": "friend of the podcast",
+   "q": "This is run by longtime friend of the podcast, Leven Skyder.",
+   "v": "friend",
+   "who": [
+    "Lieven Scheire"
+   ],
+   "why": "Runs the Nerdland Festival in Belgium"
+  },
+  {
+   "e": "2025-05-08 - 582. No Such Thing As Siegfried Bassoon",
+   "t": 1242,
+   "p": "friend of the podcast",
+   "q": "Yeah, Pauli, by the way, was in Friend of the Podcast, the smartest ever photograph.",
+   "v": "friend",
+   "who": [
+    "The Solvay Conference photo"
+   ],
+   "why": "The 1927 photo of the great physicists"
+  },
+  {
+   "e": "2025-05-08 - 582. No Such Thing As Siegfried Bassoon",
+   "t": 1446,
+   "p": "friend of the podcast",
+   "q": "Is it a friend of the podcast? No, it's not. It's someone called Maria Gerpert-Meyer.",
+   "v": "not",
+   "why": "\"Is it a friend of the podcast? No, it's not.\""
+  },
+  {
+   "e": "2025-06-26 - 589. No Such Thing As Dung Beetles In Madame Tussauds",
+   "t": 1897,
+   "p": "friend of the podcast",
+   "q": "I find him so interesting. He had a really amazing life. He's a classic friend of the podc",
+   "v": "friend",
+   "who": [
+    "Wilder Penfield"
+   ],
+   "why": "Brain surgeon; \"a classic friend of the podcast\""
+  },
+  {
+   "e": "2025-07-03 - 590. No Such Thing As Workshopping The Alphabet",
+   "t": 1048,
+   "p": "friend of the podcast",
+   "q": "He was a killer, Daijong. Friend of the podcast, by the way.",
+   "v": "friend",
+   "who": [
+    "King Taejong"
+   ],
+   "why": "Joseon king who told historians not to record his fall from a horse"
+  },
+  {
+   "e": "2025-07-17 - 592. No Such Thing As A Cat In A Muumuu",
+   "t": 2910,
+   "p": "friend of the podcast",
+   "q": "Friend of the podcast. Very scientifically.",
+   "v": "friend",
+   "who": [
+    "perineum tanning"
+   ],
+   "why": "Discussed \"very scientifically\" a few weeks earlier"
+  },
+  {
+   "e": "2025-08-07 - 595. No Such Thing As The Treaty Of Velociraptors",
+   "t": 2969,
+   "p": "friend of the podcast",
+   "q": "But he saw the end of the war. He might have lived to, friend of the podcast, the Treaty o",
+   "v": "friend",
+   "who": [
+    "Treaty of Versailles"
+   ],
+   "why": "Guest Elf Lyons calls it a friend of the podcast"
+  },
+  {
+   "e": "2025-09-04 - 599. No Such Thing As Julius Caesar's Plan B",
+   "t": 1590,
+   "p": "friend of the podcast",
+   "q": "Friend of the podcast. We've spoken about him before. Inventor of sideburns.",
+   "v": "friend",
+   "who": [
+    "Ambrose Burnside"
+   ],
+   "why": "Inventor of sideburns"
+  },
+  {
+   "e": "2025-09-25 - No Such Thing As 'What's My Spoon'",
+   "t": 2646,
+   "p": "friend of the podcast",
+   "q": "Friend of the podcast. Right. T.I. Pharrell Williams and... Robin Thickey.",
+   "v": "friend",
+   "who": [
+    "Blurred Lines"
+   ],
+   "why": "The Robin Thicke song sued by Marvin Gaye's estate"
+  },
+  {
+   "e": "2025-10-02 - No Such Thing As Jack Can't Reacher",
+   "t": 533,
+   "p": "enemy of the podcast",
+   "q": "And the person who stood up for her, I'm afraid, enemy of the podcast, Mark Twain.",
+   "v": "enemy",
+   "who": [
+    "Mark Twain"
+   ],
+   "why": "Stood up for Harriet Beecher Stowe: \"him vindicated a bit\""
+  },
+  {
+   "e": "2025-10-23 - No Such Thing As A Litter Box In The Sahara",
+   "t": 51,
+   "p": "friend of the podcast",
+   "q": "And if you would like to be a friend of the podcast, then the top tier is for you.",
+   "v": "not",
+   "why": "The name of Club Fish's top tier"
+  },
+  {
+   "e": "2025-10-30 - No Such Thing As Teletubby TikTok Tummies",
+   "t": 2304,
+   "p": "friend of the podcast",
+   "q": "But the Pope in question on this one was Pius XII. So he's a friend of the podcast.",
+   "v": "friend",
+   "who": [
+    "Pope Pius XII"
+   ],
+   "why": "Mentioned a couple of weeks earlier; his doctor injected patients with lamb cells"
+  },
+  {
+   "e": "2025-10-30 - No Such Thing As Teletubby TikTok Tummies",
+   "t": 2353,
+   "p": "friend of the podcast",
+   "q": "And the other reason he's a friend of the podcast is he was the one who ruled in 1954 that",
+   "v": "friend",
+   "who": [
+    "Pope Pius XII"
+   ],
+   "why": "Ruled that anyone mentioning Jesus's foreskin is excommunicated"
+  },
+  {
+   "e": "2025-10-30 - No Such Thing As Teletubby TikTok Tummies",
+   "t": 2884,
+   "p": "foe of the podcast",
+   "q": "And, foe of the podcast, Mark Twain.",
+   "v": "enemy",
+   "who": [
+    "Mark Twain"
+   ],
+   "why": "Claimed Shakespeare never wrote a play"
+  },
+  {
+   "e": "2025-11-02 - 1. Little Fish Steam Exploded Donkey Bone Powder",
+   "t": 1446,
+   "p": "friend of the podcast",
+   "q": "Okay, before we wrap up this first episode of Little Fish, we are now going to do somethin",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2025-11-02 - 1. Little Fish Steam Exploded Donkey Bone Powder",
+   "t": 1580,
+   "p": "friend of the podcast",
+   "q": "Clubfish at the Friend of the Podcast tier, because if nobody has joined Friend of the",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2025-11-02 - 1. Little Fish Steam Exploded Donkey Bone Powder",
+   "t": 1885,
+   "p": "friend of the podcast",
+   "q": "We're going to be doing this every week. So join Friend of the Podcast.",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2025-11-02 - 1. Little Fish Steam Exploded Donkey Bone Powder",
+   "t": 1903,
+   "p": "friend of the podcast",
+   "q": "And even if you don't join it, the Friend of the Podcast, there are two other tiers availa",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2025-11-06 - No Such Thing As A Chocolate Sausage",
+   "t": 1567,
+   "p": "friend of the podcast",
+   "q": "He has polished scripts for 102 Dalmatians, Indiana Jones and the Last Crusade, and one ve",
+   "v": "friend",
+   "who": [
+    "Stop! Or My Mom Will Shoot"
+   ],
+   "why": "\"Our white whale of a film\"; Tom Stoppard worked on it"
+  },
+  {
+   "e": "2025-11-09 - 2. Little Fish Yum Yum, Plum Plum",
+   "t": 1701,
+   "p": "friend of the podcast",
+   "q": "- If you'd put a gun to my head and said, You've got a thousand guesses as to the Christia",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2025-11-09 - 2. Little Fish Yum Yum, Plum Plum",
+   "t": 1731,
+   "p": "friend of the podcast",
+   "q": "Bye. Friend of the podcast.",
+   "v": "friend",
+   "who": [
+    "George Eliot"
+   ],
+   "why": "\"Silas Marner, by... friend of the podcast\""
+  },
+  {
+   "e": "2025-11-09 - 2. Little Fish Yum Yum, Plum Plum",
+   "t": 1909,
+   "p": "friend of the podcast",
+   "q": "Darcy. Four absolute legends, the first four people to sign up for our friend of the podca",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2025-11-13 - No Such Thing As Aunt Bessie In A Red Citroën Picasso",
+   "t": 655,
+   "p": "friend of the podcast",
+   "q": "The winner was Kiki Hackinson from Sweden. She was crowned wearing her bikini, and the who",
+   "v": "friend",
+   "who": [
+    "Pope Pius XII"
+   ],
+   "why": "Condemned the first Miss World as sinful"
+  },
+  {
+   "e": "2025-11-16 - Little Fish You've Been Harkin'd",
+   "t": 1363,
+   "p": "friend of the podcast",
+   "q": "Okay. Okay. OK, let's end it there. Let's go to inaugurating the latest members of the Fri",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2025-11-16 - Little Fish You've Been Harkin'd",
+   "t": 1370,
+   "p": "friend of the podcast",
+   "q": "the Podcast Hall of Fame. Exciting. Anyone who has signed up to Clubfish at the Friend of ",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2025-11-16 - Little Fish You've Been Harkin'd",
+   "t": 1388,
+   "p": "friend of the podcast",
+   "q": "Guys, we've had a bit of a rush on membership of Friend of the Podcast, so we are going to",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2025-11-16 - Little Fish You've Been Harkin'd",
+   "t": 1541,
+   "p": "friend of the podcast",
+   "q": "So we're not going to say you can request your facts if you're a friend of the podcast, bu",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2025-11-16 - Little Fish You've Been Harkin'd",
+   "t": 1837,
+   "p": "friend of the podcast",
+   "q": "Exactly. Unless Anna... Ptaszynski. Our Anna has signed up to be a friend of the podcast.",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2025-11-23 - Little Fish Poor Benighted Mountain Beaver",
+   "t": 1217,
+   "p": "friend of the podcast",
+   "q": "your facts before we wrap up though we have something very important to do which is to ann",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2025-11-23 - Little Fish Poor Benighted Mountain Beaver",
+   "t": 1759,
+   "p": "friend of the podcast",
+   "q": "If you want to be a custodian of one of our facts from the archive, all you need to do is ",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2025-11-27 - No Such Thing As A Forbidden Panettone",
+   "t": 525,
+   "p": "friend of the podcast",
+   "q": "There's no plural because no one's ever had two panettones. It's mentioned in a book by a ",
+   "v": "friend",
+   "who": [
+    "Bartolomeo Scappi"
+   ],
+   "why": "Renaissance chef who cooked for popes"
+  },
+  {
+   "e": "2025-11-27 - No Such Thing As A Forbidden Panettone",
+   "t": 535,
+   "p": "friend of the podcast",
+   "q": "Oh, yeah. Spelled scappy. Was he a friend of us four? He was a friend of the podcast.",
+   "v": "friend",
+   "who": [
+    "Bartolomeo Scappi"
+   ],
+   "why": "Cooked for popes until one only wanted a boiled egg"
+  },
+  {
+   "e": "2025-11-27 - No Such Thing As A Forbidden Panettone",
+   "t": 1443,
+   "p": "friend of the podcast",
+   "q": "I have a friend of the podcast, Rhys Darby, in that one.",
+   "v": "friend",
+   "who": [
+    "Rhys Darby"
+   ],
+   "why": "In Jumanji: Welcome to the Jungle"
+  },
+  {
+   "e": "2025-12-01 - Little Fish Now You Three Me",
+   "t": 1202,
+   "p": "friend of the podcast",
+   "q": "Okay, well on that note I think we've come to the end of your facts, so we're going to go ",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2025-12-01 - Little Fish Now You Three Me",
+   "t": 1223,
+   "p": "friend of the podcast",
+   "q": "Well, that was okay, Andy, but I might add it in post. Let's hear the first person who is ",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2025-12-01 - Little Fish Now You Three Me",
+   "t": 1292,
+   "p": "friend of the podcast",
+   "q": "Yeah. All of our listeners. We could be selling... friend of the podcast for 50 grand.",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2025-12-07 - Little Fish This Could Tail Off Really Quickly",
+   "t": 1394,
+   "p": "friend of the podcast",
+   "q": "This is a thing we're doing where if you join Club Fish, on Patreon, at the friend of the ",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2025-12-07 - Little Fish This Could Tail Off Really Quickly",
+   "t": 1417,
+   "p": "friends of the podcast",
+   "q": "to a few friends of the podcast who've joined. So let's start with one. Anyone want to kic",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2025-12-11 - No Such Thing As Dwayne Johnson's Hare",
+   "t": 567,
+   "p": "friend of the podcast",
+   "q": "Adam, now you're talking about a friend of the podcast. We've mentioned this on this show ",
+   "v": "friend",
+   "who": [
+    "Now You See Me"
+   ],
+   "why": "The heist films they \"unironically love\""
+  },
+  {
+   "e": "2025-12-14 - Little Fish Juan Trippe",
+   "t": 1238,
+   "p": "friends of the podcast",
+   "q": "We're going to be doing this every Monday. But before we wrap up today, we have a very imp",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2025-12-14 - Little Fish Juan Trippe",
+   "t": 1751,
+   "p": "friend of the podcast",
+   "q": "And if you join the friend of the podcast here, you automatically will be issued one.",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2025-12-18 - No Such Thing As An Eton Oyster",
+   "t": 677,
+   "p": "friend of the podcast",
+   "q": "Ah, there you go. That's very funny. The Chicago River is a friend of the podcast.",
+   "v": "friend",
+   "who": [
+    "Chicago River"
+   ],
+   "why": "Dyed green by accident; the Dave Matthews Band dumped 800 lb of poo off a bridge into it"
+  },
+  {
+   "e": "2025-12-21 - Little Fish Bizarre Choreography, Schnapps, and Singing in Swedish",
+   "t": 602,
+   "p": "friend of the podcast",
+   "q": "I've got to say friend of the",
+   "v": "friend",
+   "who": [
+    "Jesus's foreskin"
+   ],
+   "why": "A listener worked out how long it takes to eat a whole Jesus"
+  },
+  {
+   "e": "2025-12-21 - Little Fish Bizarre Choreography, Schnapps, and Singing in Swedish",
+   "t": 695,
+   "p": "friend of the podcast",
+   "q": "Who reportedly is a friend of",
+   "v": "friend",
+   "who": [
+    "Pope Pius XII"
+   ],
+   "why": "\"Huge friend\"; suffered from chronic hiccups"
+  },
+  {
+   "e": "2025-12-21 - Little Fish Bizarre Choreography, Schnapps, and Singing in Swedish",
+   "t": 710,
+   "p": "friend of the podcast",
+   "q": "He was a proper friend of the podcast.",
+   "v": "friend",
+   "who": [
+    "Pope Pius XII"
+   ],
+   "why": "\"A proper friend of the podcast\""
+  },
+  {
+   "e": "2025-12-21 - Little Fish Bizarre Choreography, Schnapps, and Singing in Swedish",
+   "t": 1393,
+   "p": "friend of the podcast",
+   "q": "do one uh this one goes out to edward cox congratulations ed ward your fact is one uh from",
+   "v": "friend",
+   "who": [
+    "Lieven Scheire"
+   ],
+   "why": "First came on in episode 13"
+  },
+  {
+   "e": "2025-12-21 - Little Fish Bizarre Choreography, Schnapps, and Singing in Swedish",
+   "t": 2013,
+   "p": "friend of the podcast",
+   "q": "And you can join the friend of the podcast tier to do that. But in the meantime, please en",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2025-12-25 - No Such Thing As Sheep Number Five",
+   "t": 1911,
+   "p": "friend of the podcast",
+   "q": "Oh, okay. And the amazing thing about fistball is it was written about in 1786 by a friend",
+   "v": "friend",
+   "who": [
+    "Goethe"
+   ],
+   "why": "Wrote about a fistball match in 1786"
+  },
+  {
+   "e": "2025-12-25 - No Such Thing As Sheep Number Five",
+   "t": 2704,
+   "p": "friend of the podcast",
+   "q": "This is friend of the podcast from the get-go. So Just designed that font, which an invest",
+   "v": "friend",
+   "who": [
+    "Joost van Rossum"
+   ],
+   "why": "Listener whose font was pirated for the \"You wouldn't steal a car\" advert"
+  },
+  {
+   "e": "2025-12-25 - No Such Thing As Sheep Number Five",
+   "t": 2855,
+   "p": "friend of the podcast",
+   "q": "Now You See Me has become a friend of the podcast.",
+   "v": "friend",
+   "who": [
+    "Now You See Me"
+   ],
+   "why": "\"The surprise movie hit of the year for the podcast\""
+  },
+  {
+   "e": "2025-12-28 - Little Fish A Biscuit, A Railway Station, And A Mutt",
+   "t": 1296,
+   "p": "friend of the podcast",
+   "q": ". And you get this by being part of our friend of the podcast here on Clubfish, which is, ",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2025-12-28 - Little Fish A Biscuit, A Railway Station, And A Mutt",
+   "t": 1892,
+   "p": "friend of the podcast",
+   "q": "Thank you for being a friend of the podcast. And if anyone else wants to become a custodia",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-01-04 - Little Fish If You Believe What the Government Tells You",
+   "t": 87,
+   "p": "friend of the podcast",
+   "q": "Welcome to this week's episode of Little Fish. This is your regular show where we talk abo",
+   "v": "not",
+   "why": "The Club Fish tier: \"some friend of the podcast Patreons\""
+  },
+  {
+   "e": "2026-01-04 - Little Fish If You Believe What the Government Tells You",
+   "t": 109,
+   "p": "friend of the podcast",
+   "q": "And then at the very end, we will be telling you some of our old facts and putting them un",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-01-04 - Little Fish If You Believe What the Government Tells You",
+   "t": 1274,
+   "p": "friend of the podcast",
+   "q": "Yes. First friend of the podcast to be assigned their brief this week is Richard Martin.",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-01-04 - Little Fish If You Believe What the Government Tells You",
+   "t": 1431,
+   "p": "friend of the podcast",
+   "q": "Right. This goes out to Rita Hoffmayer . Rita, thank you so much for becoming a friend of ",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-01-04 - Little Fish If You Believe What the Government Tells You",
+   "t": 1755,
+   "p": "friends of the podcast",
+   "q": "Okay. On that note, I think it is time to end today's show. Congratulations to Sean, Nikki",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-01-04 - Little Fish If You Believe What the Government Tells You",
+   "t": 1778,
+   "p": "friend of the podcast",
+   "q": "able to find out details there of how to become a friend of the podcast or any of the othe",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-01-11 - Little Fish It's Mostly Machines These Days",
+   "t": 1187,
+   "p": "friend of the podcast",
+   "q": "I think so. I think let's switch over into friend of the podcast mode.",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-01-11 - Little Fish It's Mostly Machines These Days",
+   "t": 1195,
+   "p": "friend of the podcast",
+   "q": "If you've joined a friend of the podcast, we would like to dedicate one of our facts to yo",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-01-11 - Little Fish It's Mostly Machines These Days",
+   "t": 1733,
+   "p": "friend of the podcast",
+   "q": "but also in a way that remains fun for you, the listener. If you would like to join as a f",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-01-15 - No Such Thing As Captain Crossword",
+   "t": 68,
+   "p": "friend of the podcast",
+   "q": "Now, this is for people who've joined Clubfish at the top tier, the friend of the podcast ",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-01-18 - Little Fish Not Sponsored By Reba McEntire",
+   "t": 1025,
+   "p": "friend of the podcast",
+   "q": "So if you are a member of the Club Fish highest tier, which is friend of the podcast, you ",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-01-25 - Little Fish It's Not Shaped Like A Hobnob",
+   "t": 30,
+   "p": "friend of the podcast",
+   "q": "We will read through them, we 'll chat about them, we'll give you a little bit of extra in",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-01-25 - Little Fish It's Not Shaped Like A Hobnob",
+   "t": 1035,
+   "p": "friend of the podcast",
+   "q": "some facts. If you become a member of our Patreon at the Friend of the Podcast tier, then ",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-01-25 - Little Fish It's Not Shaped Like A Hobnob",
+   "t": 1057,
+   "p": "friend of the podcast",
+   "q": "This one goes out to Kate Armstrong. Congratulations, Kate. Welcome to Friend of the Podca",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-01-25 - Little Fish It's Not Shaped Like A Hobnob",
+   "t": 1637,
+   "p": "friend of the podcast",
+   "q": "who are new custodians of facts in our friend of the podcast here.",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-02-01 - Little Fish Right Over Our Heads",
+   "t": 1264,
+   "p": "friend of the podcast",
+   "q": "All right, those are your facts . But now let's have some of our facts, because what we're",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-02-01 - Little Fish Right Over Our Heads",
+   "t": 1290,
+   "p": "friends of the podcast",
+   "q": "Friends of the podcast certificates. So let's dish out some facts now. Who wants to go fir",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-02-01 - Little Fish Right Over Our Heads",
+   "t": 1864,
+   "p": "friend of the podcast",
+   "q": "I hope you enjoy those facts. If you would like to get your own fact dedicated to you, jus",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-02-09 - Little Fish The Old Ron Brown",
+   "t": 908,
+   "p": "friend of the podcast",
+   "q": "have and we've mentioned it because my mom and dad lived on that road. Yes. Yeah, it's a f",
+   "v": "friend",
+   "who": [
+    "Rednaxela Terrace"
+   ],
+   "why": "Hong Kong street named by a backwards signwriter; Dan's parents lived there"
+  },
+  {
+   "e": "2026-02-09 - Little Fish The Old Ron Brown",
+   "t": 1064,
+   "p": "friend of the podcast",
+   "q": "okay well this is brilliant we love these facts coming in thank you so much everyone and u",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-02-09 - Little Fish The Old Ron Brown",
+   "t": 1256,
+   "p": "friend of the podcast",
+   "q": "Is this friend of the podcast?",
+   "v": "friend",
+   "who": [
+    "Annie Londonderry"
+   ],
+   "why": "First woman to cycle round the world"
+  },
+  {
+   "e": "2026-02-09 - Little Fish The Old Ron Brown",
+   "t": 1324,
+   "p": "friend of the podcast",
+   "q": "Yeah. Oh, yeah. Super cool. Very early friend of the podcast.",
+   "v": "friend",
+   "who": [
+    "Annie Londonderry"
+   ],
+   "why": "\"Very early friend of the podcast\""
+  },
+  {
+   "e": "2026-02-09 - Little Fish The Old Ron Brown",
+   "t": 1327,
+   "p": "friends of the podcast",
+   "q": "One of the first ever friends",
+   "v": "friend",
+   "who": [
+    "Annie Londonderry"
+   ],
+   "why": "\"One of the first ever friends of the podcast\""
+  },
+  {
+   "e": "2026-02-09 - Little Fish The Old Ron Brown",
+   "t": 1329,
+   "p": "friend of the podcast",
+   "q": "Yeah. But she did make it to. We did recently. If you're part of the top tier of Club Fish",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-02-09 - Little Fish The Old Ron Brown",
+   "t": 1338,
+   "p": "friends of the podcast",
+   "q": "And we have made a friends of the podcast t-shirt, which lists all of the greatest friends",
+   "v": "friend",
+   "who": [
+    "Annie Londonderry"
+   ],
+   "why": "On the Friends of the Podcast t-shirt"
+  },
+  {
+   "e": "2026-02-12 - No Such Thing As Supercritical Hot Rock Music",
+   "t": 804,
+   "p": "friend of the podcast",
+   "q": "Can I tell you guys something about a friend of the podcast?",
+   "v": "friend",
+   "who": [
+    "Henry Perky"
+   ],
+   "why": "Inventor of Shredded Wheat"
+  },
+  {
+   "e": "2026-02-15 - Little Fish Gary Scrabble",
+   "t": 1142,
+   "p": "friend of the podcast",
+   "q": "It is time to give custodians hip over to some of our facts. So anyone who is a member of ",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-02-15 - Little Fish Gary Scrabble",
+   "t": 1283,
+   "p": "friend of the podcast",
+   "q": "Okay, here's another one. This one goes out to Ian Wolfe, an old friend of the podcast him",
+   "v": "friend",
+   "who": [
+    "Ian Wolfe"
+   ],
+   "why": "Fact custodian, \"an old friend of the podcast himself\""
+  },
+  {
+   "e": "2026-02-15 - Little Fish Gary Scrabble",
+   "t": 1365,
+   "p": "friends of the podcast",
+   "q": "Friends of the podcast?",
+   "v": "not",
+   "why": "The Yakuza: \"Friends of the podcast?\" \"No.\""
+  },
+  {
+   "e": "2026-02-15 - Little Fish Gary Scrabble",
+   "t": 1646,
+   "p": "friend of the podcast",
+   "q": "And if you too are a member of the top tier of Patreon, friend of the podcast, then listen",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-02-15 - Little Fish Gary Scrabble",
+   "t": 1655,
+   "p": "friend of the podcast",
+   "q": "If you would like to become a friend of the podcast, then go to patreon.com slash no such ",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-02-19 - No Such Thing As Magical Fox Phishing",
+   "t": 516,
+   "p": "friend of the podcast",
+   "q": "I forgot that. A friend of the podcast. I forgot that, yes.",
+   "v": "friend",
+   "who": [
+    "Alan Thicke"
+   ],
+   "why": "Wrote the Wheel of Fortune theme; father of Robin Thicke"
+  },
+  {
+   "e": "2026-02-22 - Little Fish See You In The Charts",
+   "t": 983,
+   "p": "friend of the podcast",
+   "q": "we have an in with zoe hamburger friend of the podcast who like episode one of little fish",
+   "v": "friend",
+   "who": [
+    "Zoe Hamburger"
+   ],
+   "why": "Senior McDonald's executive, on episode one of Little Fish"
+  },
+  {
+   "e": "2026-02-22 - Little Fish See You In The Charts",
+   "t": 1123,
+   "p": "friend of the podcast",
+   "q": "Right. Shall we do some friend of the podcast?",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-02-22 - Little Fish See You In The Charts",
+   "t": 1135,
+   "p": "friend of the podcast",
+   "q": "com slash no such thing as a fish. And you join, you get all sorts of stuff. You get ad fr",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-02-22 - Little Fish See You In The Charts",
+   "t": 1709,
+   "p": "friend of the podcast",
+   "q": "Right, that's your lot for this week Thank you so much to all those who've joined it The f",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-03-01 - Little Fish Full Body Botox",
+   "t": 1223,
+   "p": "friend of the podcast",
+   "q": "members club, Club Fish, You will not only get ad-free episodes and lots and lots of bonus",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-03-01 - Little Fish Full Body Botox",
+   "t": 1692,
+   "p": "friend of the podcast",
+   "q": "Yes, and we should say, if you join... as a friend of the podcast, you get a certificate w",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-03-01 - Little Fish Full Body Botox",
+   "t": 1786,
+   "p": "friends of the podcast",
+   "q": "to all eight friends of the podcast we've just covered that 's maddie aaron alexander mich",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-03-05 - No Such Thing As Billions Of Checkers Boards",
+   "t": 1340,
+   "p": "enemy of the podcast",
+   "q": "I'm almost going to propose him as an enemy of the podcast, along with Mark Twain.",
+   "v": "enemy",
+   "who": [
+    "Thomas Edison"
+   ],
+   "why": "Proposed for electrocuting animals to discredit Tesla"
+  },
+  {
+   "e": "2026-03-08 - Little Fish I am Dorkus, Queen of the Dorks",
+   "t": 731,
+   "p": "enemy of the podcast",
+   "q": "We know Mark Twain, enemy of the podcast, took the London Underground.",
+   "v": "enemy",
+   "who": [
+    "Mark Twain"
+   ],
+   "why": "Rode the London Underground: maybe he was Jack the Ripper"
+  },
+  {
+   "e": "2026-03-08 - Little Fish I am Dorkus, Queen of the Dorks",
+   "t": 940,
+   "p": "friend of the podcast",
+   "q": "to one of the facts from our long 12 year history of fish to someone who is part of the hi",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-03-08 - Little Fish I am Dorkus, Queen of the Dorks",
+   "t": 1737,
+   "p": "friend of the podcast",
+   "q": "you need to do is go to patreon .com slash clubfish join the highest tier of clubfish whic",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-03-12 - No Such Thing As The Official Podcast Of Wyoming",
+   "t": 1203,
+   "p": "friend of the podcast",
+   "q": "Oh, yes. Has a moss link. So he is a friend of the podcast. I think we agree.",
+   "v": "friend",
+   "who": [
+    "Ötzi the Iceman"
+   ],
+   "why": "\"Has a moss link\", so a friend, \"I think we agree\""
+  },
+  {
+   "e": "2026-03-15 - Little Fish Release The Naughty List",
+   "t": 1123,
+   "p": "friends of the podcast",
+   "q": "okay well what an amazing fact and what an amazing bunch of facts we've had this week abso",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-03-15 - Little Fish Release The Naughty List",
+   "t": 1633,
+   "p": "friend of the podcast",
+   "q": "Congratulations, Meryl, friend of the podcast. Your fact is that astronauts don't snore.",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-03-15 - Little Fish Release The Naughty List",
+   "t": 1691,
+   "p": "friend of the podcast",
+   "q": "a friend of the podcast you can go to patreon.com there's all sorts of fun stuff or you ca",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-03-19 - No Such Thing As A Shakespeare Burger",
+   "t": 2784,
+   "p": "friend of the podcast",
+   "q": "But it wasn't just him. Alexander Pope, who's a friend of the podcast, he was changing Sha",
+   "v": "friend",
+   "who": [
+    "Alexander Pope"
+   ],
+   "why": "Rewrote bits of Shakespeare he didn't like"
+  },
+  {
+   "e": "2026-03-22 - Little Fish The Rat Ticklers Need Me",
+   "t": 1153,
+   "p": "friend of the podcast",
+   "q": "which is friend of the podcast, then you will get a shout out on the show and we will allo",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-03-22 - Little Fish The Rat Ticklers Need Me",
+   "t": 1715,
+   "p": "friends of the podcast",
+   "q": "That's enough of this stuff. Let's have one final round of thanks to our wonderful new fac",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-03-26 - No Such Thing As Doing A Solzhenitsyn",
+   "t": 3415,
+   "p": "friend of the podcast",
+   "q": "There are lots of different rewards. We have a quiz coming up for the highest tier, Friend",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-03-29 - Little Fish The Cat Is Banging On The Door",
+   "t": 1138,
+   "p": "friend of the podcast",
+   "q": "If you are a member of Clubfish , the highest tier, which is friend of the podcast, you wi",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-03-29 - Little Fish The Cat Is Banging On The Door",
+   "t": 1727,
+   "p": "friend of the podcast",
+   "q": "There's lots of different tiers , but at the highest one, friend of the podcast, that is w",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-04-05 - Little Fish The Body Of A Young Paul Newman",
+   "t": 1142,
+   "p": "friends of the podcast",
+   "q": "enough of your facts absolutely brilliant facts as ever this week thank you so much to eve",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-04-05 - Little Fish The Body Of A Young Paul Newman",
+   "t": 1656,
+   "p": "friend of the podcast",
+   "q": "They are John, Katie, Emma, Emma, Stacey, Josh, Will, and Matt. And thank you everyone who",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-04-09 - No Such Thing As The God of Snooze Buttons",
+   "t": 76,
+   "p": "friend of the podcast",
+   "q": "Yes, if you're a member of Clubfish or the friend of the podcast tier, you can come to our",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-04-09 - No Such Thing As The God of Snooze Buttons",
+   "t": 109,
+   "p": "friend of the podcast",
+   "q": "Yep, this year. AD. AD, and it's at 7pm UK time, so go to patreon.com slash clubfish, look",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-04-09 - No Such Thing As The God of Snooze Buttons",
+   "t": 638,
+   "p": "friend of the podcast",
+   "q": "So, friend of the podcast, I would say first and closest friend of the podcast.",
+   "v": "friend",
+   "who": [
+    "James Garfield"
+   ],
+   "why": "Loved Ben-Hur; \"first and closest friend of the podcast\""
+  },
+  {
+   "e": "2026-04-12 - Little Fish No Harm, No Foul",
+   "t": 23,
+   "p": "friend of the podcast",
+   "q": "You've been sending them in to podcast.qi.com and we're here to tell you all about them an",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-04-19 - Little Fish Violent Dave",
+   "t": 360,
+   "p": "friend of the podcast",
+   "q": "Not a red Lamborghini anyway. lovely you know who um i saw an interview with friend of the",
+   "v": "friend",
+   "who": [
+    "Johnny Knoxville"
+   ],
+   "why": "Sent James a contract to appear in the next Jackass"
+  },
+  {
+   "e": "2026-04-19 - Little Fish Violent Dave",
+   "t": 1142,
+   "p": "friend of the podcast",
+   "q": "controversial gosh anyway hey listen let's put down these facts and why don't we get to th",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-04-19 - Little Fish Violent Dave",
+   "t": 1645,
+   "p": "friend of the podcast",
+   "q": "Luke, your friend of the podcast. Friend of the podcast. Oh my god, that's it.",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-04-19 - Little Fish Violent Dave",
+   "t": 1761,
+   "p": "friend of the podcast",
+   "q": "of our facts, you just have to go to patreon.com slash clubfish and join the highest tier ",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-04-23 - No Such Thing As Anti-Drone Sharks",
+   "t": 39,
+   "p": "friend of the podcast",
+   "q": "But either way, Cariad Lloyd, what can I say about her? She is in the improv group, Ostent",
+   "v": "friend",
+   "who": [
+    "Sara Pascoe"
+   ],
+   "why": "Does the Weirdos Book Club podcast with Cariad Lloyd"
+  },
+  {
+   "e": "2026-04-23 - No Such Thing As Anti-Drone Sharks",
+   "t": 344,
+   "p": "friend of the podcast",
+   "q": "She actually starred in a movie that was directed by a friend of the podcast, A Guy.",
+   "v": "friend",
+   "who": [
+    "Alice Guy"
+   ],
+   "why": "The first female film director"
+  },
+  {
+   "e": "2026-04-23 - No Such Thing As Anti-Drone Sharks",
+   "t": 3209,
+   "p": "friend of the show",
+   "q": "I'm also on tour with Ostentatious. And you can listen to my Weirdos book podcast with fri",
+   "v": "friend",
+   "who": [
+    "Sara Pascoe"
+   ],
+   "why": "Cariad Lloyd's Weirdos Book Club co-host"
+  },
+  {
+   "e": "2026-04-26 - Little Fish Jurassic Bark",
+   "t": 1241,
+   "p": "friend of the podcast",
+   "q": "If you are a member of our Patreon at the top tier, which is friend of the podcast, you wi",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-04-26 - Little Fish Jurassic Bark",
+   "t": 1834,
+   "p": "friends of the podcast",
+   "q": "And in fact, your facts given to us. But we do want to say thank you to Tyler, Zander, Chr",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-04-26 - Little Fish Jurassic Bark",
+   "t": 1857,
+   "p": "friend of the podcast",
+   "q": "If you would like to become a custodian of a fact, then go to patreon.com slash clubfish a",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-05-03 - Little Fish You've Hit The Nail On The Head",
+   "t": 1215,
+   "p": "friend of the podcast",
+   "q": "But now it's time for some fact custodianships, because if you join Club Fish, and you joi",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-05-07 - No Such Thing As A Ham Bag",
+   "t": 1615,
+   "p": "friend of the podcast",
+   "q": "Yeah, no, no, it's not that. And this is some research that was done by, friend of the pod",
+   "v": "friend",
+   "who": [
+    "Angela Duckworth"
+   ],
+   "why": "Psychologist, on the 20-hour marathon"
+  },
+  {
+   "e": "2026-05-10 - Little Fish Still Rockin' The Cloaca",
+   "t": 1132,
+   "p": "friend of the podcast",
+   "q": "Please do keep them coming in podcast at qi.com. We love going through these and reading t",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-05-14 - No Such Thing As A Whale In Your Car",
+   "t": 1371,
+   "p": "friend of the podcast",
+   "q": "Okay, I have a wooden house link to the first ever friend of the podcast.",
+   "v": "friend",
+   "who": [
+    "James Garfield"
+   ],
+   "why": "\"The first ever friend of the podcast\"; born in a log cabin"
+  },
+  {
+   "e": "2026-05-14 - No Such Thing As A Whale In Your Car",
+   "t": 2023,
+   "p": "friend of the podcast",
+   "q": "Do you know who named that? Is it a friend of the podcast? No, it's someone you've never h",
+   "v": "not",
+   "why": "\"Is it a friend of the podcast? No\""
+  },
+  {
+   "e": "2026-05-17 - Little Fish Unencumbered By Any Knowledge",
+   "t": 1089,
+   "p": "friend of the podcast",
+   "q": "But we must do one more thing, and that is hand out custodianship of some of our facts to ",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-05-17 - Little Fish Unencumbered By Any Knowledge",
+   "t": 1775,
+   "p": "friends of the podcast",
+   "q": "Thank you so much for becoming custodians, and thank you for becoming friends of the podca",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-05-21 - No Such Thing As Uncle Egg",
+   "t": 2519,
+   "p": "friend of the podcast",
+   "q": "And so, I reached out to them to give us a sample. So, this is a friend of the podcast.",
+   "v": "friend",
+   "who": [
+    "Rhys Darby"
+   ],
+   "why": "Recorded his Aztec death whistle for the show"
+  },
+  {
+   "e": "2026-05-24 - Little Fish Swallowing A Fabergé Egg",
+   "t": 1083,
+   "p": "friend of the podcast",
+   "q": "If you have joined Clubfish, our exclusive members club, at the friend of the podcast here",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-05-24 - Little Fish Swallowing A Fabergé Egg",
+   "t": 1673,
+   "p": "friend of the podcast",
+   "q": "Even if you don't want to sign up to be a friend of the podcast, there is so much fun stuf",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-05-28 - No Such Thing As A Pastronaut",
+   "t": 659,
+   "p": "enemy of the podcast",
+   "q": "I'm going to say enemy of the podcast. Who's that? Greg Wallace?",
+   "v": "enemy",
+   "who": [
+    "Gregg Wallace"
+   ],
+   "why": "James's first guess for \"enemy of the podcast\""
+  },
+  {
+   "e": "2026-05-31 - Little Fish It's Nice To Say Titicaca",
+   "t": 1071,
+   "p": "friend of the podcast",
+   "q": "So if you join Clubfish, our secret members club, and you join the highest tier friend of ",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-05-31 - Little Fish It's Nice To Say Titicaca",
+   "t": 1753,
+   "p": "friends of the podcast",
+   "q": "Yeah. Sumo wrestlers and Benjamin Franklin, I feel like those were two quite heavy friends",
+   "v": "friend",
+   "who": [
+    "sumo wrestlers",
+    "Benjamin Franklin"
+   ],
+   "why": "\"Two quite heavy friends of the podcast that we've not visited much\""
+  },
+  {
+   "e": "2026-05-31 - Little Fish It's Nice To Say Titicaca",
+   "t": 1831,
+   "p": "friend of the podcast",
+   "q": "And so, yeah, do send them. We love reading them out, and if you do want your own fact to ",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-09-05 - Bonus Drop Us A Line - Will We Pass The Inspection",
+   "t": 231,
+   "p": "friend of the podcast",
+   "q": "So we've got a dual citizenship, plenty more fish, and then friend of the podcast.",
+   "v": "not",
+   "why": "The Club Fish tiers"
+  },
+  {
+   "e": "2026-09-05 - Bonus Drop Us A Line - Will We Pass The Inspection",
+   "t": 237,
+   "p": "foe of the podcast",
+   "q": "Raphael is pitching foe of the podcast. For an exorbitant amount of money, members can cla",
+   "v": "enemy",
+   "who": [
+    "Mark Twain",
+    "Adolf Hitler",
+    "Zoe Williams"
+   ],
+   "why": "A listener pitches a \"Foe of the Podcast\" tier (Zoe Williams: Guardian writer who asked why they're such bros)"
+  },
+  {
+   "e": "2026-09-05 - Bonus Drop Us A Line - Will We Pass The Inspection",
+   "t": 237,
+   "p": "foes of the podcast",
+   "q": "Raphael is pitching foe of the podcast. For an exorbitant amount of money, members can cla",
+   "v": "not",
+   "why": "The pitch for a \"Foe of the Podcast\" tier (names on the line before)"
+  },
+  {
+   "e": "2026-09-05 - Bonus Drop Us A Line - Will We Pass The Inspection",
+   "t": 275,
+   "p": "foe of the podcast",
+   "q": "Greg Wallace, of course. The foe of the podcast. Is he? He was, for a small amount of time",
+   "v": "enemy",
+   "who": [
+    "Gregg Wallace"
+   ],
+   "why": "\"The foe of the podcast... for a small amount of time\""
+  },
+  {
+   "e": "2026-09-05 - Bonus Drop Us A Line - Will We Pass The Inspection",
+   "t": 281,
+   "p": "foe of the podcast",
+   "q": "Is he? I forgot that. We mentioned him a few times as a foe of the podcast.",
+   "v": "enemy",
+   "who": [
+    "Gregg Wallace"
+   ],
+   "why": "\"We mentioned him a few times as a foe\" (after he became everyone's foe)"
+  },
+  {
+   "e": "2026-06-11 - No Such Thing As Poddyversity Challenge",
+   "t": 2823,
+   "p": "friend of the podcast",
+   "q": "But arguably, the first female person who did a score of a movie was Friend of the Podcast",
+   "v": "friend",
+   "who": [
+    "Alice Guy"
+   ],
+   "why": "First female director; maybe the first woman to score a film"
+  },
+  {
+   "e": "2026-06-14 - Little Fish I've Booked Us A Lovely Toilet",
+   "t": 1150,
+   "p": "friend of the podcast",
+   "q": "But now we're going to dish out some facts to you. Because if you join Clubfish, patreon.c",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-06-14 - Little Fish I've Booked Us A Lovely Toilet",
+   "t": 1761,
+   "p": "friend of the podcast",
+   "q": "That's all of your new friend of the podcast, Fat Custodian Facts.",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-06-18 - No Such Thing As The Metal Bloke",
+   "t": 2053,
+   "p": "friend of the podcast",
+   "q": "Did he? Yeah. And that's because he got in with some Buddhist monks in London, but also he",
+   "v": "friend",
+   "who": [
+    "Lobsang Rampa"
+   ],
+   "why": "Devon plumber who posed as a Tibetan monk"
+  },
+  {
+   "e": "2026-06-21 - Little Fish Really Siding With The Baddies",
+   "t": 1063,
+   "p": "friend of the podcast",
+   "q": "Michelle Handgraf has joined Clubfish at Friend of the Podcast here, which I think is what",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-06-25 - No Such Thing As A Glazed Lizard Donut",
+   "t": 95,
+   "p": "friend of the podcast",
+   "q": "So if you go to patreon.com slash clubfish, you will find Friend of the Podcast as a tier ",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-06-25 - No Such Thing As A Glazed Lizard Donut",
+   "t": 2835,
+   "p": "friend of the podcast",
+   "q": "It all came from some work by a friend of the podcast, actually, Dr. Helen Spurway.",
+   "v": "friend",
+   "who": [
+    "Helen Spurway"
+   ],
+   "why": "Scientist behind the idea of virgin births in humans"
+  },
+  {
+   "e": "2026-06-28 - Little Fish Shall we put a podcast on What a stupid idea!",
+   "t": 1117,
+   "p": "friend of the podcast",
+   "q": "But before we wrap up today's episode, we have one more thing to do, which is hand out our",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-07-05 - Little Fish I believed it when Pythagoras said it",
+   "t": 338,
+   "p": "friend of the podcast",
+   "q": "Friend of the podcast, President James Garfield, created a proof of Pythagoras theorem.",
+   "v": "friend",
+   "who": [
+    "James Garfield"
+   ],
+   "why": "Came up with a proof of Pythagoras's theorem"
+  },
+  {
+   "e": "2026-07-05 - Little Fish I believed it when Pythagoras said it",
+   "t": 1058,
+   "p": "friends of the podcast",
+   "q": "Facts, there are quotes around that one. Let's have some of our facts being dished out now",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-07-05 - Little Fish I believed it when Pythagoras said it",
+   "t": 1071,
+   "p": "friend of the podcast",
+   "q": "If you join at the friend of the podcast, Leia, you can get a headline fact from the podca",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-07-05 - Little Fish I believed it when Pythagoras said it",
+   "t": 1081,
+   "p": "friends of the podcast",
+   "q": "And we're going to dish out a few of those headline facts to brand new friends of the podc",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-07-12 - Little Fish Chromosomes are coming home",
+   "t": 1036,
+   "p": "friend of the podcast",
+   "q": "Now it's time for some of our facts, because if you join Club Fish, our private members cl",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-07-19 - Little Fish Get To The Bus!",
+   "t": 1192,
+   "p": "friend of the podcast",
+   "q": "If you would like one of these facts, then all you have to do is go to patreon.com slash c",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-07-19 - Little Fish Get To The Bus!",
+   "t": 1845,
+   "p": "friend of the podcast",
+   "q": "If you would like to do so too, go to patreon.com slash clubfish, and you can become a fri",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-07-23 - No Such Thing As A Fence Made of Sausage",
+   "t": 1128,
+   "p": "friend of the podcast",
+   "q": "Friend of the podcast?",
+   "v": "friend",
+   "who": [
+    "the burgeoning middle class"
+   ],
+   "why": "Bought pianos as a status symbol; \"get up on the t-shirt\""
+  },
+  {
+   "e": "2026-07-26 - Little Fish Short Back and Left",
+   "t": 1272,
+   "p": "friends of the podcast",
+   "q": "We should dish out some facts to our new friends of the podcast.",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-07-26 - Little Fish Short Back and Left",
+   "t": 1275,
+   "p": "friend of the podcast",
+   "q": "So if you go to patreon.com slash clubfish, and you sign up to Clubfish at the highest tie",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-07-30 - No Such Thing As The Mice Of The Fruit Bowl",
+   "t": 909,
+   "p": "friend of the podcast",
+   "q": "And it wasn't until the 1850s that they became popular, thanks to, friend of the podcast, ",
+   "v": "friend",
+   "who": [
+    "the burgeoning middle class"
+   ],
+   "why": "Made coat hangers popular in the 1850s"
+  },
+  {
+   "e": "2026-07-30 - No Such Thing As The Mice Of The Fruit Bowl",
+   "t": 919,
+   "p": "friend of the podcast",
+   "q": "We've got to get them on the next friend of the podcast t-shirt.",
+   "v": "friend",
+   "who": [
+    "the burgeoning middle class"
+   ],
+   "why": "\"We've got to get them on the next friend of the podcast t-shirt\""
+  },
+  {
+   "e": "2026-08-06 - No Such Thing As A Toilet Break For A Tuna",
+   "t": 918,
+   "p": "friend of the podcast",
+   "q": "And it was made by a friend of the podcast, Ashreeta Furman, who basically spends his whol",
+   "v": "friend",
+   "who": [
+    "Ashrita Furman"
+   ],
+   "why": "Made the world's largest pencil"
+  },
+  {
+   "e": "2026-08-06 - No Such Thing As A Toilet Break For A Tuna",
+   "t": 2967,
+   "p": "enemy of the podcast",
+   "q": "Enemy of the podcast, the Panama Canal.",
+   "v": "enemy",
+   "who": [
+    "Panama Canal"
+   ],
+   "why": "Let invasive lionfish into the Atlantic"
+  },
+  {
+   "e": "2026-08-09 - Little Fish Put A Peanut In It",
+   "t": 1380,
+   "p": "friend of the podcast",
+   "q": "So if you join on patreon.com/clubfish at the highest tier, which is friend of the podcast",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-08-16 - Little Fish I'm Not Even On The Internet Right Now",
+   "t": 880,
+   "p": "friend of the podcast",
+   "q": "Starring friend of the podcast, Joseph Fiennes, just for listeners of the past.",
+   "v": "friend",
+   "who": [
+    "Joseph Fiennes"
+   ],
+   "why": "Star of Shakespeare in Love (Anna: \"I've missed that friendship being formed\")"
+  },
+  {
+   "e": "2026-08-20 - No Such Thing As The Have An Ice Cream Bird",
+   "t": 1372,
+   "p": "friend of the podcast",
+   "q": "Because what it's trying to do, and actually, this is an old friend of the podcast, it's t",
+   "v": "friend",
+   "who": [
+    "the kappa"
+   ],
+   "why": "Japanese water demon after the soul ball up your anus"
+  },
+  {
+   "e": "2026-08-23 - Little Fish Pope Guilty the First",
+   "t": 615,
+   "p": "friend of the podcast",
+   "q": "He came over to the UK. He was given a position at the University College Hospital by, fri",
+   "v": "friend",
+   "who": [
+    "JBS Haldane"
+   ],
+   "why": "Gave penicillin pioneer Ernst Chain a job in London"
+  },
+  {
+   "e": "2026-08-27 - No Such Thing As An Emotional Support Wig",
+   "t": 2024,
+   "p": "friend of the podcast",
+   "q": "Okay, so from someone from- He's a friend of the podcast. Oh, oh, Utsi.",
+   "v": "friend",
+   "who": [
+    "Ötzi the Iceman"
+   ],
+   "why": "Short, bald and old"
+  },
+  {
+   "e": "2026-08-27 - No Such Thing As An Emotional Support Wig",
+   "t": 2030,
+   "p": "friend of the podcast",
+   "q": "Utsi the Iceman, friend of the podcast, was balding. He had the male pattern baldness gene",
+   "v": "friend",
+   "who": [
+    "Ötzi the Iceman"
+   ],
+   "why": "Had the male pattern baldness gene"
+  },
+  {
+   "e": "2026-08-30 - Little Fish No Orifice Boy",
+   "t": 1845,
+   "p": "friend of the podcast",
+   "q": "If you want to become a friend of the podcast and become a fact custodian, with which you ",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-09-06 - Little Fish Reindeer Animal Animal",
+   "t": 1354,
+   "p": "friend of the podcast",
+   "q": "So if you join Clubfish at the top tier, friend of the podcast, then you will get one of o",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-09-06 - Little Fish Reindeer Animal Animal",
+   "t": 1372,
+   "p": "friend of the podcast",
+   "q": "There is all manner of stuff, and as I say, if you become a friend of the podcast, you wil",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-09-10 - No Such Thing As Musical Toads",
+   "t": 2698,
+   "p": "friend of the podcast",
+   "q": "Okay, well, Dan is right. Randy Candy is actually a friend of the podcast.",
+   "v": "friend",
+   "who": [
+    "Randy Candy"
+   ],
+   "why": "Chicago tattoo artist with a discount if you pick your bum hole"
+  },
+  {
+   "e": "2026-09-10 - No Such Thing As Musical Toads",
+   "t": 3011,
+   "p": "friend of the podcast",
+   "q": "We were, our plane was delayed today, so unfortunately, when we were on the train over fro",
+   "v": "friend",
+   "who": [
+    "Disgusting Food Museum"
+   ],
+   "why": "In Malmö; Dan has a bone to pick over Vegemite"
+  },
+  {
+   "e": "2026-09-13 - Little Fish Four Times a Knight",
+   "t": 1693,
+   "p": "friend of the podcast",
+   "q": "That was her fact, and it came from her, and now it's back to her, and she's become a frie",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-09-13 - Little Fish Four Times a Knight",
+   "t": 1816,
+   "p": "friends of the podcast",
+   "q": "Thank you so much for becoming friends of the podcast, and like I say, if you go to patreo",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-09-20 - Little Fish This Is A Song",
+   "t": 1075,
+   "p": "friends of the podcast",
+   "q": "And these go to people who are members of our highest tier, the Friends of the Podcast tie",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-09-20 - Little Fish This Is A Song",
+   "t": 1696,
+   "p": "friends of the podcast",
+   "q": "And thank you also to our friends of the podcast who are now custodians of various facts.",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-09-20 - Little Fish This Is A Song",
+   "t": 1726,
+   "p": "friend of the podcast",
+   "q": "And if you want to receive one of our facts, join the top tier, friend of the podcast.",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-09-27 - Little Fish Checking the Mark Hoppus",
+   "t": 1236,
+   "p": "friend of the podcast",
+   "q": "So if you join Club Fish, our exclusive members club, patreon.com slash club fish, and if ",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-09-27 - Little Fish Checking the Mark Hoppus",
+   "t": 1721,
+   "p": "friends of the podcast",
+   "q": "Thank you so much to all of you for joining and becoming friends of the podcast on Clubfis",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-10-01 - No Such Thing As Alfred Hedgehog",
+   "t": 2328,
+   "p": "friend of the podcast",
+   "q": "This is so exciting because it's friend of the podcast, the Treaty of Versailles.",
+   "v": "friend",
+   "who": [
+    "Treaty of Versailles"
+   ],
+   "why": "\"So exciting, because it's friend of the podcast\": the largest aspirin transfer in history"
+  },
+  {
+   "e": "2026-10-01 - No Such Thing As Alfred Hedgehog",
+   "t": 3146,
+   "p": "friend of the podcast",
+   "q": "Oh, yeah. Old friend of the podcast.",
+   "v": "friend",
+   "who": [
+    "the world's oldest ham"
+   ],
+   "why": "\"Old friend of the podcast\""
+  },
+  {
+   "e": "2026-10-04 - Little Fish Ant Tower",
+   "t": 1034,
+   "p": "friend of the podcast",
+   "q": "Now, if you join Clubfish, which is our secret members club on Patreon, so patreon.com sla",
+   "v": "not",
+   "why": "The Club Fish tier"
+  },
+  {
+   "e": "2026-10-04 - Little Fish Ant Tower",
+   "t": 1708,
+   "p": "friend of the podcast",
+   "q": "Go to patreon.com slash clubfish. It's in the friend of the podcast tier.",
+   "v": "not",
+   "why": "The Club Fish tier"
+  }
+ ]
+}

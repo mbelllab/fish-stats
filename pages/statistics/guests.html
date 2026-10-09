@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="robots" content="noindex, nofollow"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Most frequent guests · Fish Stats</title>
+<link rel="stylesheet" href="../site.css?v=27cc7df6">
+<link rel="stylesheet" href="stats.css?v=7e04a0ce">
+<link rel="stylesheet" href="../fishstats.css?v=c9963441">
+</head>
+<body>
+<nav class="sitebar" aria-label="Site"><a class="brand" href="../index.html">Fish Stats</a><a href="../index.html" aria-current="page">Stats</a><a href="../facts.html">Facts</a><a href="../episodes.html">Episodes</a></nav>
+<div class="page wide">
+  <div class="crumbs"><a href="../index.html">Fish Stats</a> / Guests</div>
+  <h1>Most frequent guests</h1>
+  <p class="lede">Every guest on <span class="multi-show">the three shows</span><span class="one-show-text">the show</span> and how often they've been on. Tap a name to see their episodes.</p>
+  <p class="built" id="built"></p>
+  <div class="controls">
+    <span class="ctl">Show<span class="seg" id="show"></span></span>
+    <input type="search" id="q" placeholder="Find a guest…" aria-label="Find a guest" autocomplete="off">
+  </div>
+  <div class="tiles" id="tiles"></div>
+  <h2 id="topHead">Top 15</h2>
+  <div class="chart mid"><canvas id="top"></canvas></div>
+  <h2>Every guest</h2>
+  <div id="tbl"></div>
+  <div id="detail"></div>
+  <p class="note">A guest counts if the transcript names them as a speaker for at least a minute. Guest names are less reliable than host
+    names, so some appearances may be missing.</p>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" integrity="sha384-bs/nf9FbdNouRbMiFcrcZfLXYPKiPaGVGplVbv7dLGECccEXDW+S3zjqSKR5ZEaD" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="../site.js?v=5ed52cef"></script>
+<script src="../episode-links.js?v=3767e14c"></script><script src="../site-config.js?v=3af975ec"></script><script src="stats.js?v=f6e16ff7"></script>
+<script>
+const { $ } = Site;
+let D, show = S.state.get("show", "all"), q = "";
+function rows() {
+  return D.guests.map(g => { const eps = g.eps.filter(e => show === "all" || e.p === show);
+      return { ...g, eps, count: eps.length, talk: eps.reduce((s, e) => s + e.sec, 0), first: eps[0] && eps[0].d, last: eps.length ? eps[eps.length - 1].d : "" }; })
+    .filter(g => g.count && (!q || g.name.toLowerCase().includes(q)));
+}
+function render() {
+  const r = rows();
+  const top = [...r].sort((a, b) => b.count - a.count || b.talk - a.talk).slice(0, 15);
+  $("topHead").textContent = top.length < 15 ? "Top " + top.length : "Top 15";
+  S.tiles($("tiles"), [
+    ["Guests", S.num(r.length), S.ONE_SHOW ? "" : show === "all" ? "across all shows" : S.SHORT[show]],
+    ["Most appearances", top[0] ? top[0].name : "–", top[0] ? S.plural(top[0].count, "episode") : ""],
+    ["Back more than once", S.num(r.filter(g => g.count > 1).length), "guests"],
+  ].map(([k, v, s]) => [k, S.esc(v), s]));
+  S.hbar("top", top.map(g => g.name), top.map(g => g.count), S.one(), { onClick: (e, els) => { if (els[0]) detail(top[els[0].index]); } });
+  const cols = [
+    { key: "name", label: "Guest", fmt: g => `<a href="#" data-g="${S.esc(g.name)}">${S.esc(g.name)}</a>` },
+    { key: "count", label: "Episodes", num: true },
+    { key: "shows", label: "Shows", sort: g => g.shows.join(), fmt: g => g.shows.map(s => S.SHORT[s]).join(", ") },
+    { key: "first", label: "First", fmt: g => S.fmtDate(g.first) },
+    { key: "last", label: "Latest", fmt: g => S.fmtDate(g.last) },
+    { key: "talk", label: "Minutes talking", num: true, fmt: g => Math.round(g.talk / 60) },
+  ];
+  if (!window.T) window.T = S.table($("tbl"), cols, r, { sort: "count" }); else T.set(r);
+}
+function detail(g) {
+  $("detail").innerHTML = `<h2>${S.esc(g.name)}</h2>` + `<div class="tbl"><table><thead><tr><th scope="col">Date</th><th scope="col">Show</th><th scope="col" class="long">Episode</th><th scope="col" class="num">Minutes</th></tr></thead><tbody>` +
+    g.eps.map(e => `<tr><td>${S.fmtDate(e.d)}</td><td>${S.SHORT[e.p]}</td><td class="long"><a href="${S.link(e.p, e.e, 0)}">${S.esc(S.epLabel(e))}</a></td><td class="num">${Math.round(e.sec / 60)}</td></tr>`).join("") +
+    `</tbody></table></div>`;
+  $("detail").scrollIntoView({ behavior: "smooth" });
+}
+$("tbl").addEventListener("click", e => { const a = e.target.closest("[data-g]"); if (!a) return; e.preventDefault();
+  detail(rows().find(g => g.name === a.dataset.g)); });
+$("q").addEventListener("input", e => { q = e.target.value.trim().toLowerCase(); render(); });
+S.page(S.load("guests"), d => { D = d; S.built(d);
+  S.seg($("show"), [["all", "All shows"], [S.FISH, "Fish"]], show,
+    v => { show = v; S.state.set("show", v); render(); });
+  render(); });
+</script>
+<footer class="fan">Fish Stats is an unofficial fan project. It isn't made or endorsed by No Such Thing As A Fish or QI. The numbers are worked out from automatic transcripts of the free public episodes. <a href="https://www.nosuchthingasafish.com/">Listen to the show</a>.</footer>
+</body>
+</html>

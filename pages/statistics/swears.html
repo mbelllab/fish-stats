@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="robots" content="noindex, nofollow"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Swear jar · Fish Stats</title>
+<link rel="stylesheet" href="../site.css?v=27cc7df6">
+<link rel="stylesheet" href="stats.css?v=7e04a0ce">
+<link rel="stylesheet" href="../fishstats.css?v=c9963441">
+</head>
+<body>
+<nav class="sitebar" aria-label="Site"><a class="brand" href="../index.html">Fish Stats</a><a href="../index.html" aria-current="page">Stats</a><a href="../facts.html">Facts</a><a href="../episodes.html">Episodes</a></nav>
+<div class="page wide">
+  <div class="crumbs"><a href="../index.html">Fish Stats</a> / Swear jar</div>
+  <h1>Swear jar</h1>
+  <p class="lede">Swears per hour of each person's own talking, so people who talk more aren't punished for it.</p>
+  <p class="built" id="built"></p>
+  <div class="controls"><span class="ctl">Show<span class="seg" id="show"></span></span></div>
+  <div class="tiles" id="tiles"></div>
+  <div class="two">
+    <div><h2>Swears per hour of talking</h2><div class="chart mid"><canvas id="rate"></canvas></div></div>
+    <div><h2>Favourite swears</h2><div class="chart mid"><canvas id="words"></canvas></div></div>
+  </div>
+  <h2>Over the years</h2>
+  <div class="chart tall"><canvas id="years"></canvas></div>
+  <h2>Sweariest episodes</h2>
+  <div id="tbl"></div>
+  <p class="note" id="list"></p>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" integrity="sha384-bs/nf9FbdNouRbMiFcrcZfLXYPKiPaGVGplVbv7dLGECccEXDW+S3zjqSKR5ZEaD" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="../site.js?v=5ed52cef"></script>
+<script src="../episode-links.js?v=3767e14c"></script><script src="../site-config.js?v=3af975ec"></script><script src="stats.js?v=f6e16ff7"></script>
+<script>
+const { $ } = Site;
+let SW, TALK, show = S.state.get("show", S.FISH);
+function render() {
+  const hosts = TALK.hosts[show];
+  const talkEps = TALK.episodes.filter(r => r.p === show), swEps = SW.episodes.filter(r => r.p === show);
+  const sec = {}, secY = {};
+  talkEps.forEach(r => hosts.forEach(h => { if (r.s[h]) { sec[h] = (sec[h] || 0) + r.s[h][0]; const y = S.year(r.d); ((secY[y] = secY[y] || {})[h] = (secY[y][h] || 0) + r.s[h][0]); } }));
+  const n = {}, nY = {}, wc = {};
+  swEps.forEach(r => Object.entries(r.c).forEach(([who, c]) => { const k = Object.values(c).reduce((a, b) => a + b, 0);
+    Object.entries(c).forEach(([w, x]) => wc[w] = (wc[w] || 0) + x);
+    if (!hosts.includes(who)) return; n[who] = (n[who] || 0) + k; const y = S.year(r.d); ((nY[y] = nY[y] || {})[who] = (nY[y][who] || 0) + k); }));
+  const rate = hosts.filter(h => sec[h]).map(h => [h, 3600 * (n[h] || 0) / sec[h]]).sort((a, b) => b[1] - a[1]);
+  S.chart("rate", { type: "bar", data: { labels: rate.map(x => x[0]), datasets: [{ data: rate.map(x => +x[1].toFixed(2)), backgroundColor: rate.map(x => S.color(x[0])) }] },
+    options: { plugins: { legend: { display: false } } } });
+  const wl = Object.entries(wc).sort((a, b) => b[1] - a[1]).slice(0, 10);
+  S.hbar("words", wl.map(x => x[0]), wl.map(x => x[1]), S.one());
+  const years = Object.keys(secY).sort();
+  S.chart("years", { type: "line", data: { labels: years, datasets: hosts.filter(h => sec[h]).map(h => ({ label: h, borderColor: S.color(h), tension: .3,
+    data: years.map(y => secY[y] && secY[y][h] ? +(3600 * ((nY[y] || {})[h] || 0) / secY[y][h]).toFixed(2) : null) })) },
+    options: { scales: { y: { title: { display: true, text: "swears per hour" }, beginAtZero: true } } } });
+  const total = Object.values(n).reduce((a, b) => a + b, 0);
+  S.tiles($("tiles"), [
+    ["Swears (hosts)", S.num(total), S.SHORT[show]],
+    ["Sweariest", rate[0] ? S.who(rate[0][0]) : "–", rate[0] ? rate[0][1].toFixed(1) + " an hour" : ""],
+    ["Cleanest mouth", rate.length ? rate[rate.length - 1][0] : "–", rate.length ? rate[rate.length - 1][1].toFixed(1) + " an hour" : ""],
+    ["Top swear", wl[0] ? '"' + wl[0][0] + '"' : "–", wl[0] ? S.num(wl[0][1]) + " times" : ""],
+  ].map(([k, v, s]) => [k, S.esc(v), s]));
+  const rows = swEps.map(r => { const k = Object.values(r.c).reduce((s, c) => s + Object.values(c).reduce((a, b) => a + b, 0), 0);
+    const top = Object.entries(r.c).map(([w, c]) => [w, Object.values(c).reduce((a, b) => a + b, 0)]).sort((a, b) => b[1] - a[1])[0];
+    return { ...r, k, top: top ? top[0] : "" }; });
+  if (!window.T) window.T = S.table($("tbl"), [
+    { key: "k", label: "Swears", num: true },
+    { key: "d", label: "Date", cls: "lo", fmt: r => S.fmtDate(r.d) },
+    { key: "e", label: "Episode", cls: "long", sort: r => S.epLabel(r), fmt: r => `<a href="${S.link(r.p, r.e, 0)}">${S.esc(S.epLabel(r))}</a>` },
+    { key: "top", label: "Sweariest", fmt: r => S.esc(S.who(r.top)) },
+  ], rows, { sort: "k", page: 25 }); else T.set(rows);
+}
+S.page(Promise.all([S.load("swears"), S.load("talk")]), ([a, b]) => { SW = a; TALK = b; S.built(a);
+  $("list").textContent = "Counted: " + a.words.join(", ") + ".";
+  S.seg($("show"), [[S.FISH, "Fish"]], show, v => { show = v; S.state.set("show", v); render(); });
+  render(); });
+</script>
+<footer class="fan">Fish Stats is an unofficial fan project. It isn't made or endorsed by No Such Thing As A Fish or QI. The numbers are worked out from automatic transcripts of the free public episodes. <a href="https://www.nosuchthingasafish.com/">Listen to the show</a>.</footer>
+</body>
+</html>

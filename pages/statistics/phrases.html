@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="robots" content="noindex, nofollow"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catchphrases · Fish Stats</title>
+<link rel="stylesheet" href="../site.css?v=27cc7df6">
+<link rel="stylesheet" href="stats.css?v=7e04a0ce">
+<link rel="stylesheet" href="../fishstats.css?v=c9963441">
+</head>
+<body>
+<nav class="sitebar" aria-label="Site"><a class="brand" href="../index.html">Fish Stats</a><a href="../index.html" aria-current="page">Stats</a><a href="../facts.html">Facts</a><a href="../episodes.html">Episodes</a></nav>
+<div class="page wide">
+  <div class="crumbs"><a href="../index.html">Fish Stats</a> / Catchphrases</div>
+  <h1>Catchphrases</h1>
+  <p class="lede">The things they say again and again: who says each one, and whether it's catching on or dying out.</p>
+  <p class="built" id="built"></p>
+  <div class="controls">
+    <span class="ctl">Show<span class="seg" id="show"></span></span>
+  </div>
+  <div id="tiles"></div>
+  <h2>Every catchphrase, by person</h2>
+  <div id="grid"></div>
+  <h2 id="ph">Over the years</h2>
+  <p class="ctl pick">Phrase <select id="phrase"></select></p>
+  <div class="chart tall"><canvas id="years"></canvas></div>
+  <p class="note">Rates are per hour of each person's own talking. To track any other phrase, use the <a href="words.html">word tracker</a>.</p>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" integrity="sha384-bs/nf9FbdNouRbMiFcrcZfLXYPKiPaGVGplVbv7dLGECccEXDW+S3zjqSKR5ZEaD" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="../site.js?v=5ed52cef"></script>
+<script src="../episode-links.js?v=3767e14c"></script><script src="../site-config.js?v=3af975ec"></script><script src="stats.js?v=f6e16ff7"></script>
+<script>
+const { $ } = Site;
+let PH, TALK, show = S.state.get("show", S.FISH), phrase = S.state.get("phrase", "");
+function render() {
+  const hosts = TALK.hosts[show], eps = PH.episodes.filter(r => r.p === show);
+  const sec = {}, secY = {};
+  TALK.episodes.filter(r => r.p === show).forEach(r => hosts.forEach(h => { if (r.s[h]) { sec[h] = (sec[h] || 0) + r.s[h][0];
+    const y = S.year(r.d); ((secY[y] = secY[y] || {})[h] = (secY[y][h] || 0) + r.s[h][0]); } }));
+  const tot = {}; // phrase -> person -> count
+  const byY = {}; // year -> person -> count (for the chosen phrase)
+  eps.forEach(r => Object.entries(r.c).forEach(([who, c]) => Object.entries(c).forEach(([w, n]) => {
+    ((tot[w] = tot[w] || {})[who] = (tot[w][who] || 0) + n);
+    if (w === phrase) { const y = S.year(r.d); ((byY[y] = byY[y] || {})[who] = (byY[y][who] || 0) + n); } })));
+  // Only the phrases said on this show at least once; the chart's phrase list follows.
+  const used = PH.words.filter(w => Object.values(tot[w] || {}).some(n => n > 0));
+  const sel = $("phrase");
+  sel.innerHTML = used.map(w => `<option>${S.esc(w)}</option>`).join("");
+  const said = w => Object.values(tot[w] || {}).reduce((a, b) => a + b, 0);
+  if (!used.includes(phrase) && used.length) { phrase = used.reduce((a, w) => said(w) > said(a) ? w : a); return render(); }
+  sel.value = phrase;
+  const rows = used.map(w => { const o = { w, all: said(w) };
+    hosts.forEach(h => o[h] = sec[h] ? 3600 * ((tot[w] || {})[h] || 0) / sec[h] : null); return o; });
+  S.table($("grid"), [{ key: "w", label: "Phrase", fmt: r => `<a href="#" data-w="${S.esc(r.w)}">"${S.esc(r.w)}"</a>` },
+    { key: "all", label: "Times said", num: true, fmt: r => S.num(r.all) }]
+    .concat(hosts.filter(h => sec[h]).map(h => ({ key: h, label: h + " /hr", num: true, fmt: r => r[h] == null ? "–" : r[h].toFixed(2) }))), rows, { sort: "all" });
+  $("ph").textContent = `"${phrase}" over the years`;
+  $("years").setAttribute("aria-label", `Chart: "${phrase}" over the years, per hour of each host's talking`);
+  const years = Object.keys(secY).sort();
+  S.chart("years", { type: "line", data: { labels: years, datasets: hosts.filter(h => sec[h]).map(h => ({ label: h, borderColor: S.color(h), tension: .3,
+    data: years.map(y => secY[y] && secY[y][h] ? +(3600 * ((byY[y] || {})[h] || 0) / secY[y][h]).toFixed(2) : null) })) },
+    options: { scales: { y: { title: { display: true, text: "times per hour of their talking" }, beginAtZero: true } } } });
+}
+$("grid").addEventListener("click", e => { const a = e.target.closest("[data-w]"); if (!a) return; e.preventDefault();
+  phrase = a.dataset.w; $("phrase").value = phrase; S.state.set("phrase", phrase); render();
+  $("years").scrollIntoView({ behavior: "smooth", block: "center" }); });
+S.page(Promise.all([S.load("phrases"), S.load("talk")]), ([a, b]) => { PH = a; TALK = b; S.built(a);
+  const sel = $("phrase");
+  sel.onchange = () => { phrase = sel.value; S.state.set("phrase", phrase); render(); };
+  S.seg($("show"), [[S.FISH, "Fish"]], show, v => { show = v; S.state.set("show", v); render(); });
+  render(); });
+</script>
+<footer class="fan">Fish Stats is an unofficial fan project. It isn't made or endorsed by No Such Thing As A Fish or QI. The numbers are worked out from automatic transcripts of the free public episodes. <a href="https://www.nosuchthingasafish.com/">Listen to the show</a>.</footer>
+</body>
+</html>

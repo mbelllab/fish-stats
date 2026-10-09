@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Facts · Fish Stats</title>
+<link rel="stylesheet" href="site.css?v=27cc7df6">
+<style>
+  header { padding: 4px 0 6px; }
+  header .sub { color: var(--muted); margin-top: 6px; }
+  /* Room for the two-line count that replaces the first line once the facts arrive, so nothing jumps. */
+  @media (max-width: 600px) { header .sub { min-height: 3em; } }
+
+  .tabs { display: flex; gap: 8px; margin: 16px 0 14px; flex-wrap: wrap; }
+  .tabs .pill { padding: 8px 16px; font-size: .95rem; }
+
+  .controls { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-panel); padding: 14px;
+              box-shadow: 0 6px 20px rgba(0,0,0,.25); }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .row + .row { margin-top: 10px; }
+  input[type=search] { flex: 1 1 14rem; }
+  .pill .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+  .count { color: var(--muted); font-size: .9rem; margin: 14px 2px 6px; display: flex; flex-wrap: wrap; gap: 6px 12px;
+           align-items: center; justify-content: space-between; }
+  .count .acts { display: flex; gap: 8px; }
+
+  .ep { background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-panel); margin: 12px 0; overflow: hidden; }
+  .ep-head { display: flex; gap: 12px; align-items: baseline; padding: 12px 14px 8px; border-bottom: 1px solid var(--line); }
+  .ep-num { flex: 0 0 auto; font-weight: 800; color: var(--accent); font-size: 1.05rem; }
+  .ep-title { flex: 1 1 auto; min-width: 0; font-weight: 650; color: #f3f4f6; }
+  .ep-date { flex: 0 0 auto; color: var(--faint); font-size: .85rem; white-space: nowrap; }
+  .fact { display: grid; grid-template-columns: 6.6rem 1fr auto; gap: 10px; align-items: start;
+          padding: 10px 14px; border-top: 1px solid rgba(55,65,81,.5); }
+  .fact:first-of-type { border-top: 0; }
+  .fact:hover { background: var(--panel2); }
+  .who { font-size: .85rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 1px; }
+  .sec { display: block; font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: var(--faint);
+         font-weight: 700; margin-bottom: 1px; }
+  .txt { color: var(--text); }
+  .txt mark { background: rgba(250,204,21,.28); color: #fff; border-radius: 3px; padding: 0 1px; }
+  .fact .btn-outline { margin-top: -2px; }
+  .more { display: flex; margin: 18px auto 30px; }
+  .note { text-align: center; margin: 26px 0 40px; line-height: 1.6; }
+
+  .spot { background: var(--accent-bg); border: 1px solid var(--accent-line);
+          border-radius: var(--r-panel); padding: 16px 18px; margin: 14px 0 4px; display: none; }
+  .spot.show { display: block; }
+  .spot .k { font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; color: #bfdbfe; font-weight: 700; }
+  .spot .f { font-size: 1.15rem; margin: 6px 0 8px; color: #fff; }
+  .spot .m { font-size: .88rem; color: #c7d2fe; }
+
+  /* People and section chips scroll sideways in one row instead of stacking (.scroll-row, site.css). */
+  .row.scroll-row { flex-wrap: nowrap; }
+  #people { min-height: 40px; }   /* filled once the facts arrive */
+  /* Reserve the first screen while the facts load, so the page doesn't sit half-empty and then jump. */
+  #list .loading { min-height: 70vh; }
+
+  @media (max-width: 600px) {
+    .fact { grid-template-columns: 1fr auto; }
+    .fact .who { grid-column: 1 / -1; justify-self: start; max-width: 100%; }
+    .ep-head { flex-wrap: wrap; gap: 4px 10px; }
+    .ep-title { flex-basis: 100%; order: 3; }
+  }
+</style>
+<link rel="stylesheet" href="fishstats.css?v=c9963441">
+</head>
+<body>
+<nav class="sitebar" aria-label="Site"><a class="brand" href="index.html">Fish Stats</a><a href="index.html">Stats</a><a href="facts.html" aria-current="page">Facts</a><a href="episodes.html">Episodes</a></nav>
+<div class="page">
+  <header>
+    <h1>Facts</h1>
+    <div class="sub" id="sub">Every headline fact</div>
+  </header>
+
+  <div class="tabs" id="tabs" role="group" aria-label="Show">
+    <button type="button" class="pill on" data-show="fish" aria-pressed="true">No Such Thing As A Fish</button>
+  </div>
+
+  <div class="controls">
+    <div class="row">
+      <input type="search" id="q" placeholder="Search facts…" aria-label="Search facts" autocomplete="off">
+      <select id="year" title="Year" aria-label="Year"><option value="">All years</option></select>
+      <select id="sort" title="Order" aria-label="Order">
+        <option value="new">Newest first</option>
+        <option value="old">Oldest first</option>
+      </select>
+    </div>
+    <div class="row scroll-row" id="people" role="group" aria-label="Who said it"></div>
+    <div class="row scroll-row" id="sections" role="group" aria-label="Section" style="display:none"></div>
+  </div>
+
+  <div class="spot" id="spot" aria-live="polite"></div>
+  <div class="count"><span id="count"></span>
+    <span class="acts"><button type="button" class="btn alt sm" id="random">Surprise me</button>
+      <button type="button" class="btn alt sm" id="clear" style="display:none">Clear filters</button></span></div>
+  <div id="list"><div class="loading" role="status">Loading the facts…</div></div>
+  <button type="button" class="btn alt more" id="moreBtn" style="display:none">Show more</button>
+  <div class="note" id="note">Taken automatically from the transcripts, so a few are cut short or credited to the wrong
+    person. Tap <b>Listen</b> to open the transcript where the fact starts.</div>
+</div>
+
+<script src="site.js?v=5ed52cef"></script><script src="episode-links.js?v=3767e14c"></script><script src="site-config.js?v=3af975ec"></script>
+<script>
+(function () {
+  const COLORS = { James: '--james', Andy: '--andy', Anna: '--anna', Dan: '--dan',
+                   Rhys: '--rhys' };
+  // The Fish hosts, from the Stats summary (curated/shows.json via build_stats.py), once loaded.
+  let HOSTS = { fish: [] };
+  const PAGE = 40;
+  let DATA = { fish: [] }, show = 'fish', shown = PAGE, people = new Set(), section = '';
+
+  const { $, esc, fmtDate, plural } = Site;   // shared helpers (site.js)
+  // The public Fish stats site sets window.STATS_SITE (as on the stats pages): one show, and
+  // Listen goes to the episode's own page, as it has no transcripts.
+  const SITE = window.STATS_SITE || {};
+  const color = who => `var(${COLORS[who] || (who ? '--guest' : '--other')})`;
+  const link = (e, t) => (SITE.link || Site.link)(e.podcast, e.episode, t);
+  const isGuest = who => who && !HOSTS[show].includes(who);
+
+  function items(e) { return e.facts || e.items || []; }
+  function textOf(f) { return f.fact || f.headline || ''; }
+
+  function filtered() {
+    const q = $('q').value.trim().toLowerCase();
+    const words = q ? q.split(/\s+/) : [];
+    const year = $('year').value;
+    let eps = DATA[show].map(e => {
+      if (year && !e.date.startsWith(year)) return null;
+      const keep = items(e).filter(f => {
+        if (people.size) {
+          const ok = [...people].some(p => p === 'Guests' ? isGuest(f.who) : f.who === p);
+          if (!ok) return false;
+        }
+        if (section && f.section !== section) return false;
+        if (words.length) {
+          const hay = (textOf(f) + ' ' + e.title + ' ' + (f.who || '') + ' ' + (f.section || '')).toLowerCase();
+          if (!words.every(w => hay.includes(w))) return false;
+        }
+        return true;
+      });
+      return keep.length ? { e, keep } : null;
+    }).filter(Boolean);
+    if ($('sort').value !== 'old') eps.reverse();   // data is oldest first
+    return { eps, words };
+  }
+
+  // Highlight on the raw text, then escape each piece, so a match never lands inside "&amp;".
+  function hl(text, words) {
+    const ws = words.filter(w => w.length >= 2).sort((a, b) => b.length - a.length)
+      .map(w => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+    if (!ws.length) return esc(text);
+    return String(text).split(new RegExp('(' + ws.join('|') + ')', 'i'))
+      .map((part, i) => i % 2 ? `<mark>${esc(part)}</mark>` : esc(part)).join('');
+  }
+
+  function render() {
+    const { eps, words } = filtered();
+    const n = eps.reduce((a, x) => a + x.keep.length, 0);
+    const filtering = $('q').value || $('year').value || people.size || section;
+    // The heading already gives the full count; this line only says what a filter left.
+    $('count').textContent = filtering ? `${plural(n, show === 'fish' ? 'fact' : 'headline')} from ${plural(eps.length, 'episode')}` : '';
+    $('clear').style.display = filtering ? '' : 'none';
+    const html = eps.slice(0, shown).map(({ e, keep }) => `
+      <article class="ep">
+        <div class="ep-head">
+          ${e.num ? `<div class="ep-num">#${esc(e.num)}</div>` : ''}
+          <div class="ep-title">${hl(e.title, words)}</div>
+          <div class="ep-date">${fmtDate(e.date)}</div>
+        </div>
+        ${keep.map(f => `
+        <div class="fact">
+          <div class="who" style="color:${color(f.who)}" title="${esc(f.who || 'Not sure who')}">${esc(f.who || '?')}</div>
+          <div class="txt">${f.section ? `<span class="sec">${esc(f.section)}</span>` : ''}${hl(textOf(f), words)}</div>
+          <a class="btn-outline sm" href="${link(e, f.t)}" title="${SITE.link ? 'Open the episode' : 'Open the transcript at this moment'}"
+             aria-label="Listen: ${esc(f.who || 'unknown speaker')}, ${esc(e.title)}">Listen</a>
+        </div>`).join('')}
+      </article>`).join('');
+    $('list').innerHTML = html || `<div class="empty">${DATA[show].length ? 'Nothing matches that. Try fewer words.' :
+      'Coming soon.'}</div>`;
+    $('moreBtn').style.display = eps.length > shown ? '' : 'none';
+  }
+
+  function setupFilters() {
+    const all = DATA[show];
+    const years = [...new Set(all.map(e => e.date.slice(0, 4)).filter(Boolean))].sort().reverse();
+    $('year').innerHTML = '<option value="">All years</option>' + years.map(y => `<option>${y}</option>`).join('');
+    const counts = {};
+    let guests = 0;
+    all.forEach(e => items(e).forEach(f => { if (isGuest(f.who)) guests++; else if (f.who) counts[f.who] = (counts[f.who] || 0) + 1; }));
+    const chips = HOSTS[show].filter(h => counts[h]).map(h => [h, counts[h]]);
+    if (guests) chips.push(['Guests', guests]);
+    $('people').innerHTML = chips.map(([p, c]) => `<button type="button" class="pill${people.has(p) ? ' on' : ''}" aria-pressed="${people.has(p)}" data-p="${esc(p)}">
+        <span class="dot" style="background:${p === 'Guests' ? 'var(--guest)' : color(p)}"></span>${esc(p)}
+        <span style="color:var(--faint)">${c.toLocaleString()}</span></button>`).join('');
+    const secs = {};
+    all.forEach(e => items(e).forEach(f => { if (f.section) secs[f.section] = (secs[f.section] || 0) + 1; }));
+    const sl = Object.entries(secs).filter(([s, c]) => c >= 5 || s === section).sort((a, b) => b[1] - a[1]);
+    $('sections').style.display = sl.length ? '' : 'none';
+    $('sections').innerHTML = sl.map(([s, c]) => `<button type="button" class="pill${section === s ? ' on' : ''}" aria-pressed="${section === s}" data-s="${esc(s)}">${esc(s)}
+        <span style="color:var(--faint)">${c}</span></button>`).join('');
+    const total = all.reduce((a, e) => a + items(e).length, 0);
+    $('sub').textContent = `${total.toLocaleString()} headline facts from ${all.length.toLocaleString()} episodes of No Such Thing As A Fish`;
+  }
+
+  function randomFact() {
+    const { eps } = filtered();
+    const pool = eps.flatMap(({ e, keep }) => keep.map(f => ({ e, f })));
+    if (!pool.length) return;
+    const { e, f } = pool[Math.floor(Math.random() * pool.length)];
+    $('spot').innerHTML = `<div class="k">${show === 'fish' ? 'Random fact' : 'Random headline'}</div>
+      <div class="f">${esc(textOf(f))}</div>
+      <div class="m">${esc(f.who || 'Someone')} · ${e.num ? '#' + esc(e.num) + ' ' : ''}${esc(e.title)} · ${fmtDate(e.date)}
+        · <a href="${link(e, f.t)}" style="color:#fff;text-decoration:underline">Listen</a></div>`;
+    $('spot').classList.add('show');
+  }
+
+  // The URL says what is on screen ("q=" for a search),
+  // so a link like facts.html#q=Anne%20Miller opens the list already filtered.
+  function saveHash() {
+    const parts = [];
+    const q = $('q').value.trim();
+    if (q) parts.push('q=' + encodeURIComponent(q));
+    history.replaceState(null, '', parts.length ? '#' + parts.join('&') : location.pathname);
+  }
+
+  function switchTo(which, q = '') {
+    show = which; shown = PAGE; people.clear(); section = ''; $('q').value = q; $('year').value = '';
+    $('spot').classList.remove('show');
+    document.querySelectorAll('#tabs .pill').forEach(b => { const on = b.dataset.show === which;
+      b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
+    $('q').placeholder = which === 'fish' ? 'Search facts…' : 'Search headlines…';
+    $('q').setAttribute('aria-label', $('q').placeholder.replace('…', ''));
+    saveHash(); setupFilters(); render();
+  }
+
+  let t;
+  $('q').addEventListener('input', () => { clearTimeout(t); t = setTimeout(() => { shown = PAGE; saveHash(); render(); }, 150); });
+  $('year').addEventListener('change', () => { shown = PAGE; render(); });
+  $('sort').addEventListener('change', () => { shown = PAGE; render(); });
+  $('moreBtn').addEventListener('click', () => { shown += PAGE * 2; render(); });
+  $('random').addEventListener('click', randomFact);
+  $('clear').addEventListener('click', () => { people.clear(); section = ''; $('q').value = ''; $('year').value = '';
+    shown = PAGE; saveHash(); setupFilters(); render(); });
+  $('tabs').addEventListener('click', e => { const b = e.target.closest('.pill'); if (b) switchTo(b.dataset.show); });
+  $('people').addEventListener('click', e => { const b = e.target.closest('.pill'); if (!b) return;
+    const p = b.dataset.p; people.has(p) ? people.delete(p) : people.add(p); b.classList.toggle('on', people.has(p));
+    b.setAttribute('aria-pressed', people.has(p)); shown = PAGE; render(); });
+  $('sections').addEventListener('click', e => { const b = e.target.closest('.pill'); if (!b) return;
+    section = section === b.dataset.s ? '' : b.dataset.s; setupFilters(); shown = PAGE; render(); });
+  // Infinite-ish scroll: load the next page when near the bottom.
+  addEventListener('scroll', () => {
+    if ($('moreBtn').style.display !== 'none' && innerHeight + scrollY > document.body.offsetHeight - 900) {
+      shown += PAGE; render();
+    }
+  }, { passive: true });
+
+  if ((SITE.shows || []).length === 1) $('tabs').style.display = 'none';
+  if (SITE.search === false) $('note').textContent = 'Taken automatically from the free public episodes. Tap Listen to open the episode.';
+
+  const getJSON = url => fetch(url, { cache: 'no-cache' }).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); });
+  Promise.all([getJSON('facts.json'), getJSON('statistics/summary.json').catch(() => ({}))]).then(([d, sum]) => {
+    DATA = { fish: d.fish || [] };
+    // summary.json names each show in full; an episode in facts.json carries the same name.
+    const hostsOf = list => ((sum.hosts || {})[(list[0] || {}).podcast]) || [];
+    HOSTS = { fish: hostsOf(DATA.fish) };
+    const p = new URLSearchParams(location.hash.slice(1));
+    switchTo('fish', (p.get('q') || '').trim());
+  }).catch(() => {
+    $('list').innerHTML = `<div class="error" role="alert">Couldn't load the facts. Check your connection and refresh the page.</div>`;
+    $('random').disabled = true;
+  });
+})();
+</script>
+<footer class="fan">Fish Stats is an unofficial fan project. It isn't made or endorsed by No Such Thing As A Fish or QI. The numbers are worked out from automatic transcripts of the free public episodes. <a href="https://www.nosuchthingasafish.com/">Listen to the show</a>.</footer>
+</body>
+</html>

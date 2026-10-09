@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="robots" content="noindex, nofollow"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fish Stats</title>
+<link rel="stylesheet" href="site.css?v=27cc7df6">
+<link rel="stylesheet" href="statistics/stats.css?v=7e04a0ce">
+<link rel="stylesheet" href="fishstats.css?v=c9963441">
+</head>
+<body>
+<nav class="sitebar" aria-label="Site"><a class="brand" href="index.html">Fish Stats</a><a href="index.html" aria-current="page">Stats</a><a href="facts.html">Facts</a><a href="episodes.html">Episodes</a></nav>
+<div class="page wide">
+  <h1>Fish Stats</h1>
+  <p class="lede" id="lede">Numbers from every episode.</p>
+  <p class="built" id="built"></p>
+  <div id="groups"><p class="empty">Loading…</p></div>
+  <p class="note" style="margin-top:28px">These pages update whenever new episodes are added.</p>
+</div>
+<script src="site.js?v=5ed52cef"></script>
+<script src="episode-links.js?v=3767e14c"></script><script src="site-config.js?v=3af975ec"></script><script src="statistics/stats.js?v=f6e16ff7"></script>
+<script>
+const { $ } = Site;
+// One entry per stats page. To add a page: add it here and build its data in build_stats.py.
+const PAGES = [
+  ["The shows", [
+    ["statistics/ttp.html", "Time to penis", s => s.ttp ? `${S.mmss(s.ttp.median)} median \u00b7 ${S.mmss(s.ttp.fastest.t)} fastest` : "", s => s.ttp ? `How long before someone says "penis". The fastest was ${S.esc(s.ttp.fastest.who)} in ${S.esc(S.epLabel({ n: s.ttp.fastest.n, e: s.ttp.fastest.e }))}.` : ""],
+    ["statistics/talk.html", "Who talks most", s => s.talk && s.talk[0] ? S.esc(s.talk[0][0]) : "", s => s.talk ? "Share of the talking on Fish: " + s.talk.map(([h, p]) => `${S.esc(h)} ${p}%`).join(", ") + ". Also who hands over to whom" + (s.flow ? `, and the longest unbroken run (${S.esc(s.flow.who)}, ${S.mmss(s.flow.s)})` : "") + "." : ""],
+    ["statistics/pod.html", "Friends and enemies of the pod", s => s.pod ? `${S.num(s.pod.friends)} friends, ${S.num(s.pod.enemies)} enemies` : "", () => "Everyone the Fish hosts have called a friend or an enemy of the podcast, and who switched sides."],
+    ["statistics/lineup.html", "Fish line-up", s => s.lineup ? `${S.num(s.lineup.all4)} of ${S.num(s.lineup.of)}` : "", () => "Main episodes with all four hosts. Who missed the most, and who sat in."],
+  ]],
+  ["People", [
+    ["statistics/guests.html", "Most frequent guests", s => s.guests && s.guests[0] ? S.esc(s.guests[0][0]) : "", s => s.guests ? "On most often: " + s.guests.map(([n, c]) => `${S.esc(n)} (${c})`).join(", ") + (S.ONE_SHOW ? "." : ", across all three shows.") : ""],
+    ["statistics/facts.html", "Fact stats", s => s.facts ? S.num(s.facts.total) : "", s => s.facts ? "Facts on Fish. Most: " + s.facts.top.map(([n, c]) => `${S.esc(n)} ${c}`).join(", ") + ". Also who goes first and who goes last." : ""],
+  ]],
+  ["Words", [
+    ["statistics/words.html", "Word tracker", () => "", () => "Type any word or phrase to see how often it's said each year, who says it and when in an episode. Compare up to four."],
+    ["statistics/style.html", "How they talk", s => s.style ? S.esc(s.style[0]) : "", s => s.style ? `Widest vocabulary: ${S.esc(s.style[0])}, ${s.style[1]} different words in every 1,000. Also each host's trademark words and the words that sum up each year.` : ""],
+    ["statistics/mentions.html", "Who and what they mention", () => "", () => "Which cryptids and which famous names get dropped, and who drops them."],
+    ["statistics/phrases.html", "Catchphrases", s => s.phrases && s.phrases[0] ? '"' + S.esc(s.phrases[0][0]) + '"' : "", s => s.phrases ? "Most said: " + s.phrases.map(([w, c]) => `"${S.esc(w)}" ${S.num(c)}`).join(", ") + "." : ""],
+    ["statistics/swears.html", "Swear jar", s => s.swears && s.swears[0] ? S.esc(s.swears[0][0]) : "", s => s.swears ? "Swears per hour of their own talking: " + s.swears.map(([n, r]) => `${S.esc(n)} ${r}`).join(", ") + "." : ""],
+  ]],
+];
+// The shows, as a list: "A, B and C".
+const and = a => a.length > 1 ? a.slice(0, -1).join(", ") + " and " + a[a.length - 1] : a.join("");
+fetch("statistics/summary.json", { cache: "no-cache" }).then(r => { if (!r.ok) throw new Error(r.status); return r.json(); }).then(s => {
+  // A site with an episode list (STATS_SITE.episodes, the public site) links the count to it.
+  const eps = `${S.num(s.episodes)} episodes`;
+  $("lede").innerHTML = `Numbers from ${S.SITE.episodes ? `<a href="${S.SITE.episodes}">${eps}</a>` : eps} (${S.num(s.hours)} hours) of ${S.esc(and(S.SHOWS))}.`;
+  S.built(s);
+  const skip = new Set(S.SITE.skip || []);
+  $("groups").innerHTML = PAGES.map(([g, cards]) => [g, cards.filter(c => !skip.has(c[0]))]).filter(([, cards]) => cards.length)
+    .map(([g, cards]) => `<div class="group">${g}</div><div class="cards">${cards.map(([href, t, big, desc]) =>
+    `<a class="card" href="${href}"><span class="t">${t}</span>${big(s) ? `<span class="big">${big(s)}</span>` : ""}<span class="d">${desc(s)}</span></a>`).join("")}</div>`).join("");
+}).catch(() => { $("groups").innerHTML = '<p class="error" role="alert">Couldn\'t load the stats. Check your connection and refresh the page.</p>'; });
+</script>
+<footer class="fan">Fish Stats is an unofficial fan project. It isn't made or endorsed by No Such Thing As A Fish or QI. The numbers are worked out from automatic transcripts of the free public episodes. <a href="https://www.nosuchthingasafish.com/">Listen to the show</a>.</footer>
+</body>
+</html>

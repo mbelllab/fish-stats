@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="robots" content="noindex, nofollow"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Who talks most · Fish Stats</title>
+<link rel="stylesheet" href="../site.css?v=27cc7df6">
+<link rel="stylesheet" href="stats.css?v=7e04a0ce">
+<style>
+/* "Who hands over to whom": a heatmap; a stronger blue means that handover happens more often */
+.heat { width: auto; min-width: 0; table-layout: fixed; }
+.heat th, .heat td { padding: 8px 6px; text-align: center; white-space: normal; font-variant-numeric: tabular-nums; }
+.heat thead th { padding: 8px 6px; font-weight: 700; }
+.heat tbody th { text-align: left; font-weight: 600; color: var(--text); background: var(--panel2); }
+.heat td { min-width: 3.4rem; border-left: 1px solid var(--bg); }
+.heat td.top { font-weight: 700; }
+.heat td.self { color: var(--faint); }
+.heat .corner { font-size: .72rem; text-align: left; }
+.sub { margin: 16px 0 6px; color: var(--muted); }
+#best { margin-top: 0; }
+@media (max-width: 760px) { .heat th, .heat td { padding: 7px 4px; } .heat td { min-width: 2.9rem; } }
+</style>
+<link rel="stylesheet" href="../fishstats.css?v=c9963441">
+</head>
+<body>
+<nav class="sitebar" aria-label="Site"><a class="brand" href="../index.html">Fish Stats</a><a href="../index.html" aria-current="page">Stats</a><a href="../facts.html">Facts</a><a href="../episodes.html">Episodes</a></nav>
+<div class="page wide">
+  <div class="crumbs"><a href="../index.html">Fish Stats</a> / Who talks most</div>
+  <h1>Who talks most</h1>
+  <p class="lede">How much of the talking each person does, how fast they talk, how long they keep going, and how that has changed over the years.</p>
+  <p class="built" id="built"></p>
+
+  <div class="controls">
+    <span class="ctl">Show<span class="seg" id="show"></span></span>
+    <span class="ctl" id="kindctl">Episodes<span class="seg" id="kind"></span></span>
+  </div>
+
+  <div class="tiles" id="tiles"></div>
+
+  <h2>Share of the talking, by year</h2>
+  <div class="chart tall"><canvas id="share"></canvas></div>
+  <p class="note">Each host's average share of the hosts' talking time per episode, by year. Guests are left out so the hosts compare fairly.</p>
+
+  <div class="two">
+    <div><h2>Words per minute</h2><div class="chart short"><canvas id="wpm"></canvas></div></div>
+    <div><h2>Average turn (seconds before someone else speaks)</h2><div class="chart short"><canvas id="turn"></canvas></div></div>
+  </div>
+
+  <h2>Totals</h2>
+  <div id="totals"></div>
+
+  <div id="flow">
+    <h2>Who hands over to whom</h2>
+    <div id="grid"></div>
+    <p class="note" id="gridnote"></p>
+
+    <h2>Longest uninterrupted run</h2>
+    <div class="tiles" id="best"></div>
+    <h3 class="sub">Top runs: hosts</h3>
+    <div id="runs"></div>
+    <div id="gwrap"><h3 class="sub">Top runs: guests</h3><div id="gruns"></div></div>
+    <p class="note">How long one person talks before anyone else gets a word in. A line counts until the next one starts, but never longer
+      than its words take to say at a slow pace, so silences and music don't count. Left out: the
+      first 3 minutes (welcome and theme), the last minute, and solo intros and outros<span class="multi-show">, and the audiobook episodes. Readings still
+      count (Rhys reading out a sighting report)</span>. A quick "yeah" from someone else can end up inside a run if the labels miss it.</p>
+  </div>
+
+  <h2>Every episode</h2>
+  <div id="eps"></div>
+  <p class="note">Fast back-and-forth sometimes gets put on one person.</p>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" integrity="sha384-bs/nf9FbdNouRbMiFcrcZfLXYPKiPaGVGplVbv7dLGECccEXDW+S3zjqSKR5ZEaD" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="../site.js?v=5ed52cef"></script>
+<script src="../episode-links.js?v=3767e14c"></script><script src="../site-config.js?v=3af975ec"></script><script src="stats.js?v=f6e16ff7"></script>
+<script>
+const { $ } = Site;
+let D, F, show = S.state.get("show", S.FISH), kindSel = S.ALL_KINDS ? "all" : S.state.get("kind", "main");
+function eps() {
+  return D.episodes.filter(r => r.p === show && (kindSel === "all" || r.k === "Main"));
+}
+function render() {
+  const hosts = D.hosts[show], list = eps();
+  const agg = Object.fromEntries(hosts.map(h => [h, { sec: 0, words: 0, turns: 0, eps: 0, shares: [] }]));
+  const byYear = {};
+  list.forEach(r => {
+    const tot = hosts.reduce((s, h) => s + (r.s[h] ? r.s[h][0] : 0), 0) || 1;
+    const y = S.year(r.d);
+    hosts.forEach(h => { const v = r.s[h]; if (!v) return;
+      const a = agg[h]; a.sec += v[0]; a.words += v[1]; a.turns += v[2]; a.eps++; a.shares.push(v[0] / tot);
+      ((byYear[y] = byYear[y] || {})[h] = byYear[y][h] || []).push(v[0] / tot); });
+  });
+  const active = hosts.filter(h => agg[h].eps);
+  const ranked = [...active].sort((a, b) => S.mean(agg[b].shares) - S.mean(agg[a].shares));
+  const longest = !S.ONE_SHOW || !F ? null : (F.runs[show] || []).filter(r => kindSel === "all" || r.k === "Main")
+    .reduce((m, r) => !m || r.s > m.s ? r : m, null);
+  S.tiles($("tiles"), [
+    S.ONE_SHOW ? ["Longest run", longest ? S.mmss(longest.s) : "–", longest ? `${S.esc(longest.w)}, <a href="${S.link(show, longest.e, longest.at)}">${S.esc(S.epLabel(longest))}</a>` : ""]
+      : ["Episodes", S.num(list.length), S.SHORT[show]],
+    ["Talks the most", ranked[0] || "–", ranked[0] ? S.pct(S.mean(agg[ranked[0]].shares)) + " of host talk" : ""],
+    ["Fastest talker", (() => { const f = [...active].sort((a, b) => agg[b].words / agg[b].sec - agg[a].words / agg[a].sec)[0];
+      return f ? `${f}` : "–"; })(), (() => { const f = [...active].sort((a, b) => agg[b].words / agg[b].sec - agg[a].words / agg[a].sec)[0];
+      return f ? Math.round(60 * agg[f].words / agg[f].sec) + " words a minute" : ""; })()],
+    ["Longest turns", (() => { const f = [...active].sort((a, b) => agg[b].sec / agg[b].turns - agg[a].sec / agg[a].turns)[0]; return f || "–"; })(),
+      (() => { const f = [...active].sort((a, b) => agg[b].sec / agg[b].turns - agg[a].sec / agg[a].turns)[0]; return f ? (agg[f].sec / agg[f].turns).toFixed(1) + " seconds a turn" : ""; })()],
+  ].map(([k, v, s]) => [k, k === "Longest run" ? v : S.esc(v), s]));
+
+  const years = Object.keys(byYear).sort();
+  S.chart("share", { type: "line", data: { labels: years, datasets: active.map(h => ({ label: h, borderColor: S.color(h), backgroundColor: S.color(h),
+      tension: .3, data: years.map(y => byYear[y][h] ? +(100 * S.mean(byYear[y][h])).toFixed(1) : null) })) },
+    options: { scales: { y: { title: { display: true, text: "% of host talking" }, suggestedMin: 0 } },
+      plugins: { tooltip: { callbacks: { label: c => `${c.dataset.label}: ${c.parsed.y}%` } } } } });
+  const bar = (id, f, unit) => S.chart(id, { type: "bar", data: { labels: active, datasets: [{ data: active.map(f), backgroundColor: active.map(S.color) }] },
+    options: { plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => c.parsed.y + unit } } } } });
+  bar("wpm", h => Math.round(60 * agg[h].words / agg[h].sec), " words a minute");
+  bar("turn", h => +(agg[h].sec / agg[h].turns).toFixed(1), " seconds");
+
+  const tot = active.map(h => ({ h, eps: agg[h].eps, share: S.mean(agg[h].shares), hours: agg[h].sec / 3600,
+    wpm: 60 * agg[h].words / agg[h].sec, turn: agg[h].sec / agg[h].turns, words: agg[h].words }));
+  if (!window.TT) window.TT = S.table($("totals"), [
+    { key: "h", label: "Person", fmt: r => `<span class="dot" style="background:${S.color(r.h)}"></span>${S.esc(r.h)}` },
+    { key: "eps", label: "Episodes", num: true, fmt: r => S.num(r.eps) },
+    { key: "share", label: "Avg share", num: true, fmt: r => S.pct(r.share) },
+    { key: "hours", label: "Hours talking", num: true, fmt: r => r.hours.toFixed(1) },
+    { key: "words", label: "Words", num: true, fmt: r => S.num(r.words) },
+    { key: "wpm", label: "Words/min", num: true, fmt: r => Math.round(r.wpm) },
+    { key: "turn", label: "Avg turn (s)", num: true, fmt: r => r.turn.toFixed(1) },
+  ], tot, { sort: "share" }); else TT.set(tot);
+
+  const rows = list.map(r => { const t = hosts.reduce((s, h) => s + (r.s[h] ? r.s[h][0] : 0), 0) || 1;
+    const o = { ...r, len: r.len }; hosts.forEach(h => o[h] = r.s[h] ? r.s[h][0] / t : null); return o; });
+  const cols = [{ key: "d", label: "Date", cls: "lo", fmt: r => S.fmtDate(r.d) },
+    { key: "e", label: "Episode", cls: "long", sort: r => S.epLabel(r), fmt: r => `<a href="${S.link(r.p, r.e, 0)}">${S.esc(S.epLabel(r))}</a>` }]
+    .concat(active.map(h => ({ key: h, label: h, num: true, fmt: r => r[h] == null ? "–" : S.pct(r[h]) })))
+    .concat([{ key: "len", label: "Length", num: true, fmt: r => S.mmss(r.len) }]);
+  window.TE = S.table($("eps"), cols, rows, { sort: "d", dir: "asc" });
+  if (F) renderFlow(hosts);
+}
+
+// Who hands over to whom, and the longest runs (flow.json, built by stats_flow.py). Guests are one "Guest" row/column.
+// flow.json splits episodes like the Episodes control: "m" main, "o" the rest.
+function renderFlow(hosts) {
+  const groups = kindSel === "all" ? ["m", "o"] : ["m"], G = F.grid[show];
+  const n = {};                                                      // n[from][to] = handovers
+  groups.forEach(g => Object.entries(G[g] || {}).forEach(([a, c]) => Object.entries(c).forEach(([b, k]) => {
+    (n[a] = n[a] || {})[b] = (n[a][b] || 0) + k; })));
+  const total = a => Object.values(n[a] || {}).reduce((x, y) => x + y, 0);
+  // hosts with at least 1% of the handovers, then Guest if guests are labelled at all
+  const all = Object.keys(n).reduce((s, a) => s + total(a), 0) || 1;
+  const people = hosts.concat("Guest").filter(a => total(a) / all >= .01);
+  const share = (a, b) => (n[a] && n[a][b] || 0) / (total(a) || 1);
+  const max = Math.max(...people.flatMap(a => people.map(b => a === b ? 0 : share(a, b)))) || 1;
+  const name = a => `<span class="dot" style="background:${S.color(a)}"></span>${S.esc(a)}`;
+  $("grid").innerHTML = people.length < 2 ? '<p class="empty">Not enough labelled speakers.</p>' :
+    `<div class="tbl"><table class="heat"><thead><tr><th class="corner" scope="col">After&nbsp;… next&nbsp;is</th>${people.map(b => `<th scope="col">${S.esc(b)}</th>`).join("")}</tr></thead>
+    <tbody>${people.map(a => { const best = Math.max(...people.map(b => share(a, b)));
+      return `<tr><th scope="row">${name(a)}</th>${people.map(b => { const x = share(a, b);
+        if (a === b && a !== "Guest") return '<td class="self">–</td>';
+        return `<td class="${x === best && x > 0 ? "top" : ""}" style="background:color-mix(in srgb, var(--primary) ${Math.round(85 * x / max)}%, var(--panel))"
+          title="${S.esc(a)} then ${S.esc(b)}: ${S.num(n[a] && n[a][b] || 0)} times">${x ? Math.round(100 * x) + "%" : "–"}</td>`; }).join("")}</tr>`; }).join("")}</tbody></table></div>`;
+  // one plain-English reading: the strongest handover, and who is least likely to follow the person who talks most
+  let top = null, low = null;
+  people.forEach(a => people.forEach(b => { if (a === b) return; const x = share(a, b);
+    if (!top || x > top.x) top = { a, b, x };
+    if (hosts.includes(a) && hosts.includes(b) && (!low || x < low.x)) low = { a, b, x }; }));
+  const sentence = (a, b, x, most) => `When ${a === "Guest" ? "a guest" : a} finishes, ${b === "Guest" ? "a guest" : b} is ${most ? "most" : "least"} likely to come in next (${Math.round(100 * x)}%)`;
+  $("gridnote").innerHTML = (top ? sentence(top.a, top.b, top.x, true) + "." : "") +
+    (low && people.length > 3 && (low.a !== top.a || low.b !== top.b) ? ` ${sentence(low.a, low.b, low.x, false)}.` : "") +
+    ` Each row adds up to 100% and shows who speaks straight after that person, out of ${S.num(all)} handovers. Lines with no name on them break the chain.`;
+
+  const runs = (F.runs[show] || []).filter(r => kindSel === "all" || r.k === "Main");
+  const host = runs.filter(r => hosts.includes(r.w)), guest = runs.filter(r => !hosts.includes(r.w));
+  const listen = r => S.link(show, r.e, r.at);
+  S.tiles($("best"), hosts.map(h => host.find(r => r.w === h)).filter(Boolean)
+    .map(r => [`<span class="dot" style="background:${S.color(r.w)}"></span>${S.esc(r.w)}`, S.mmss(r.s),
+      `<a href="${listen(r)}">${S.esc(S.epLabel(r))}</a>`]));
+  const cols = [
+    { key: "w", label: "Who", fmt: r => name(r.w) },
+    { key: "s", label: "Length", num: true, fmt: r => S.mmss(r.s) },
+    { key: "x", label: "Starts with", cls: "clip", fmt: r => `<a href="${listen(r)}">Listen</a> · "${S.esc(r.x)}"` },
+    { key: "e", label: "Episode", cls: "long", sort: r => S.epLabel(r), fmt: r => S.esc(S.epLabel(r)) },
+    { key: "d", label: "Date", cls: "lo", fmt: r => S.fmtDate(r.d) },
+  ];
+  S.table($("runs"), cols, host.slice(0, 10), { sort: "s" });
+  $("gwrap").hidden = !guest.length;
+  if (guest.length) S.table($("gruns"), cols, guest.slice(0, 10), { sort: "s" });
+}
+S.page(Promise.all([S.load("talk"), S.load("flow").catch(() => null)]), ([d, f]) => {
+  D = d; F = f; S.built(d);
+  $("flow").hidden = !f;
+  S.seg($("show"), [[S.FISH, "Fish"]], show,
+    v => { show = v; S.state.set("show", v); window.TT = null; render(); });
+  if (S.ALL_KINDS) $("kindctl").hidden = true;
+  else S.seg($("kind"), [["main", "Main episodes"], ["all", "All"]], kindSel, v => { kindSel = v; S.state.set("kind", v); window.TT = null; render(); });
+  render();
+});
+</script>
+<footer class="fan">Fish Stats is an unofficial fan project. It isn't made or endorsed by No Such Thing As A Fish or QI. The numbers are worked out from automatic transcripts of the free public episodes. <a href="https://www.nosuchthingasafish.com/">Listen to the show</a>.</footer>
+</body>
+</html>

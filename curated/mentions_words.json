@@ -1,0 +1,1334 @@
+{
+ "_about": "Word lists for the 'Who and what they mention' stats page (stats_mentions.py). Each entry is a name and the spellings that count for it (Whisper's variants and misspellings included); a possessive ('s) is counted automatically. Cryptids match in any case; people match case-sensitively, because Whisper capitalises names and that keeps 'bond' or 'fry' out. The *_not lists are phrases blanked out before counting. Left out on purpose: kraken (mostly a company and a rum), 'big feet', Champ (the lake monster: too common a word), Jesus (mostly said as a swear), fictional characters, and the hosts themselves.",
+ "cryptids": [
+  [
+   "Bigfoot",
+   [
+    "bigfoot",
+    "bigfoots",
+    "bigfeet",
+    "big foot",
+    "sasquatch",
+    "sasquatches",
+    "squatch",
+    "squatches",
+    "squatching",
+    "bigfooter",
+    "bigfooters",
+    "bigfooting"
+   ]
+  ],
+  [
+   "Loch Ness Monster",
+   [
+    "loch ness monster",
+    "loch n ess monster",
+    "loch ness",
+    "lock ness",
+    "lochness",
+    "ness monster",
+    "nessie",
+    "nessies"
+   ]
+  ],
+  [
+   "Yeti",
+   [
+    "yeti",
+    "yetis",
+    "abominable snowman",
+    "abominable snowmen"
+   ]
+  ],
+  [
+   "Mothman",
+   [
+    "mothman",
+    "moth man",
+    "moth men"
+   ]
+  ],
+  [
+   "Thylacine",
+   [
+    "thylacine",
+    "thylacines",
+    "tasmanian tiger",
+    "tasmanian tigers"
+   ]
+  ],
+  [
+   "Alien big cats",
+   [
+    "alien big cat",
+    "alien big cats",
+    "beast of bodmin",
+    "beast of bodman",
+    "beast of bolton",
+    "beast of trowbridge",
+    "beast of exmoor"
+   ]
+  ],
+  [
+   "Chupacabra",
+   [
+    "chupacabra",
+    "chupacabras",
+    "chupacabre"
+   ]
+  ],
+  [
+   "Thunderbird",
+   [
+    "thunderbird"
+   ]
+  ],
+  [
+   "Yowie",
+   [
+    "yowie",
+    "yowies"
+   ]
+  ],
+  [
+   "Dogman",
+   [
+    "dogman",
+    "dog man",
+    "dogmen"
+   ]
+  ],
+  [
+   "Lizard Man",
+   [
+    "lizard man",
+    "lizardman",
+    "lizardmen"
+   ]
+  ],
+  [
+   "Kappa",
+   [
+    "kappa",
+    "kappas"
+   ]
+  ],
+  [
+   "Mongolian death worm",
+   [
+    "mongolian death worm",
+    "mongolian death worms",
+    "death worm",
+    "death worms"
+   ]
+  ],
+  [
+   "Jersey Devil",
+   [
+    "jersey devil"
+   ]
+  ],
+  [
+   "Skunk ape",
+   [
+    "skunk ape",
+    "skunk apes"
+   ]
+  ],
+  [
+   "Sea serpents",
+   [
+    "sea serpent",
+    "sea serpents"
+   ]
+  ],
+  [
+   "Lake monsters",
+   [
+    "lake monster",
+    "lake monsters"
+   ]
+  ],
+  [
+   "Orang pendek",
+   [
+    "orang pendek",
+    "orang pendak"
+   ]
+  ],
+  [
+   "Aswang",
+   [
+    "aswang",
+    "aswangs"
+   ]
+  ],
+  [
+   "Mantis Man",
+   [
+    "mantis man"
+   ]
+  ],
+  [
+   "Loveland Frog",
+   [
+    "loveland frog",
+    "loveland frogman",
+    "loveland frogmen"
+   ]
+  ],
+  [
+   "Owlman",
+   [
+    "owlman",
+    "owl man"
+   ]
+  ],
+  [
+   "Jackalope",
+   [
+    "jackalope",
+    "jackalopes"
+   ]
+  ],
+  [
+   "Megalodon",
+   [
+    "megalodon",
+    "megalodons"
+   ]
+  ],
+  [
+   "Ogopogo",
+   [
+    "ogopogo",
+    "ogo pogo"
+   ]
+  ],
+  [
+   "Bunyip",
+   [
+    "bunyip",
+    "bunyips"
+   ]
+  ],
+  [
+   "Mokele-mbembe",
+   [
+    "mokele mbembe",
+    "mokele-mbembe"
+   ]
+  ],
+  [
+   "Wendigo",
+   [
+    "wendigo",
+    "windigo",
+    "wendigos"
+   ]
+  ],
+  [
+   "Moehau monster",
+   [
+    "moehau"
+   ]
+  ],
+  [
+   "Almasty",
+   [
+    "almasty",
+    "almas"
+   ]
+  ]
+ ],
+ "cryptids_not": [
+  "big footprint",
+  "big footprints",
+  "big foot print",
+  "thunderbirds",
+  "yeti mug",
+  "yeti mic",
+  "yeti microphone",
+  "yeti cooler",
+  "phi beta kappa",
+  "kappa sigma",
+  "kappa alpha"
+ ],
+ "people": [
+  [
+   "William Shakespeare",
+   [
+    "Shakespeare"
+   ]
+  ],
+  [
+   "Charles Darwin",
+   [
+    "Charles Darwin",
+    "Darwin"
+   ]
+  ],
+  [
+   "Albert Einstein",
+   [
+    "Einstein"
+   ]
+  ],
+  [
+   "Isaac Newton",
+   [
+    "Isaac Newton",
+    "Newton"
+   ]
+  ],
+  [
+   "Napoleon",
+   [
+    "Napoleon",
+    "Bonaparte"
+   ]
+  ],
+  [
+   "Adolf Hitler",
+   [
+    "Hitler"
+   ]
+  ],
+  [
+   "Winston Churchill",
+   [
+    "Churchill"
+   ]
+  ],
+  [
+   "Queen Victoria",
+   [
+    "Queen Victoria"
+   ]
+  ],
+  [
+   "Queen Elizabeth",
+   [
+    "Queen Elizabeth",
+    "Elizabeth II",
+    "Elizabeth the Second",
+    "Elizabeth I",
+    "Elizabeth the First"
+   ]
+  ],
+  [
+   "Henry VIII",
+   [
+    "Henry VIII",
+    "Henry the Eighth",
+    "Henry 8th",
+    "Henry the 8th"
+   ]
+  ],
+  [
+   "Abraham Lincoln",
+   [
+    "Abraham Lincoln",
+    "Abe Lincoln",
+    "President Lincoln"
+   ]
+  ],
+  [
+   "George Washington",
+   [
+    "George Washington"
+   ]
+  ],
+  [
+   "Benjamin Franklin",
+   [
+    "Benjamin Franklin",
+    "Ben Franklin"
+   ]
+  ],
+  [
+   "Julius Caesar",
+   [
+    "Julius Caesar",
+    "Caesar"
+   ]
+  ],
+  [
+   "Cleopatra",
+   [
+    "Cleopatra"
+   ]
+  ],
+  [
+   "Genghis Khan",
+   [
+    "Genghis Khan"
+   ]
+  ],
+  [
+   "Leonardo da Vinci",
+   [
+    "Leonardo da Vinci",
+    "Da Vinci",
+    "da Vinci"
+   ]
+  ],
+  [
+   "Michelangelo",
+   [
+    "Michelangelo"
+   ]
+  ],
+  [
+   "Mozart",
+   [
+    "Mozart"
+   ]
+  ],
+  [
+   "Beethoven",
+   [
+    "Beethoven"
+   ]
+  ],
+  [
+   "Charles Dickens",
+   [
+    "Dickens"
+   ]
+  ],
+  [
+   "Jane Austen",
+   [
+    "Austen"
+   ]
+  ],
+  [
+   "Oscar Wilde",
+   [
+    "Oscar Wilde"
+   ]
+  ],
+  [
+   "Mark Twain",
+   [
+    "Mark Twain"
+   ]
+  ],
+  [
+   "Lord Byron",
+   [
+    "Lord Byron",
+    "Byron"
+   ]
+  ],
+  [
+   "Sigmund Freud",
+   [
+    "Freud"
+   ]
+  ],
+  [
+   "Karl Marx",
+   [
+    "Karl Marx"
+   ]
+  ],
+  [
+   "Joseph Stalin",
+   [
+    "Stalin"
+   ]
+  ],
+  [
+   "Chairman Mao",
+   [
+    "Chairman Mao",
+    "Mao Zedong",
+    "Mao Tse-tung"
+   ]
+  ],
+  [
+   "Marie Antoinette",
+   [
+    "Marie Antoinette"
+   ]
+  ],
+  [
+   "Marie Curie",
+   [
+    "Marie Curie"
+   ]
+  ],
+  [
+   "Nikola Tesla",
+   [
+    "Nikola Tesla",
+    "Nicola Tesla"
+   ]
+  ],
+  [
+   "Thomas Edison",
+   [
+    "Edison"
+   ]
+  ],
+  [
+   "Galileo",
+   [
+    "Galileo"
+   ]
+  ],
+  [
+   "Aristotle",
+   [
+    "Aristotle"
+   ]
+  ],
+  [
+   "Plato",
+   [
+    "Plato"
+   ]
+  ],
+  [
+   "Socrates",
+   [
+    "Socrates"
+   ]
+  ],
+  [
+   "Alexander the Great",
+   [
+    "Alexander the Great"
+   ]
+  ],
+  [
+   "Captain Cook",
+   [
+    "Captain Cook",
+    "Captain James Cook"
+   ]
+  ],
+  [
+   "Christopher Columbus",
+   [
+    "Columbus"
+   ]
+  ],
+  [
+   "Florence Nightingale",
+   [
+    "Florence Nightingale"
+   ]
+  ],
+  [
+   "Amelia Earhart",
+   [
+    "Amelia Earhart"
+   ]
+  ],
+  [
+   "Neil Armstrong",
+   [
+    "Neil Armstrong"
+   ]
+  ],
+  [
+   "Buzz Aldrin",
+   [
+    "Buzz Aldrin",
+    "Aldrin"
+   ]
+  ],
+  [
+   "Yuri Gagarin",
+   [
+    "Gagarin"
+   ]
+  ],
+  [
+   "Alan Turing",
+   [
+    "Turing"
+   ]
+  ],
+  [
+   "Stephen Hawking",
+   [
+    "Hawking"
+   ]
+  ],
+  [
+   "Carl Sagan",
+   [
+    "Sagan"
+   ]
+  ],
+  [
+   "Richard Feynman",
+   [
+    "Feynman"
+   ]
+  ],
+  [
+   "Aleister Crowley",
+   [
+    "Aleister Crowley",
+    "Alistair Crowley",
+    "Alastair Crowley",
+    "Crowley"
+   ]
+  ],
+  [
+   "Harry Houdini",
+   [
+    "Houdini"
+   ]
+  ],
+  [
+   "Nostradamus",
+   [
+    "Nostradamus"
+   ]
+  ],
+  [
+   "Rasputin",
+   [
+    "Rasputin"
+   ]
+  ],
+  [
+   "Vincent van Gogh",
+   [
+    "Van Gogh",
+    "van Gogh"
+   ]
+  ],
+  [
+   "Pablo Picasso",
+   [
+    "Picasso"
+   ]
+  ],
+  [
+   "Salvador Dali",
+   [
+    "Salvador Dali",
+    "Dali",
+    "Dalí"
+   ]
+  ],
+  [
+   "Andy Warhol",
+   [
+    "Warhol"
+   ]
+  ],
+  [
+   "Edgar Allan Poe",
+   [
+    "Edgar Allan Poe",
+    "Edgar Allen Poe"
+   ]
+  ],
+  [
+   "Arthur Conan Doyle",
+   [
+    "Conan Doyle"
+   ]
+  ],
+  [
+   "Agatha Christie",
+   [
+    "Agatha Christie"
+   ]
+  ],
+  [
+   "Bram Stoker",
+   [
+    "Bram Stoker"
+   ]
+  ],
+  [
+   "Mary Shelley",
+   [
+    "Mary Shelley"
+   ]
+  ],
+  [
+   "Ernest Hemingway",
+   [
+    "Ernest Hemingway"
+   ]
+  ],
+  [
+   "Samuel Johnson",
+   [
+    "Samuel Johnson",
+    "Dr Johnson",
+    "Doctor Johnson"
+   ]
+  ],
+  [
+   "Samuel Pepys",
+   [
+    "Pepys"
+   ]
+  ],
+  [
+   "Isambard Kingdom Brunel",
+   [
+    "Brunel"
+   ]
+  ],
+  [
+   "Guy Fawkes",
+   [
+    "Guy Fawkes"
+   ]
+  ],
+  [
+   "Joan of Arc",
+   [
+    "Joan of Arc"
+   ]
+  ],
+  [
+   "Gandhi",
+   [
+    "Mahatma Gandhi",
+    "Gandhi"
+   ]
+  ],
+  [
+   "Martin Luther King",
+   [
+    "Martin Luther King"
+   ]
+  ],
+  [
+   "Nelson Mandela",
+   [
+    "Mandela"
+   ]
+  ],
+  [
+   "Mother Teresa",
+   [
+    "Mother Teresa"
+   ]
+  ],
+  [
+   "The Dalai Lama",
+   [
+    "Dalai Lama"
+   ]
+  ],
+  [
+   "Prince Philip",
+   [
+    "Prince Philip",
+    "Prince Phillip"
+   ]
+  ],
+  [
+   "King Charles III",
+   [
+    "Prince Charles",
+    "King Charles III",
+    "Charles III",
+    "King Charles the Third"
+   ]
+  ],
+  [
+   "Princess Diana",
+   [
+    "Princess Diana",
+    "Princess Di",
+    "Lady Di",
+    "Lady Diana"
+   ]
+  ],
+  [
+   "Prince Harry",
+   [
+    "Prince Harry"
+   ]
+  ],
+  [
+   "Prince Andrew",
+   [
+    "Prince Andrew"
+   ]
+  ],
+  [
+   "Donald Trump",
+   [
+    "Trump"
+   ]
+  ],
+  [
+   "Boris Johnson",
+   [
+    "Boris Johnson"
+   ]
+  ],
+  [
+   "Margaret Thatcher",
+   [
+    "Thatcher"
+   ]
+  ],
+  [
+   "Tony Blair",
+   [
+    "Tony Blair"
+   ]
+  ],
+  [
+   "Barack Obama",
+   [
+    "Obama"
+   ]
+  ],
+  [
+   "Bill Clinton",
+   [
+    "Bill Clinton"
+   ]
+  ],
+  [
+   "Ronald Reagan",
+   [
+    "Reagan"
+   ]
+  ],
+  [
+   "Richard Nixon",
+   [
+    "Nixon"
+   ]
+  ],
+  [
+   "John F. Kennedy",
+   [
+    "John F. Kennedy",
+    "John F Kennedy",
+    "JFK",
+    "President Kennedy"
+   ]
+  ],
+  [
+   "Liz Truss",
+   [
+    "Liz Truss"
+   ]
+  ],
+  [
+   "Kim Jong Un",
+   [
+    "Kim Jong Un",
+    "Kim Jong-un",
+    "Kim Jong"
+   ]
+  ],
+  [
+   "Vladimir Putin",
+   [
+    "Putin"
+   ]
+  ],
+  [
+   "Elon Musk",
+   [
+    "Elon Musk",
+    "Musk"
+   ]
+  ],
+  [
+   "Bill Gates",
+   [
+    "Bill Gates"
+   ]
+  ],
+  [
+   "Steve Jobs",
+   [
+    "Steve Jobs"
+   ]
+  ],
+  [
+   "Mark Zuckerberg",
+   [
+    "Zuckerberg"
+   ]
+  ],
+  [
+   "Jeff Bezos",
+   [
+    "Bezos"
+   ]
+  ],
+  [
+   "David Attenborough",
+   [
+    "Attenborough"
+   ]
+  ],
+  [
+   "Brian Cox",
+   [
+    "Brian Cox"
+   ]
+  ],
+  [
+   "Neil deGrasse Tyson",
+   [
+    "Neil deGrasse Tyson",
+    "Neil DeGrasse Tyson",
+    "Neil de Grasse Tyson",
+    "deGrasse Tyson"
+   ]
+  ],
+  [
+   "Patrick Moore",
+   [
+    "Patrick Moore"
+   ]
+  ],
+  [
+   "Richard Dawkins",
+   [
+    "Dawkins"
+   ]
+  ],
+  [
+   "Uri Geller",
+   [
+    "Uri Geller",
+    "Yuri Geller",
+    "Geller"
+   ]
+  ],
+  [
+   "Rupert Sheldrake",
+   [
+    "Sheldrake"
+   ]
+  ],
+  [
+   "Graham Hancock",
+   [
+    "Graham Hancock"
+   ]
+  ],
+  [
+   "Stephen Fry",
+   [
+    "Stephen Fry"
+   ]
+  ],
+  [
+   "Sandi Toksvig",
+   [
+    "Toksvig"
+   ]
+  ],
+  [
+   "Alan Davies",
+   [
+    "Alan Davies"
+   ]
+  ],
+  [
+   "John Lloyd",
+   [
+    "John Lloyd"
+   ]
+  ],
+  [
+   "Brian Blessed",
+   [
+    "Brian Blessed"
+   ]
+  ],
+  [
+   "Richard Osman",
+   [
+    "Richard Osman"
+   ]
+  ],
+  [
+   "Greg Jenner",
+   [
+    "Greg Jenner"
+   ]
+  ],
+  [
+   "David Mitchell",
+   [
+    "David Mitchell"
+   ]
+  ],
+  [
+   "Jimmy Carr",
+   [
+    "Jimmy Carr"
+   ]
+  ],
+  [
+   "Bill Bailey",
+   [
+    "Bill Bailey"
+   ]
+  ],
+  [
+   "Noel Fielding",
+   [
+    "Noel Fielding"
+   ]
+  ],
+  [
+   "Michael Palin",
+   [
+    "Michael Palin"
+   ]
+  ],
+  [
+   "John Cleese",
+   [
+    "John Cleese"
+   ]
+  ],
+  [
+   "Douglas Adams",
+   [
+    "Douglas Adams"
+   ]
+  ],
+  [
+   "Terry Pratchett",
+   [
+    "Pratchett"
+   ]
+  ],
+  [
+   "Spike Milligan",
+   [
+    "Spike Milligan"
+   ]
+  ],
+  [
+   "Peter Cook",
+   [
+    "Peter Cook"
+   ]
+  ],
+  [
+   "Ken Campbell",
+   [
+    "Ken Campbell"
+   ]
+  ],
+  [
+   "Jon Ronson",
+   [
+    "Jon Ronson",
+    "John Ronson"
+   ]
+  ],
+  [
+   "Danny Robins",
+   [
+    "Danny Robins",
+    "Danny Robbins"
+   ]
+  ],
+  [
+   "Danny Wallace",
+   [
+    "Danny Wallace"
+   ]
+  ],
+  [
+   "Dan Snow",
+   [
+    "Dan Snow"
+   ]
+  ],
+  [
+   "Mary Roach",
+   [
+    "Mary Roach"
+   ]
+  ],
+  [
+   "Irving Finkel",
+   [
+    "Irving Finkel"
+   ]
+  ],
+  [
+   "David Bowie",
+   [
+    "Bowie"
+   ]
+  ],
+  [
+   "Elvis Presley",
+   [
+    "Elvis"
+   ]
+  ],
+  [
+   "John Lennon",
+   [
+    "John Lennon"
+   ]
+  ],
+  [
+   "Paul McCartney",
+   [
+    "McCartney"
+   ]
+  ],
+  [
+   "Ringo Starr",
+   [
+    "Ringo Starr"
+   ]
+  ],
+  [
+   "Michael Jackson",
+   [
+    "Michael Jackson"
+   ]
+  ],
+  [
+   "Freddie Mercury",
+   [
+    "Freddie Mercury"
+   ]
+  ],
+  [
+   "Taylor Swift",
+   [
+    "Taylor Swift"
+   ]
+  ],
+  [
+   "Dolly Parton",
+   [
+    "Dolly Parton"
+   ]
+  ],
+  [
+   "Elton John",
+   [
+    "Elton John"
+   ]
+  ],
+  [
+   "Bob Dylan",
+   [
+    "Bob Dylan"
+   ]
+  ],
+  [
+   "Johnny Cash",
+   [
+    "Johnny Cash"
+   ]
+  ],
+  [
+   "Jimi Hendrix",
+   [
+    "Hendrix"
+   ]
+  ],
+  [
+   "Kanye West",
+   [
+    "Kanye"
+   ]
+  ],
+  [
+   "Justin Bieber",
+   [
+    "Bieber"
+   ]
+  ],
+  [
+   "Tom Cruise",
+   [
+    "Tom Cruise"
+   ]
+  ],
+  [
+   "Tom Hanks",
+   [
+    "Tom Hanks"
+   ]
+  ],
+  [
+   "Jim Carrey",
+   [
+    "Jim Carrey"
+   ]
+  ],
+  [
+   "Dan Aykroyd",
+   [
+    "Aykroyd",
+    "Akroyd"
+   ]
+  ],
+  [
+   "Arnold Schwarzenegger",
+   [
+    "Schwarzenegger"
+   ]
+  ],
+  [
+   "Harrison Ford",
+   [
+    "Harrison Ford"
+   ]
+  ],
+  [
+   "Sean Connery",
+   [
+    "Sean Connery"
+   ]
+  ],
+  [
+   "Bill Murray",
+   [
+    "Bill Murray"
+   ]
+  ],
+  [
+   "Robin Williams",
+   [
+    "Robin Williams"
+   ]
+  ],
+  [
+   "Charlie Chaplin",
+   [
+    "Chaplin"
+   ]
+  ],
+  [
+   "Marilyn Monroe",
+   [
+    "Marilyn Monroe"
+   ]
+  ],
+  [
+   "Orson Welles",
+   [
+    "Orson Welles"
+   ]
+  ],
+  [
+   "Walt Disney",
+   [
+    "Walt Disney"
+   ]
+  ],
+  [
+   "Steven Spielberg",
+   [
+    "Spielberg"
+   ]
+  ],
+  [
+   "George Lucas",
+   [
+    "George Lucas"
+   ]
+  ],
+  [
+   "James Cameron",
+   [
+    "James Cameron"
+   ]
+  ],
+  [
+   "Keanu Reeves",
+   [
+    "Keanu"
+   ]
+  ],
+  [
+   "Nicolas Cage",
+   [
+    "Nicolas Cage",
+    "Nicholas Cage"
+   ]
+  ],
+  [
+   "Peter Sellers",
+   [
+    "Peter Sellers"
+   ]
+  ],
+  [
+   "Andy Serkis",
+   [
+    "Serkis"
+   ]
+  ],
+  [
+   "Bruce Lee",
+   [
+    "Bruce Lee"
+   ]
+  ],
+  [
+   "Usain Bolt",
+   [
+    "Usain Bolt"
+   ]
+  ],
+  [
+   "Muhammad Ali",
+   [
+    "Muhammad Ali",
+    "Mohammed Ali",
+    "Mohammad Ali"
+   ]
+  ],
+  [
+   "Tiger Woods",
+   [
+    "Tiger Woods"
+   ]
+  ],
+  [
+   "Michael Jordan",
+   [
+    "Michael Jordan"
+   ]
+  ],
+  [
+   "David Beckham",
+   [
+    "Beckham"
+   ]
+  ]
+ ],
+ "people_not": [
+  "Olivia Newton",
+  "Newton Abbot",
+  "Erasmus Darwin",
+  "Indira Gandhi",
+  "Caesar salad",
+  "Caesars Palace",
+  "Caesar's Palace",
+  "Little Caesars",
+  "Victoria Beckham"
+ ]
+}

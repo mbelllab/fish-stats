@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="robots" content="noindex, nofollow"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fact stats · Fish Stats</title>
+<link rel="stylesheet" href="../site.css?v=27cc7df6">
+<link rel="stylesheet" href="stats.css?v=7e04a0ce">
+<style>
+  /* the topic table's shading and the one-line readings under it */
+  td .heat { display: block; margin: -7px -10px; padding: 7px 10px; background: color-mix(in srgb, var(--accent2) var(--p), transparent); }
+  .readings { padding-left: 1.1rem; }
+  .readings li { margin: 2px 0; }
+</style>
+<link rel="stylesheet" href="../fishstats.css?v=c9963441">
+</head>
+<body>
+<nav class="sitebar" aria-label="Site"><a class="brand" href="../index.html">Fish Stats</a><a href="../index.html" aria-current="page">Stats</a><a href="../facts.html">Facts</a><a href="../episodes.html">Episodes</a></nav>
+<div class="page wide">
+  <div class="crumbs"><a href="../index.html">Fish Stats</a> / Fact stats</div>
+  <h1>Fact stats</h1>
+  <p class="lede">Who brings the most facts to No Such Thing As A Fish, who goes first and who closes the show. From the <a href="../facts.html">facts list</a>.</p>
+  <p class="built" id="built"></p>
+  <div class="tiles" id="tiles"></div>
+  <div class="two">
+    <div><h2>Facts per person</h2><div class="chart mid"><canvas id="per"></canvas></div></div>
+    <div><h2>Who goes first, second, third, last</h2><div class="chart mid"><canvas id="slot"></canvas></div></div>
+  </div>
+  <h2>Facts per episode, by year</h2>
+  <p class="note">Each host's facts in a year, divided by that year's episodes, so a year that isn't over yet compares fairly.</p>
+  <div class="chart tall"><canvas id="years"></canvas></div>
+  <h2>Fact topics by host</h2>
+  <p class="note">What each host's facts are about, as a share of their facts. The darker the cell, the bigger the share.</p>
+  <div id="topics"></div>
+  <ul class="note readings" id="readings"></ul>
+  <p class="note">A word list picks each fact's topic, not a person. A fact about a
+    pigeon-loving inventor counts as Animals.</p>
+  <h2>Guests who brought a fact</h2>
+  <div id="guests"></div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" integrity="sha384-bs/nf9FbdNouRbMiFcrcZfLXYPKiPaGVGplVbv7dLGECccEXDW+S3zjqSKR5ZEaD" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="../site.js?v=5ed52cef"></script>
+<script src="../episode-links.js?v=3767e14c"></script><script src="../site-config.js?v=3af975ec"></script><script src="stats.js?v=f6e16ff7"></script>
+<script>
+const { $ } = Site;
+let HOSTS = [];   // the Fish hosts, from summary.json (curated/shows.json via build_stats.py)
+// Topic of a fact from the keyword lists in fact_topics.json: the topic with the highest score
+// (hits times the topic's weight) wins, a tie goes to the topic listed first, no hits is "Other".
+function topicer(cfg) {
+  const lit = w => w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const rx = cfg.topics.map(([name, words, weight]) => [name, weight || 1, new RegExp("\\b(" + words.map(w =>
+    w.endsWith("*") ? lit(w.slice(0, -1)) + "\\w*" : lit(w)).join("|") + ")\\b", "gi")]);
+  return text => { let best = "Other", score = 0;
+    rx.forEach(([name, w, r]) => { const s = (text.match(r) || []).length * w; if (s > score) { best = name; score = s; } });
+    return best; };
+}
+// The site's own facts.json (the same file the Facts page uses); summary.json for the hosts and the "Updated" line.
+S.page(Promise.all([S.load("../facts"), S.load("summary"), S.load("fact_topics")]), ([d, sum, tcfg]) => { S.built(sum);
+  HOSTS = (sum.hosts || {})[S.FISH] || [];
+  const all = d.fish.flatMap(e => e.facts.map(f => ({ ...f, ep: e })));
+  const per = {}; all.forEach(f => { const w = f.who || "?"; per[w] = (per[w] || 0) + 1; });
+  const guestFacts = all.filter(f => f.who && !HOSTS.includes(f.who));
+  S.tiles($("tiles"), [
+    ["Facts", S.num(all.length), `from ${S.num(d.fish.length)} episodes`],
+    ...HOSTS.map(h => [h, S.num(per[h] || 0), S.pct((per[h] || 0) / all.length)]),
+    ["Guests", S.num(guestFacts.length), "facts from guests"],
+  ]);
+  S.chart("per", { type: "bar", data: { labels: HOSTS.concat(["Guests"]), datasets: [{ data: HOSTS.map(h => per[h] || 0).concat([guestFacts.length]),
+    backgroundColor: HOSTS.map(S.color).concat([S.color("Guest")]) }] }, options: { plugins: { legend: { display: false } } } });
+  // slot: 1st, 2nd, 3rd, last (only episodes with exactly four facts, so "last" means fourth)
+  const four = d.fish.filter(e => e.facts.length === 4);
+  const slots = ["First", "Second", "Third", "Last"];
+  S.chart("slot", { type: "bar", data: { labels: slots, datasets: HOSTS.map(h => ({ label: h, backgroundColor: S.color(h),
+    data: slots.map((_, i) => four.filter(e => e.facts[i].who === h).length) })) },
+    options: { scales: { x: { stacked: true }, y: { stacked: true } } } });
+  const years = [...new Set(d.fish.map(e => S.year(e.date)))].sort();
+  const epsIn = {}; d.fish.forEach(e => { const y = S.year(e.date); epsIn[y] = (epsIn[y] || 0) + 1; });
+  S.chart("years", { type: "line", data: { labels: years, datasets: HOSTS.map(h => ({ label: h, borderColor: S.color(h), tension: .3,
+    data: years.map(y => +(all.filter(f => f.who === h && S.year(f.ep.date) === y).length / epsIn[y]).toFixed(2)) })) },
+    options: { scales: { y: { beginAtZero: true } } } });
+  // topics: share of each host's facts per topic, and who leans hardest into each one
+  const topicOf = topicer(tcfg), names = tcfg.topics.map(t => t[0]).concat(["Other"]);
+  const tc = {}, hostN = {}; all.forEach(f => { if (!HOSTS.includes(f.who)) return; const t = topicOf(f.fact);
+    hostN[f.who] = (hostN[f.who] || 0) + 1; ((tc[t] = tc[t] || {})[f.who] = (tc[t][f.who] || 0) + 1); });
+  const hostsAll = HOSTS.reduce((s, h) => s + (hostN[h] || 0), 0);
+  const trows = names.map(t => { const r = { t, all: HOSTS.reduce((s, h) => s + ((tc[t] || {})[h] || 0), 0) / hostsAll };
+    HOSTS.forEach(h => r[h] = hostN[h] ? ((tc[t] || {})[h] || 0) / hostN[h] : 0); return r; }).filter(r => r.all > 0);
+  const maxShare = Math.max(...trows.flatMap(r => HOSTS.map(h => r[h])));
+  const cell = v => `<span class="heat" style="--p:${Math.round(70 * v / maxShare)}%">${S.pct(v)}</span>`;
+  S.table($("topics"), [{ key: "t", label: "Topic" }, { key: "all", label: "All hosts", num: true, cls: "lo", fmt: r => S.pct(r.all) }]
+    .concat(HOSTS.map(h => ({ key: h, label: h, num: true, fmt: r => cell(r[h]) }))), trows, { sort: "all" });
+  // "The most X host": the biggest share compared with the hosts' average for that topic.
+  // Strongest leanings first.
+  $("readings").innerHTML = trows.filter(r => r.t !== "Other" && r.all * hostsAll >= 20)
+    .map(r => { const h = HOSTS.reduce((a, b) => r[b] > r[a] ? b : a); return { r, h, x: r[h] / r.all }; }).sort((a, b) => b.x - a.x)
+    .map(({ r, h, x }) => `<li>The most <b>${S.esc(r.t)}</b> host is ${S.esc(h)}: ${S.pct(r[h])} of their facts, ${x.toFixed(1)} times the hosts' average</li>`).join("");
+  const g = {}; guestFacts.forEach(f => (g[f.who] = g[f.who] || []).push(f));
+  const rows = Object.entries(g).map(([who, fs]) => ({ who, n: fs.length, fs }));
+  S.table($("guests"), [
+    { key: "who", label: "Guest" }, { key: "n", label: "Facts", num: true },
+    { key: "fs", label: "Their facts", cls: "clip", sort: r => r.fs[0].fact, fmt: r =>
+      `<a class="fact" href="${S.link(r.fs[0].ep.podcast, r.fs[0].ep.episode, r.fs[0].t)}">${S.esc(r.fs[0].fact)}</a>` +
+      (r.n > 1 ? `<a class="also" href="../facts.html#q=${encodeURIComponent(r.who)}">and ${r.n - 1} more</a>` : "") },
+  ], rows, { sort: "n" });
+});
+</script>
+<footer class="fan">Fish Stats is an unofficial fan project. It isn't made or endorsed by No Such Thing As A Fish or QI. The numbers are worked out from automatic transcripts of the free public episodes. <a href="https://www.nosuchthingasafish.com/">Listen to the show</a>.</footer>
+</body>
+</html>

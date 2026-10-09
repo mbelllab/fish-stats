@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="robots" content="noindex, nofollow"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How they talk · Fish Stats</title>
+<link rel="stylesheet" href="../site.css?v=27cc7df6">
+<link rel="stylesheet" href="stats.css?v=7e04a0ce">
+<style>
+/* word chips (each opens the main search) and the year list */
+.sigs { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: 12px; }
+.sig { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { display: inline-flex; align-items: baseline; gap: 5px; padding: 4px 10px; border: 1px solid var(--line2); border-radius: 999px;
+         color: var(--text); font-size: .86rem; line-height: 1.4; }
+a.chip:hover { background: var(--line); color: var(--text); border-color: var(--accent-line); }
+.chip small { color: var(--muted); font-size: .74rem; font-variant-numeric: tabular-nums; }
+.years { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; }
+.yr { display: grid; grid-template-columns: 3.2rem minmax(0, 1fr); gap: 10px; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+.yr:last-child { border-bottom: 0; }
+.yr .y { font-weight: 700; font-variant-numeric: tabular-nums; padding-top: 4px; }
+.yr .y small { display: block; color: var(--faint); font-weight: 400; font-size: .72rem; }
+</style>
+<link rel="stylesheet" href="../fishstats.css?v=c9963441">
+</head>
+<body>
+<nav class="sitebar" aria-label="Site"><a class="brand" href="../index.html">Fish Stats</a><a href="../index.html" aria-current="page">Stats</a><a href="../facts.html">Facts</a><a href="../episodes.html">Episodes</a></nav>
+<div class="page wide">
+  <div class="crumbs"><a href="../index.html">Fish Stats</a> / How they talk</div>
+  <h1>How they talk</h1>
+  <p class="lede">Each host's trademark words, the words that sum up each year, and who has the widest vocabulary.</p>
+  <p class="built" id="built"></p>
+  <div class="controls">
+    <span class="ctl">Show<span class="seg" id="show"></span></span>
+    <span class="ctl">Host<span class="seg" id="host"></span></span>
+  </div>
+  <div class="tiles" id="tiles"></div>
+
+  <h2>Signature words</h2>
+  <p class="note">Words each host says far more than anyone else on the show. The number is how many times as often they say it.</p>
+  <div class="sigs" id="sig"></div>
+  <p class="note">"As often" is per word spoken, so talking more doesn't help.
+    A word also needs plenty of uses to rank high, so a word said 30 times can't beat one said 3,000 times by luck.
+    Grammar words and names are left out, and so are words used fewer than 30 times or in fewer than 10 episodes. The whole page also skips the business of running the show: the first and last 3 minutes of every episode (intros, sign-offs, plugs), the bonus episodes (Drop Us A Line, Club Fish, compilations), and words like "microphones", "episode", "Club Fish" and "tier". <span class="full-site-only">Tap a word to hear them say it.</span></p>
+
+  <h2>Word of the year</h2>
+  <div class="years" id="years"></div>
+  <p class="note">Words said more that year than in the show's other years, scored the same way. An episode counts a word at most three times,
+    so one episode about potatoes can't win a year on its own. Adverts and the weekly intro are left out. <span class="full-site-only">Tap a word to find it in that year.</span></p>
+
+  <h2>Vocabulary</h2>
+  <div class="chart"><canvas id="vocab"></canvas></div>
+  <p class="note">How many different words someone uses in every 1,000 words they say, averaged over all their talking. Measuring equal
+    stretches means talking more doesn't win. Only people with at least 10,000 words are shown, with hosts in their colours.</p>
+
+  <p class="note">All of this depends on who the transcripts say is speaking. Hosts are named reliably, guests less so.</p>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" integrity="sha384-bs/nf9FbdNouRbMiFcrcZfLXYPKiPaGVGplVbv7dLGECccEXDW+S3zjqSKR5ZEaD" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="../site.js?v=5ed52cef"></script>
+<script src="../episode-links.js?v=3767e14c"></script><script src="../site-config.js?v=3af975ec"></script><script src="stats.js?v=f6e16ff7"></script>
+<script>
+const { $ } = Site;
+let D, show = S.state.get("show", S.FISH), host = S.state.get("host", "all");
+// The main search for a word, optionally said by one person or in one year of the show.
+const searchFor = (w, o = {}) => S.searchUrl(Object.assign({ q: w, podcast: show },
+  o.who ? { speaker: o.who } : {}, o.y ? { yf: o.y, yt: o.y } : {}));
+// A word chip: a link to that search, or plain on a site with no search.
+const chip = (url, title, inner) => url ? `<a class="chip" href="${url}" title="${title}">${inner}</a>` : `<span class="chip" title="${title}">${inner}</span>`;
+// A word-of-the-year tile: the year's top word and how many episodes it came up in.
+const yearTile = y => [y ? `Word of ${y.y}` : "Word of the year", y && y.w[0] ? '"' + S.esc(y.w[0][0]) + '"' : "–",
+  y && y.w[0] ? `in ${S.plural(y.w[0][3], "episode")}` : ""];
+const times = x => x >= 10 ? Math.round(x) + "×" : x.toFixed(1) + "×";
+
+function hostSeg() {
+  const hosts = D.hosts[show];
+  if (host !== "all" && !hosts.includes(host)) { host = "all"; S.state.set("host", ""); }
+  S.seg($("host"), [["all", "All"], ...hosts.map(h => [h, h])], host,
+    v => { host = v; S.state.set("host", v === "all" ? "" : v); render(); });
+}
+
+function render() {
+  const hosts = D.hosts[show], sig = D.sig[show] || {}, years = D.years[show] || [];
+  const si = D.shows.indexOf(show), people = D.vocab.filter(r => r[3].includes(si));
+
+  // Headline tiles
+  const best = hosts.flatMap(h => (sig[h] || []).slice(0, 10).map(r => ({ h, w: r[0], x: r[3] }))).sort((a, b) => b.x - a.x)[0];
+  S.tiles($("tiles"), [
+    ["Trademark word", best ? '"' + S.esc(best.w) + '"' : "–", best ? `${S.esc(best.h)} says it ${times(best.x)} as often as the rest` : ""],
+    yearTile(years[0]),
+    yearTile(years[1]),
+    ["Widest vocabulary", people[0] ? S.esc(people[0][0]) : "–", people[0] ? `${people[0][1]} different words per 1,000` : ""],
+  ]);
+
+  // Signature words
+  const shown = host === "all" ? hosts : [host];
+  $("sig").innerHTML = shown.filter(h => sig[h] && sig[h].length).map(h => `<div class="sig">
+      <h3><span class="dot" style="background:${S.color(h)}"></span>${S.esc(h)}</h3>
+      <div class="chips">${sig[h].map(([w, , n, x]) => chip(searchFor(w, { who: h }),
+        `${S.esc(h)} has said it ${S.num(n)} times, ${times(x)} as often as the others`, `${S.esc(w)}<small>${times(x)}</small>`)).join("")}</div>
+    </div>`).join("") || '<p class="empty">Not enough talk from this host yet.</p>';
+
+  // Word of the year, newest first
+  $("years").innerHTML = years.map(y => `<div class="yr"><div class="y">${y.y}<small>${S.plural(y.eps, "ep")}</small></div>
+      <div class="chips">${y.w.map(([w, , n, e]) => chip(searchFor(w, { y: y.y }),
+        `Said ${S.num(n)} times in ${S.plural(e, "episode")} of ${y.y}`, S.esc(w))).join("")}</div></div>`).join("")
+    || '<p class="empty">Not enough episodes yet.</p>';
+
+  // Vocabulary
+  S.hbar("vocab", people.map(r => r[0]), people.map(r => r[1]), people.map(r => S.color(r[0])), {
+    scales: { x: { min: 0, title: { display: true, text: "different words per 1,000" } },
+      y: { ticks: { autoSkip: false, callback: (_v, i) => S.clip(people[i][0], matchMedia("(max-width: 760px)").matches ? 18 : 30) } } },
+    plugins: { legend: { display: false }, tooltip: { callbacks: { title: c => people[c[0].dataIndex][0],
+      label: c => `${c.parsed.x} different words per 1,000 · ${S.num(people[c.dataIndex][2])} words in all` } } } });
+}
+
+S.page(S.load("style"), d => {
+  D = d; S.built(d);
+  S.seg($("show"), [[S.FISH, "Fish"]], show,
+    v => { show = v; S.state.set("show", v); hostSeg(); render(); });
+  hostSeg();
+  render();
+});
+</script>
+<footer class="fan">Fish Stats is an unofficial fan project. It isn't made or endorsed by No Such Thing As A Fish or QI. The numbers are worked out from automatic transcripts of the free public episodes. <a href="https://www.nosuchthingasafish.com/">Listen to the show</a>.</footer>
+</body>
+</html>

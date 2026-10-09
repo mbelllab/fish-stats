@@ -1,0 +1,6 @@
+data/
+site/
+__pycache__/
+scripts/hf_token.txt
+scripts/whispercpp/
+scripts/ffmpeg7/

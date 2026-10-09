@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="robots" content="noindex, nofollow"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Word tracker · Fish Stats</title>
+<link rel="stylesheet" href="../site.css?v=27cc7df6">
+<link rel="stylesheet" href="stats.css?v=7e04a0ce">
+<style>
+  /* the box and its Track button share one full-width row; the Show and Everyone pills go below */
+  .qrow { display: flex; gap: 8px; flex: 1 1 100%; min-width: 0; }
+  .qrow input { flex: 0 1 40rem; min-width: 0; }
+  .qrow .btn { flex: 0 0 auto; }
+  /* suggestion chips under the box, the status line, and the "Where in the episode" block */
+  .try { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 10px; font-size: .82rem; color: var(--muted); }
+  .try .pill { min-height: 32px; padding: 4px 11px; font-size: .82rem; }
+  .try .list { color: var(--accent2); border-style: dashed; }
+  #status { min-height: 1.3em; color: var(--muted); }
+  #status.bad { color: var(--bad); }
+  .busy .chart, .busy .tiles, .busy .what { opacity: .45; transition: opacity .2s; }
+  .where-h { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: baseline; justify-content: space-between; }
+  .where-h h2 { margin-bottom: 4px; }
+  #whereRead { font-weight: 600; color: var(--text); margin: 0 0 8px; }
+  .nohits .where, .failed .where, .nohits .extra, .failed .extra, .nohits .what, .failed .what { display: none; }
+  /* the hint under the box, and the "More options" panel (closed until opened) */
+  .hint { font-size: .8rem; }
+  .hint code { color: var(--accent2); font: inherit; font-weight: 600; }
+  .opts { margin-top: 10px; }
+  .opts > summary { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; list-style: none; min-height: 36px; padding: 6px 12px;
+                    border: 1px solid var(--line2); border-radius: 999px; font-size: .85rem; color: var(--accent2); }
+  .opts > summary::-webkit-details-marker { display: none; }
+  .opts > summary::before { content: "+"; font-weight: 700; width: .8em; text-align: center; }
+  .opts[open] > summary::before { content: "−"; }
+  .opts > summary:hover { background: var(--line); }
+  .opts > summary b { color: var(--text); font-weight: 600; }
+  .opt-grid { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; margin-top: 10px; padding: 12px 14px;
+              background: var(--panel); border: 1px solid var(--line); border-radius: 12px; }
+  .opt-grid select { min-height: 36px; padding: 6px 10px; }
+  #spk { max-width: 14rem; }
+  .ctl.off { opacity: .45; }
+  /* the words being tracked and the filters in force, right above the numbers (so a screenshot explains itself) */
+  .what { margin: 18px 0 0; }
+  .what h2 { margin: 0; font-size: 1.35rem; overflow-wrap: anywhere; }
+  .what p { margin: 2px 0 0; color: var(--muted); font-size: .88rem; }
+  /* firsts and lasts */
+  .fl { display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: 10px; }
+  .fl > div { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; font-size: .88rem; }
+  .fl p { margin: 4px 0 0; }
+  .fl .k { font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 700; margin-right: 4px; }
+  /* top episodes: on phones the date and show sit under the title instead of in their own columns */
+  #top .sm { display: none; font-size: .78rem; color: var(--muted); }
+  @media (max-width: 760px) { #spk { max-width: 100%; } #top .sm { display: block; } }
+</style>
+<link rel="stylesheet" href="../fishstats.css?v=c9963441">
+</head>
+<body class="nohits">
+<nav class="sitebar" aria-label="Site"><a class="brand" href="../index.html">Fish Stats</a><a href="../index.html" aria-current="page">Stats</a><a href="../facts.html">Facts</a><a href="../episodes.html">Episodes</a></nav>
+<div class="page wide">
+  <div class="crumbs"><a href="../index.html">Fish Stats</a> / Word tracker</div>
+  <h1>Word tracker</h1>
+  <p class="lede">Type any word or phrase to see how often it's said each year, who says it, and where in an episode it comes. Compare up to four by separating them with commas.</p>
+  <p class="built">Searches the live transcripts, so it's always up to date.</p>
+  <form class="controls" id="f">
+    <span class="qrow"><input type="search" id="q" placeholder="e.g. ghost, or bigfoot | yeti" aria-label="Word or phrase to track" autocomplete="off" maxlength="250" enterkeyhint="search">
+      <button class="btn" type="submit">Track</button></span>
+    <span class="ctl">Show<span class="seg" id="show"></span></span>
+    <span class="ctl" id="who-c"><span class="seg" id="who-f"></span></span>
+  </form>
+  <p class="note hint">Commas compare words: <code>ghost, alien</code>. A | counts words together as one: <code>bigfoot | sasquatch | yeti</code>.</p>
+  <details class="opts" id="opts">
+    <summary>More options<b id="optCount"></b></summary>
+    <div class="opt-grid">
+      <span class="ctl">Time scale<span class="seg" id="scale"></span></span>
+      <span class="ctl">Count<span class="seg" id="norm"></span></span>
+      <label class="ctl">Said by <select id="spk"><option value="">Anyone</option></select></label>
+      <span class="ctl">Years <select id="yf" aria-label="From year"><option value="">Any</option></select> to
+        <select id="yt" aria-label="To year"><option value="">Any</option></select></span>
+      <label class="ctl">Episodes <select id="kind"><option value="">All</option><option value="main">Main episodes only</option></select></label>
+      <button class="btn alt sm" type="button" id="clear">Clear options</button>
+    </div>
+  </details>
+  <div class="try" id="try"></div>
+  <p class="note" id="status" aria-live="polite"></p>
+  <div class="what"><h2 id="what"></h2><p id="filters"></p></div>
+  <div class="tiles" id="tiles"><p class="empty">Type a word or phrase above, or tap one of the suggestions.</p></div>
+  <h2 id="h1">By year</h2>
+  <div class="chart tall"><canvas id="years"></canvas></div>
+  <div class="two">
+    <div><h2>Who says it most</h2><div class="chart short"><canvas id="who"></canvas></div>
+      <p class="note people" id="whoLinks"></p></div>
+    <div class="multi-show"><h2>By show</h2><div class="chart short"><canvas id="shows"></canvas></div></div>
+  </div>
+  <div class="extra">
+    <h2>First and last time</h2>
+    <div class="fl" id="fl"></div>
+    <h2>Top episodes</h2>
+    <div id="top"></div>
+    <p class="note">The episodes where it's said most. Tap a column to sort.</p>
+  </div>
+  <div class="where">
+    <div class="where-h"><h2>Where in the episode</h2><span class="ctl"><span class="seg" id="wmode"></span></span></div>
+    <p class="note" id="whereRead"></p>
+    <div class="chart mid"><canvas id="where"></canvas></div>
+    <p class="note" id="whereNote"></p>
+  </div>
+  <div id="tbl"></div>
+  <p class="note">"Per hour" divides by the hours of audio in that year, month or episode, so busy years don't win by default.
+    A search also finds other forms of a word ("ghost" finds "ghosts"). Hosts are named reliably, guests less so.</p>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" integrity="sha384-bs/nf9FbdNouRbMiFcrcZfLXYPKiPaGVGplVbv7dLGECccEXDW+S3zjqSKR5ZEaD" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="../site.js?v=5ed52cef"></script>
+<script src="../episode-links.js?v=3767e14c"></script><script src="../site-config.js?v=3af975ec"></script><script src="stats.js?v=f6e16ff7"></script>
+<script>
+// Settings, all kept in the URL (#q=ghost&scale=month&yf=2018...) so a link reproduces the chart.
+// show, who and norm are applied here; scale, spk, yf, yt and kind are asked of api.php.
+const opt = { scale: S.state.get("scale", "year"), spk: S.state.get("spk", ""), yf: S.state.get("yf", ""), yt: S.state.get("yt", ""), kind: S.ALL_KINDS ? "" : S.state.get("kind", "") };
+let HOSTS = null, SPEAKERS = null, LIST = null, show = S.state.get("show", "all"), norm = S.state.get("norm", "count"),
+  hostsOnly = S.state.get("who") === "hosts", wmode = S.state.get("where", "pct"), last = [];
+const { $ } = Site;
+const qEl = $("q"), statusEl = $("status"), page = document.querySelector(".page");
+const PROMPT = '<p class="empty">Type a word or phrase above, or tap one of the suggestions.</p>';
+// Hosts per show (for "Hosts only") and the first suggestions come from the small summary file.
+S.load("summary").then(d => { HOSTS = d.hosts || null; suggest(d); if (last.length) draw(); }).catch(e => { console.error(e); suggest({}); });
+// The names the main search's "Said by" list knows (most heard first): the person picker, and only those can open a filtered search.
+fetch("../api.php?action=speakers").then(r => r.json()).then(n => { SPEAKERS = Array.isArray(n) ? n : []; fillSpeakers(); if (last.length) draw(); }).catch(() => { SPEAKERS = []; });
+// Every episode once (id, show, name, length, kind): episode names, and the hours of audio for "Per hour".
+const listReady = fetch("../api.php?action=trend&list=1").then(r => r.json()).then(d => {
+  LIST = new Map(d.ep.map(([id, si, e, sec, kind]) => [id, { id, p: d.shows[si], e, sec, kind, y: e.slice(0, 4), m: e.slice(0, 7) }]));
+  fillYears(); fillKinds();
+}).catch(e => { console.error(e); LIST = null; });
+// "Hosts only": a line counts when its speaker hosts that line's show. With All shows,
+// the hosts of any of the three count (before summary.json arrives, anyone with a host colour).
+// Picking one person replaces it.
+const isHostOf = (spk, podcast) => HOSTS && HOSTS[podcast] ? (show === "all" ? Object.values(HOSTS).some(h => h.includes(spk)) : HOSTS[podcast].includes(spk)) : S.isHost(spk);
+const keep = (podcast, spk) => (show === "all" || podcast === show) && (opt.spk || !hostsOnly || isHostOf(spk, podcast));
+// The main search for these words (any of them), said by one person, with the same show and years.
+const quote = a => /\s/.test(a) ? `"${a}"` : a;
+const searchFor = name => S.searchUrl(Object.assign({ q: last.flatMap(s => s.alts).map(quote).join(" | ") },
+  show !== "all" ? { podcast: show } : {}, name || opt.spk ? { speaker: name || opt.spk } : {}, opt.yf ? { yf: opt.yf } : {}, opt.yt ? { yt: opt.yt } : {}));
+const canSearch = name => !!S.searchUrl({}) && !!name && name !== "?" && (SPEAKERS === null || !SPEAKERS.length || SPEAKERS.includes(name));
+// An episode in the list passes the show, years and episode-kind settings.
+const MAIN = ["Main", "Guest episode", "Issue"];
+const epKept = e => (show === "all" || e.p === show) && (!opt.yf || e.y >= opt.yf) && (!opt.yt || e.y <= opt.yt)
+  && (!opt.kind || (opt.kind === "main" ? MAIN.includes(e.kind) : e.kind === opt.kind));
+// The period an episode falls in: "2019", "2019-03" or its id.
+const periodOf = e => opt.scale === "month" ? e.m : opt.scale === "episode" ? e.id : e.y;
+// Hours of audio per period, for "Per hour" (the whole show's audio, whoever is picked).
+function hoursBy() {
+  const h = new Map(); if (!LIST) return h;
+  LIST.forEach(e => { if (epKept(e)) h.set(periodOf(e), (h.get(periodOf(e)) || 0) + e.sec / 3600); });
+  return h;
+}
+const monthName = m => Site.MONTHS[+m.slice(5, 7) - 1] + " " + m.slice(0, 4);
+const epName = e => (show === "all" ? S.SHORT[e.p] + " · " : "") + Site.episode(e.e).label;
+
+// suggestions: the top catchphrases, plus the full curated lists on request
+function suggest(d) {
+  const top = [...(d.phrases || []).map(x => x[0])]
+    .filter(w => w.length <= 30).slice(0, 6);
+  const words = [...new Set([...top, "that's my fact"])];
+  const el = $("try");
+  el.innerHTML = "Try " + words.map(chip).join("") +
+    `<button type="button" class="pill list" data-list="phrases">All catchphrases</button><button type="button" class="pill list" data-list="swears">Swears</button>`;
+}
+const chip = w => `<button type="button" class="pill" data-w="${S.esc(w)}">${S.esc(w)}</button>`;
+$("try").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  if (b.dataset.w) { qEl.value = b.dataset.w; run(); return; }
+  // The curated lists live in the Catchphrases and Swears pages' files (fetched only when asked for).
+  b.disabled = true;
+  const shown = new Set([...e.currentTarget.querySelectorAll("[data-w]")].map(x => x.dataset.w));
+  S.load(b.dataset.list).then(d => { b.outerHTML = (d.words || []).filter(w => !shown.has(w)).map(chip).join(""); })
+    .catch(() => { b.disabled = false; b.textContent += " (couldn't load)"; });
+});
+
+// the "More options" panel
+function fillSpeakers() {
+  const sel = $("spk"), names = [...(SPEAKERS || [])];
+  if (opt.spk && !names.includes(opt.spk)) names.unshift(opt.spk);
+  const hosts = names.filter(S.isHost), rest = names.filter(n => !S.isHost(n));
+  const o = n => `<option value="${S.esc(n)}">${S.esc(n)}</option>`;
+  sel.innerHTML = `<option value="">Anyone</option><optgroup label="Hosts">${hosts.map(o).join("")}</optgroup>` +
+    (rest.length ? `<optgroup label="Guests and others">${rest.map(o).join("")}</optgroup>` : "");
+  sel.value = opt.spk;
+}
+function fillYears() {
+  const ys = [...new Set([...LIST.values()].map(e => e.y))].sort();
+  ["yf", "yt"].forEach(k => { $(k).innerHTML = '<option value="">Any</option>' + ys.map(y => `<option>${y}</option>`).join(""); $(k).value = opt[k]; });
+}
+// Episode kinds, worked out by api.php from the titles (the same rules as the Stats build). The main kind
+// of each show is "Main episodes only"; the others are listed under their show with how many there are.
+function fillKinds() {
+  const n = new Map(); LIST.forEach(e => { if (!MAIN.includes(e.kind)) { const k = e.p + "\t" + e.kind; n.set(k, (n.get(k) || 0) + 1); } });
+  const by = {}; [...n].sort((a, b) => b[1] - a[1]).forEach(([k, c]) => { const [p, kind] = k.split("\t"); (by[p] = by[p] || []).push([kind, c]); });
+  $("kind").innerHTML = '<option value="">All</option><option value="main">Main episodes only</option>' + Object.entries(by).map(([p, ks]) =>
+    `<optgroup label="${S.esc(S.SHORT[p] || p)}">${ks.map(([k, c]) => `<option value="${S.esc(k)}">${S.esc(k)} (${c})</option>`).join("")}</optgroup>`).join("");
+  $("kind").value = opt.kind;
+}
+const KIND_NAME = k => k === "main" ? "Main episodes" : k;
+// What's set, in words: "Fish, Hosts only, 2018-2024, per hour".
+function filterLine() {
+  const y = opt.yf && opt.yt ? (opt.yf === opt.yt ? opt.yf : `${opt.yf}–${opt.yt}`) : opt.yf ? `${opt.yf} on` : opt.yt ? `up to ${opt.yt}` : "";
+  return [show !== "all" && S.SHORT[show], opt.spk ? "Said by " + S.who(opt.spk) : hostsOnly && "Hosts only", y, opt.kind && KIND_NAME(opt.kind),
+    opt.scale === "month" && "by month", opt.scale === "episode" && "episode by episode", norm === "hour" && "per hour"].filter(Boolean).join(" · ");
+}
+function optCount() {
+  const n = ["spk", "yf", "yt", "kind"].filter(k => opt[k]).length + (opt.scale !== "year") + (norm === "hour") - (opt.yf && opt.yt ? 1 : 0);
+  $("optCount").textContent = n ? ` · ${n} set` : "";
+  $("who-c").classList.toggle("off", !!opt.spk);
+  $("who-c").title = opt.spk ? "A person is picked under More options" : "";
+}
+// A setting the API needs (scale, person, years, kind) fetches again; the others only redraw.
+function setOpt(k, v) { opt[k] = v; S.state.set(k, v === "year" ? "" : v); optCount(); if (last.length || qEl.value) run(); }
+["spk", "yf", "yt", "kind"].forEach(k => $(k).addEventListener("change", e => setOpt(k, e.target.value)));
+$("clear").addEventListener("click", () => {
+  Object.assign(opt, { scale: "year", spk: "", yf: "", yt: "", kind: "" }); norm = "count";
+  ["scale", "spk", "yf", "yt", "kind", "norm"].forEach(k => S.state.set(k, ""));
+  ["spk", "yf", "yt", "kind"].forEach(k => $(k).value = "");
+  segs(); optCount(); if (last.length || qEl.value) run();
+});
+
+// fetching: each word is asked for once per setting (cached), typing waits for a pause, stale answers are dropped
+const cache = new Map();
+const apiOpts = () => ["scale", "spk", "yf", "yt", "kind"].filter(k => opt[k] && !(k === "scale" && opt[k] === "year"))
+  .map(k => `&${k}=${encodeURIComponent(opt[k])}`).join("");
+const fetchTerm = t => {
+  const k = t.toLowerCase() + apiOpts();
+  if (!cache.has(k)) cache.set(k, fetch("../api.php?action=trend&q=" + encodeURIComponent(t) + apiOpts())
+    .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(j => { if (j.error) throw new Error(j.error); return { rows: j.rows || [], pos: j.pos || [], mins: j.mins || [], top: j.top || [], fl: j.fl || [] }; })
+    .catch(e => { cache.delete(k); throw e; }));
+  return cache.get(k);
+};
+let seq = 0, timer = 0;
+function status(msg, bad) { statusEl.textContent = msg || ""; statusEl.classList.toggle("bad", !!bad); }
+function reset(msg) {
+  last = []; document.body.classList.add("nohits"); page.classList.remove("busy");
+  $("tiles").innerHTML = msg || PROMPT; $("tbl").innerHTML = "";
+}
+// "ghost, Bigfoot |  yeti" -> two terms, the second "Bigfoot | yeti" (two words counted together).
+function terms() {
+  const raw = qEl.value.split(",").map(s => s.split("|").map(a => a.trim().replace(/\s+/g, " ")).filter(a => a.length > 1)).filter(a => a.length);
+  const seen = new Set(), out = [];
+  raw.forEach(alts => { const t = alts.join(" | "); if (!seen.has(t.toLowerCase())) { seen.add(t.toLowerCase()); out.push({ t, alts }); } });
+  return { raw: qEl.value.split(",").filter(s => s.trim()), list: out.slice(0, 4) };
+}
+async function run() {
+  clearTimeout(timer);
+  const { raw, list } = terms();
+  S.state.set("q", list.map(x => x.t).join(", "));
+  const my = ++seq;
+  if (!list.length) { status(raw.length ? "Type at least two letters." : ""); reset(); return; }
+  if (list.some(x => x.alts.some(a => a.length > 60))) { status("Keep each word or phrase under 60 characters.", true); return; }
+  if (list.some(x => x.alts.length > 8)) { status("Up to eight words can be counted together with |.", true); return; }
+  const more = raw.length > 4 ? "Only the first four are tracked." : "";
+  status(more);
+  // A slow answer (very common words take a few seconds) shows that it's counting.
+  const slow = setTimeout(() => { if (my !== seq) return; page.classList.add("busy"); status("Counting… very common words take a few seconds.");
+    if (!last.length) $("tiles").innerHTML = '<p class="empty">Counting…</p>'; }, 250);
+  try {
+    const got = await Promise.all(list.map(x => fetchTerm(x.t).then(d => ({ ...x, ...d }))));
+    await listReady;
+    if (my !== seq) return;
+    // By episode the API leaves the show out of each row; it comes from the episode list.
+    if (opt.scale === "episode") got.forEach(s => s.rows.forEach(r => { if (r[1] === null) r[1] = LIST && LIST.get(r[0]) ? LIST.get(r[0]).p : ""; }));
+    last = got; status(more); draw();
+  } catch (e) {
+    if (my !== seq) return;
+    console.error(e); status("");
+    reset('<p class="error" role="alert">Couldn\'t reach the transcripts. Try again in a moment.</p>');
+  } finally { clearTimeout(slow); if (my === seq) page.classList.remove("busy"); }
+}
+qEl.addEventListener("input", () => { clearTimeout(timer); timer = setTimeout(run, 500); });
+$("f").addEventListener("submit", e => { e.preventDefault(); run(); qEl.blur(); });
+
+// drawing
+function draw() {
+  const sets = last.map(s => ({ t: s.t, alts: s.alts, rows: s.rows.filter(r => keep(r[1], r[2])), pos: s.pos.filter(r => keep(r[0], r[1])),
+    mins: s.mins.filter(r => keep(r[0], r[1])), top: s.top, fl: s.fl.filter(r => keep(r[0], r[1])) }));
+  const total = sets.reduce((s, x) => s + x.rows.reduce((a, r) => a + r[3], 0), 0);
+  const quoted = sets.map(s => '"' + S.esc(s.t) + '"').join(" or ");
+  const filters = filterLine();
+  $("what").innerHTML = sets.map(s => '"' + S.esc(s.t) + '"').join(" vs ");
+  $("filters").textContent = filters;
+  document.body.classList.toggle("nohits", !total);
+  if (!total) {
+    $("tiles").innerHTML = `<p class="empty">No mentions of ${quoted}${filters ? " (" + S.esc(filters) + ")" : ""} yet.</p>`;
+    $("tbl").innerHTML = "";
+    return;
+  }
+  const H = hoursBy(), perHour = norm === "hour";
+  // The periods along the bottom: every year or month from the first to the last mention,
+  // or every episode the settings keep, in date order (none dropped for having no mentions).
+  let periods, label;
+  if (opt.scale === "episode") {
+    const used = new Set(sets.flatMap(s => s.rows.map(r => r[0])));
+    periods = LIST ? [...LIST.values()].filter(epKept).map(e => e.id) : [...used];
+    label = id => LIST && LIST.get(id) ? S.fmtDate(LIST.get(id).e) : String(id);
+  } else {
+    const seen = [...new Set(sets.flatMap(s => s.rows.map(r => r[0])))].sort();
+    periods = [];
+    if (seen.length) for (let p = seen[0]; p <= seen[seen.length - 1];) {
+      periods.push(p);
+      if (opt.scale === "month") { const y = +p.slice(0, 4), m = +p.slice(5, 7); p = m === 12 ? `${y + 1}-01` : `${y}-${String(m + 1).padStart(2, "0")}`; }
+      else p = String(+p + 1);
+    }
+    label = opt.scale === "month" ? monthName : p => p;
+  }
+  const rate = (n, p) => perHour ? (H.get(p) ? +(n / H.get(p)).toFixed(2) : 0) : n;
+  const sum = (rows, test) => rows.reduce((s, r) => s + (test(r) ? r[3] : 0), 0);
+  const byP = rows => { const m = new Map(); rows.forEach(r => m.set(r[0], (m.get(r[0]) || 0) + r[3])); return m; };
+  const counts = sets.map(s => byP(s.rows));
+  const val = (i, p) => rate(counts[i].get(p) || 0, p);
+  const multi = sets.length > 1, many = periods.length > 60;
+  const yTitle = { display: true, text: perHour ? "times per hour of audio" : "times said" };
+  $("h1").textContent = opt.scale === "month" ? "By month" : opt.scale === "episode" ? "Episode by episode" : "By year";
+  // Episode by episode, the tooltip names the episode.
+  const tipTitle = opt.scale === "episode" ? { title: c => { const e = LIST && LIST.get(periods[c[0].dataIndex]); return e ? [epName(e), S.fmtDate(e.e)] : ""; } } : {};
+  const xOpts = { ticks: { maxRotation: 0, autoSkipPadding: 12 } };
+  // one line per term; for a single term, bars (stacked by speaker by year or month, one colour episode by episode)
+  if (multi) {
+    S.chart("years", { type: "line", data: { labels: periods.map(label), datasets: sets.map((s, i) => ({ label: s.t, data: periods.map(p => val(i, p)),
+      borderColor: S.series(i), backgroundColor: S.series(i), tension: many ? 0 : .3, pointRadius: many ? 0 : 3, borderWidth: many ? 1.5 : 3 })) },
+      options: { interaction: { mode: "index", intersect: false }, plugins: { tooltip: { callbacks: tipTitle } }, scales: { x: xOpts, y: { beginAtZero: true, title: yTitle } } } });
+  } else if (opt.scale === "episode") {
+    S.chart("years", { type: "bar", data: { labels: periods.map(label), datasets: [{ label: sets[0].t, data: periods.map(p => val(0, p)), backgroundColor: S.one(),
+      barPercentage: 1, categoryPercentage: many ? 1 : .8, minBarLength: 0 }] },
+      options: { plugins: { legend: { display: false }, tooltip: { callbacks: tipTitle } }, scales: { x: xOpts, y: { title: yTitle } } } });
+  } else {
+    const rows = sets[0].rows;
+    // Hosts by name; guests share one colour, so they're one "Guests" band; no label is "Unknown".
+    const band = r => !r[2] ? "?" : S.isHost(r[2]) ? r[2] : "Guests";
+    const tot = {}; rows.forEach(r => tot[band(r)] = (tot[band(r)] || 0) + r[3]);
+    const top = Object.entries(tot).sort((a, b) => b[1] - a[1]).slice(0, 7).map(x => x[0]);
+    const grp = r => top.includes(band(r)) ? band(r) : "Other";
+    const names = [...top, ...(Object.keys(tot).length > top.length ? ["Other"] : [])];
+    S.chart("years", { type: "bar", data: { labels: periods.map(label), datasets: names.map(n => ({ label: S.who(n), backgroundColor: S.color(n),
+      barPercentage: many ? 1 : .9, categoryPercentage: many ? 1 : .8,
+      data: periods.map(p => rate(sum(rows, r => r[0] === p && grp(r) === n), p)) })) },
+      options: { scales: { x: { ...xOpts, stacked: true }, y: { stacked: true, title: yTitle } } } });
+  }
+  const who = {}; sets.forEach(s => s.rows.forEach(r => who[r[2] || "?"] = (who[r[2] || "?"] || 0) + r[3]));
+  const wl = Object.entries(who).sort((a, b) => b[1] - a[1]).slice(0, 10);
+  // A bar or a name opens the main search for the word(s), said by that person.
+  const barAt = (ev, els, ch) => { if (els[0]) return els[0].index;
+    const a = ch.chartArea; if (ev.x >= a.left || ev.y < a.top || ev.y > a.bottom) return -1;
+    return Math.round(ch.scales.y.getValueForPixel(ev.y)); };
+  const linkable = i => i >= 0 && wl[i] && canSearch(wl[i][0]);
+  S.chart("who", { type: "bar", data: { labels: wl.map(x => S.who(x[0])), datasets: [{ data: wl.map(x => x[1]), backgroundColor: wl.map(x => S.color(x[0])),
+      hoverBackgroundColor: wl.map(x => S.color(x[0])), hoverBorderColor: S.css("--text"), hoverBorderWidth: 2 }] },
+    options: { indexAxis: "y", events: ["mousemove", "mouseout", "click", "touchstart"], plugins: { legend: { display: false } },
+      onHover: (ev, els, ch) => { ch.canvas.style.cursor = linkable(barAt(ev, els, ch)) ? "pointer" : ""; },
+      onClick: (ev, els, ch) => { const i = barAt(ev, els, ch); if (linkable(i)) location.href = searchFor(wl[i][0]); } } });
+  const people = wl.filter(x => canSearch(x[0]));
+  $("whoLinks").innerHTML = people.length ? "Hear it from: " + people.map(x =>
+    `<a href="${searchFor(x[0])}">${S.esc(S.who(x[0]))}</a>`).join(", ") : "";
+  // Every show here (the Show choice would leave one slice), but "Hosts only" still applies.
+  const sh = {}; last.forEach(s => s.rows.forEach(r => { if (opt.spk || !hostsOnly || isHostOf(r[2], r[1])) sh[r[1]] = (sh[r[1]] || 0) + r[3]; }));
+  const sl = Object.entries(sh).sort((a, b) => b[1] - a[1]);
+  S.chart("shows", { type: "doughnut", data: { labels: sl.map(x => S.SHORT[x[0]] || x[0]), datasets: [{ data: sl.map(x => x[1]), backgroundColor: sl.map(x => S.showColor(x[0])), borderColor: S.css("--panel") }] } });
+  drawWhere(sets);
+  drawFirsts(sets);
+  drawTop(sets);
+  const peak = periods.map(p => [p, sets.reduce((s, _x, i) => s + val(i, p), 0)]).sort((a, b) => b[1] - a[1])[0];
+  const peakSub = peak ? (perHour ? peak[1].toFixed(2) + " per hour" : S.num(peak[1]) + " times") : "";
+  const peakEp = opt.scale === "episode" && peak && LIST && LIST.get(peak[0]);
+  S.tiles($("tiles"), [
+    ["Times said", S.num(total), sets.map(s => '"' + S.esc(s.t) + '"').join(" + ")],
+    ["Said most by", wl[0] ? S.esc(S.who(wl[0][0])) : "–", wl[0] ? S.num(wl[0][1]) + " times" : ""],
+    peakEp ? ["Most in one episode", perHour ? peak[1].toFixed(2) + "/h" : S.num(peak[1]), S.esc(S.clip(epName(peakEp), 48))]
+      : [opt.scale === "month" ? "Peak month" : "Peak year", peak ? label(peak[0]) : "–", peakSub],
+  ]);
+  $("tbl").innerHTML = searchFor("") ? `<p class="note"><a href="${S.esc(searchFor(""))}">Search for it on the main page</a> to hear every mention.</p>` : "";
+}
+
+// First and last time each word was said, among the people and shows the settings keep.
+// The API gives each person's first and last; the earliest and latest of those win.
+function drawFirsts(sets) {
+  if (!LIST) { $("fl").innerHTML = '<p class="note">Couldn\'t load the episode list.</p>'; return; }
+  const when = (id, t) => (LIST.get(id) || { e: "" }).e.slice(0, 10) + String(id).padStart(8, "0") + String(t).padStart(6, "0");
+  const line = (k, p, spk, id, t) => { const e = LIST.get(id); if (!e) return "";
+    return `<p><span class="k">${k}</span>${S.fmtDate(e.e)} · ${S.esc(S.who(spk || "?"))} · ${S.SHORT[p] || ""} · <a href="${S.esc(S.link(p, e.e, 0))}">${S.esc(Site.episode(e.e).label)}</a> · ` +
+      `<a href="${S.esc(S.link(p, e.e, t))}">Listen ${S.mmss(t)}</a></p>`; };
+  $("fl").innerHTML = sets.map(s => {
+    if (!s.fl.length) return "";
+    const f = s.fl.reduce((a, r) => when(r[2], r[3]) < when(a[2], a[3]) ? r : a), l = s.fl.reduce((a, r) => when(r[4], r[5]) > when(a[4], a[5]) ? r : a);
+    return `<div>${sets.length > 1 ? `<h3>"${S.esc(s.t)}"</h3>` : ""}${line("First", f[0], f[1], f[2], f[3])}${line("Last", l[0], l[1], l[4], l[5])}</div>`;
+  }).join("");
+}
+
+// Top episodes: the API sends each show's 40 busiest episodes per speaker, so "Hosts only" and the
+// Show choice can still be applied here. One column per word when several are tracked.
+function drawTop(sets) {
+  if (!LIST) { $("top").innerHTML = ""; return; }
+  const per = new Map();
+  sets.forEach((s, i) => s.top.forEach(([id, spk, n]) => { const e = LIST.get(id); if (!e || !keep(e.p, spk)) return;
+    if (!per.has(id)) per.set(id, { e, n: Array(sets.length).fill(0), tot: 0 });
+    const r = per.get(id); r.n[i] += n; r.tot += n; }));
+  const rows = [...per.values()].sort((a, b) => b.tot - a.tot).slice(0, 15).map(r => ({ ...r, ph: r.e.sec ? r.tot / (r.e.sec / 3600) : 0 }));
+  const cols = [
+    { key: "d", label: "Date", cls: "lo", sort: r => r.e.e.slice(0, 10), fmt: r => S.fmtDate(r.e.e) },
+    { key: "ep", label: "Episode", cls: "long", sort: r => Site.episode(r.e.e).label,
+      fmt: r => `<a href="${S.esc(S.link(r.e.p, r.e.e, 0))}">${S.esc(Site.episode(r.e.e).label)}</a><span class="sm">${S.fmtDate(r.e.e)} · ${S.SHORT[r.e.p] || ""}</span>` },
+    { key: "p", label: "Show", cls: "lo", sort: r => S.SHORT[r.e.p], fmt: r => S.SHORT[r.e.p] || "" },
+    ...(sets.length > 1 ? sets.map((s, i) => ({ key: "w" + i, label: s.t, num: true, sort: r => r.n[i], fmt: r => S.num(r.n[i]) })) : []),
+    { key: "tot", label: sets.length > 1 ? "Total" : "Times said", num: true, fmt: r => S.num(r.tot) },
+    { key: "ph", label: "Per hour", num: true, fmt: r => r.ph.toFixed(1) },
+  ];
+  S.table($("top"), cols, rows, { sort: "tot" });
+}
+
+// Where in the episode: tenths of each episode's length ("% through"), or 5-minute slots ("Minutes in").
+// Bars are each word's share of its mentions, so words said 50 and 5,000 times compare.
+const TENTH = ["first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "last"];
+const add = (list, n) => list.reduce((acc, r) => { r[2].forEach((v, i) => acc[i] += v); return acc; }, Array(n).fill(0));
+// One line read off the tenths: where the most mentions fall, or that they're spread out.
+function reading(t, mins) {
+  const n = t.reduce((a, b) => a + b, 0);
+  if (n < 20) return "Too few mentions to say where in an episode it comes.";
+  const i = t.indexOf(Math.max(...t)), share = t[i] / n;
+  let s = share < .13 ? "Spread through episodes with no clear peak" : `Said most in the ${TENTH[i]} tenth of episodes (${Math.round(100 * share)}% of mentions; 10% would be even)`;
+  // ... and by when half of the mentions are in.
+  let c = 0; const half = mins.findIndex(v => (c += v) >= n / 2);
+  if (half >= 0 && half < 23) s += `; half of them come in the first ${(half + 1) * 5} minutes`;
+  return s + ".";
+}
+function drawWhere(sets) {
+  const tenths = sets.map(s => add(s.pos, 10)), slots = sets.map(s => add(s.mins, 24));
+  const read = sets.map((s, i) => (sets.length > 1 ? `"${s.t}": ` : "") + reading(tenths[i], slots[i]));
+  $("whereRead").textContent = read.join(" ");
+  let labels, data;
+  if (wmode === "min") {
+    // Drop the empty slots at the end (most episodes are under 90 minutes).
+    let end = 24; while (end > 1 && slots.every(a => !a[end - 1])) end--;
+    labels = Array.from({ length: end }, (_, i) => i === 23 ? "115+" : `${i * 5}–${i * 5 + 5}`);
+    data = slots.map(a => a.slice(0, end));
+  } else {
+    labels = TENTH.map((_, i) => `${i * 10}–${i * 10 + 10}%`);
+    data = tenths;
+  }
+  const one = sets.length === 1;
+  const datasets = data.map((a, i) => { const n = a.reduce((x, y) => x + y, 0) || 1;
+    return { label: sets[i].t, data: a.map(v => +(100 * v / n).toFixed(1)), counts: a, backgroundColor: one ? S.one() : S.series(i) }; });
+  if (wmode !== "min") datasets.push({ type: "line", label: "Even spread", data: labels.map(() => 10), borderColor: S.css("--muted"), borderDash: [5, 4],
+    borderWidth: 1.5, pointRadius: 0, pointHitRadius: 0, backgroundColor: "transparent" });
+  S.chart("where", { type: "bar", data: { labels, datasets },
+    options: { plugins: { legend: { display: !one || wmode !== "min" },
+        tooltip: { filter: c => c.dataset.counts, callbacks: { label: c => `${c.dataset.label}: ${c.raw}% (${S.plural(c.dataset.counts[c.dataIndex], "time")})` } } },
+      scales: { x: { title: { display: true, text: wmode === "min" ? "minutes into the episode" : "how far through the episode" } },
+        y: { beginAtZero: true, title: { display: true, text: "% of mentions" } } } } });
+  $("whereNote").textContent = wmode === "min"
+    ? `Most Fish episodes are under an hour, so the later slots fill up less for every word. "% through" allows for that.`
+    : "Each episode is split into ten equal parts, so a 30-minute and a 90-minute episode line up.";
+}
+
+const redraw = () => { optCount(); if (last.length) draw(); };
+function segs() {
+  S.seg($("show"), [["all", "All"], [S.FISH, "Fish"]], show, v => { show = v; S.state.set("show", v); redraw(); });
+  S.seg($("who-f"), [["all", "Everyone"], ["hosts", "Hosts only"]], hostsOnly ? "hosts" : "all", v => { hostsOnly = v === "hosts"; S.state.set("who", hostsOnly ? "hosts" : ""); redraw(); });
+  S.seg($("scale"), [["year", "By year"], ["month", "By month"], ["episode", "Each episode"]], opt.scale, v => setOpt("scale", v));
+  S.seg($("norm"), [["count", "Times said"], ["hour", "Per hour"]], norm, v => { norm = v; S.state.set("norm", v === "hour" ? v : ""); redraw(); });
+  S.seg($("wmode"), [["pct", "% through"], ["min", "Minutes in"]], wmode, v => { wmode = v; S.state.set("where", v === "min" ? "min" : ""); if (last.length) draw(); });
+}
+segs(); optCount();
+if (S.ALL_KINDS) $("kind").closest("label").hidden = true;   // every episode counts here: no Episodes filter
+["yf", "yt", "kind"].forEach(k => { if (opt[k]) $(k).innerHTML = `<option>${S.esc(opt[k])}</option>`; });
+// Only search on arrival when the link carries a word (#q=ghost); otherwise wait for the visitor.
+qEl.value = S.state.get("q", ""); if (qEl.value) run();
+// A pasted link with another word (#q=...) in the same tab.
+addEventListener("hashchange", () => { const q = S.state.get("q", ""); if (q !== qEl.value) { qEl.value = q; run(); } });
+</script>
+<footer class="fan">Fish Stats is an unofficial fan project. It isn't made or endorsed by No Such Thing As A Fish or QI. The numbers are worked out from automatic transcripts of the free public episodes. <a href="https://www.nosuchthingasafish.com/">Listen to the show</a>.</footer>
+</body>
+</html>

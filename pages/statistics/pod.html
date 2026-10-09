@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="robots" content="noindex, nofollow"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Friends and enemies of the pod · Fish Stats</title>
+<link rel="stylesheet" href="../site.css?v=27cc7df6">
+<link rel="stylesheet" href="stats.css?v=7e04a0ce">
+<style>
+/* this page only: the friend / enemy lists */
+.lists { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 14px; align-items: start; }
+.lists h2 { margin-top: 26px; }
+.who { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; margin-bottom: 8px; }
+.who > summary { list-style: none; cursor: pointer; padding: 10px 14px; display: grid; grid-template-columns: 1fr auto; gap: 2px 10px; }
+.who > summary::-webkit-details-marker { display: none; }
+.who > summary:hover { background: var(--panel2); border-radius: 12px; }
+.who > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: 12px; }
+.who .nm { font-weight: 700; overflow-wrap: anywhere; }
+.who .ct { font-variant-numeric: tabular-nums; color: var(--muted); font-size: .82rem; text-align: right; white-space: nowrap; }
+.who .ct::after { content: " ▸"; color: var(--faint); }
+.who[open] .ct::after { content: " ▾"; }
+.who .wy { grid-column: 1 / -1; font-size: .86rem; color: var(--muted); }
+.who .fst { grid-column: 1 / -1; font-size: .78rem; color: var(--faint); }
+.tag { display: inline-block; font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; border-radius: 999px;
+       padding: 1px 7px; margin-left: 6px; vertical-align: 2px; border: 1px solid currentColor; }
+.tag.f { color: var(--good); } .tag.x { color: var(--bad); } .tag.a { color: var(--warn); }
+.mlist { list-style: none; margin: 0; padding: 0 14px 10px; }
+.mlist li { border-top: 1px solid var(--line); padding: 8px 0; font-size: .84rem; }
+.mlist .meta { color: var(--muted); font-size: .78rem; }
+.mlist q { display: block; margin-top: 3px; color: var(--text); }
+.mlist q::before, .mlist q::after { content: none; }
+.mlist .note2 { color: var(--muted); font-style: italic; }
+.ctx { display: block; color: var(--faint); font-size: .78rem; margin-top: 2px; }
+.switch { border-color: var(--warn); }
+.side-f { border-left: 3px solid var(--good); } .side-x { border-left: 3px solid var(--bad); } .side-a { border-left: 3px solid var(--warn); }
+.more-box > summary { cursor: pointer; color: var(--accent2); margin: 8px 0; }
+.empty.small { padding: 14px; }
+@media (max-width: 760px) { .lists { grid-template-columns: minmax(0, 1fr); } }
+</style>
+<link rel="stylesheet" href="../fishstats.css?v=c9963441">
+</head>
+<body>
+<nav class="sitebar" aria-label="Site"><a class="brand" href="../index.html">Fish Stats</a><a href="../index.html" aria-current="page">Stats</a><a href="../facts.html">Facts</a><a href="../episodes.html">Episodes</a></nav>
+<div class="page wide">
+  <div class="crumbs"><a href="../index.html">Fish Stats</a> / Friends and enemies</div>
+  <h1>Friends and enemies of the pod</h1>
+  <p class="lede">Everyone and everything the Fish hosts have declared a friend or an enemy of the podcast, each mention read in context. Tap a name to see every declaration, with a link to hear it.</p>
+  <p class="built" id="built"></p>
+  <div class="controls">
+    <input type="search" id="q" placeholder="Find a name…" aria-label="Find a name" autocomplete="off">
+    <span class="ctl">Sort<span class="seg" id="sort"></span></span>
+  </div>
+  <div class="tiles" id="tiles"></div>
+  <div id="switchBox"><h2>Switched sides</h2><p class="note">Declared a friend one week and an enemy (or a mere acquaintance) another.</p><div id="switch"></div></div>
+  <div class="lists">
+    <div><h2 id="fHead">Friends</h2><div id="friends"></div></div>
+    <div><h2 id="xHead">Enemies</h2><div id="enemies"></div>
+      <div id="acqBox"><h2>Mere acquaintances</h2><p class="note">Not quite friends, said on air.</p><div id="acq"></div></div></div>
+  </div>
+  <h2 id="uHead">Not yet read</h2>
+  <p class="note" id="uNote"></p>
+  <div id="unread"></div>
+  <details class="more-box" id="notBox"><summary id="notSum"></summary><div id="not"></div></details>
+  <p class="note">Found by searching every Fish transcript for "friend of the podcast", "enemy of the show", "foe of the pod" and the like.
+    Each one was then read by hand to work out who was meant and why. New episodes sit under Not yet read until someone reads them.</p>
+</div>
+<script src="../site.js?v=5ed52cef"></script>
+<script src="../episode-links.js?v=3767e14c"></script><script src="../site-config.js?v=3af975ec"></script><script src="stats.js?v=f6e16ff7"></script>
+<script>
+const { $ } = Site;
+let D, sort = S.state.get("sort", "most"), q = "";
+const ep = m => D.eps[m.i];
+const when = m => ep(m).d + String(m.t).padStart(6, "0");          // sorts mentions by date, then time
+const listen = m => `<a href="${S.link(S.FISH, ep(m).e, m.t)}">Listen ${S.mmss(m.t)}</a>`;
+const epLink = m => `<a href="${S.link(S.FISH, ep(m).e, 0)}">${S.esc(S.epLabel(ep(m)))}</a>`;
+const SIDE = { f: ["friend", "Friend"], x: ["enemy", "Enemy"], a: ["acquaintance", "Acquaintance"] };
+
+// One mention in a name's list: when, who said it, the line, and a link to that moment.
+function mention(m, side) {
+  return `<li class="side-${side}"><div class="meta">${S.fmtDate(ep(m).d)} · ${epLink(m)} · ${S.esc(S.who(m.s))} · ${listen(m)}</div>
+    <q>${S.esc(m.q)}</q>${m.w ? `<span class="note2">${S.esc(m.w)}</span>` : ""}</li>`;
+}
+// A name with its declarations on the given sides ("f", "x", "a"), newest last.
+function card(p, sides, cls = "") {
+  const ids = sides.flatMap(s => (p[s] || []).map(j => [j, s])).sort((a, b) => when(D.mentions[a[0]]) < when(D.mentions[b[0]]) ? -1 : 1);
+  const first = D.mentions[ids[0][0]], n = ids.length;
+  const tags = cls ? sides.filter(s => p[s]).map(s => `<span class="tag ${s}">${SIDE[s][0]} ×${p[s].length}</span>`).join("") : "";
+  return `<details class="who ${cls}"><summary><span class="nm">${S.esc(p.n)}${tags}</span><span class="ct">${S.plural(n, "time")}</span>
+      <span class="wy">${S.esc(p.why)}</span>
+      <span class="fst">First: ${S.fmtDate(ep(first).d)}, ${S.esc(S.epLabel(ep(first)))}</span></summary>
+    <ul class="mlist">${ids.map(([j, s]) => mention(D.mentions[j], s)).join("")}</ul></details>`;
+}
+function ordered(list, sides) {
+  const n = p => sides.reduce((a, s) => a + (p[s] || []).length, 0);
+  const last = p => sides.flatMap(s => (p[s] || []).map(j => when(D.mentions[j]))).sort().pop() || "";
+  const by = { most: (a, b) => n(b) - n(a) || a.n.localeCompare(b.n), recent: (a, b) => last(b) < last(a) ? -1 : last(b) > last(a) ? 1 : 0,
+               az: (a, b) => a.n.localeCompare(b.n, "en", { sensitivity: "base" }) };
+  return list.filter(p => sides.some(s => p[s]) && (!q || p.n.toLowerCase().includes(q) || p.why.toLowerCase().includes(q))).sort(by[sort]);
+}
+function fill(id, list, sides, cls) {
+  $(id).innerHTML = list.map(p => card(p, sides, cls)).join("") || '<p class="empty small">Nobody matches.</p>';
+}
+function render() {
+  const P = D.people;
+  const fr = ordered(P, ["f"]), en = ordered(P, ["x"]), ac = ordered(P, ["a"]);
+  const sw = ordered(P.filter(p => p.f && (p.x || p.a)), ["f", "x", "a"]);
+  fill("friends", fr, ["f"]); fill("enemies", en, ["x"]); fill("acq", ac, ["a"]); fill("switch", sw, ["f", "x", "a"], "switch");
+  $("switchBox").hidden = !sw.length;
+  $("acqBox").hidden = !ac.length;
+  $("fHead").textContent = "Friends (" + fr.length + ")";
+  $("xHead").textContent = "Enemies (" + en.length + ")";
+}
+function tiles() {
+  const P = D.people, cnt = s => P.filter(p => p[s]).length;
+  const top = s => [...P].filter(p => p[s]).sort((a, b) => b[s].length - a[s].length)[0];
+  const tf = top("f"), tx = top("x"), sw = P.filter(p => p.f && (p.x || p.a)).length;
+  S.tiles($("tiles"), [
+    ["Friends", S.num(cnt("f")), "people, places and things"],
+    ["Enemies", S.num(cnt("x")), "and counting"],
+    ["Best friend", tf ? S.esc(tf.n) : "–", tf ? S.plural(tf.f.length, "declaration") : ""],
+    ["Worst enemy", tx ? S.esc(tx.n) : "–", tx ? S.plural(tx.x.length, "declaration") : ""],
+    ["Switched sides", S.num(sw), "friend one day, not the next"],
+  ]);
+}
+// Mentions nobody has read yet (or read as unclear), oldest first, with a line or two either side.
+function unread() {
+  const u = D.mentions.filter(m => m.v === "unread" || m.v === "unclear").sort((a, b) => when(a) < when(b) ? -1 : 1);
+  $("uNote").textContent = u.length
+    ? `${S.plural(u.length, "mention")} that nobody has read yet, so who they mean is still unknown.`
+    : "Every mention has been read.";
+  $("unread").innerHTML = u.length ? `<div class="who"><ul class="mlist">${u.map(m =>
+    `<li><div class="meta">${S.fmtDate(ep(m).d)} · ${epLink(m)} · ${S.esc(S.who(m.s))} · ${listen(m)}${m.v === "unclear" ? " · read, but unclear" : ""}</div>
+      ${(m.c || []).filter(c => c[0] <= m.t).map(c => `<span class="ctx">${S.esc(S.who(c[1]))}: ${S.esc(c[2])}</span>`).join("")}
+      <q>${S.esc(m.q)}</q>
+      ${(m.c || []).filter(c => c[0] > m.t).map(c => `<span class="ctx">${S.esc(S.who(c[1]))}: ${S.esc(c[2])}</span>`).join("")}</li>`).join("")}</ul></div>` : "";
+  const no = D.mentions.filter(m => m.v === "not").sort((a, b) => when(a) < when(b) ? -1 : 1);
+  $("notBox").hidden = !no.length;
+  $("notSum").textContent = `And ${S.plural(no.length, "mention")} that weren't declarations, mostly about Club Fish's top tier, which is called Friend of the Podcast`;
+  $("not").innerHTML = `<div class="who"><ul class="mlist">${no.map(m =>
+    `<li><div class="meta">${S.fmtDate(ep(m).d)} · ${epLink(m)} · ${S.esc(S.who(m.s))} · ${listen(m)}</div>
+      <q>${S.esc(m.q)}</q>${m.w ? `<span class="note2">${S.esc(m.w)}</span>` : ""}</li>`).join("")}</ul></div>`;
+}
+$("q").addEventListener("input", e => { q = e.target.value.trim().toLowerCase(); render(); });
+S.page(S.load("pod"), d => { D = d; S.built(d); tiles(); unread();
+  S.seg($("sort"), [["most", "Most declared"], ["recent", "Most recent"], ["az", "A–Z"]], sort,
+    v => { sort = v; S.state.set("sort", v); render(); });
+  render(); });
+</script>
+<footer class="fan">Fish Stats is an unofficial fan project. It isn't made or endorsed by No Such Thing As A Fish or QI. The numbers are worked out from automatic transcripts of the free public episodes. <a href="https://www.nosuchthingasafish.com/">Listen to the show</a>.</footer>
+</body>
+</html>

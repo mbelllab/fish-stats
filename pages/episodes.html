@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Episodes · Fish Stats</title>
+<link rel="stylesheet" href="site.css?v=27cc7df6">
+<link rel="stylesheet" href="statistics/stats.css?v=7e04a0ce">
+<link rel="stylesheet" href="fishstats.css?v=c9963441">
+<style>
+#tbl { margin-top: 20px; }
+</style>
+</head>
+<body>
+<nav class="sitebar" aria-label="Site"><a class="brand" href="index.html">Fish Stats</a><a href="index.html">Stats</a><a href="facts.html">Facts</a><a href="episodes.html" aria-current="page">Episodes</a></nav>
+<div class="page wide">
+  <div class="crumbs"><a href="index.html">Fish Stats</a> / Episodes</div>
+  <h1>Every episode counted</h1>
+  <p class="lede" id="lede">The episodes the stats are worked out from.</p>
+  <p class="built" id="built"></p>
+  <div class="controls"><input type="search" id="q" placeholder="Find an episode…" aria-label="Find an episode" autocomplete="off"></div>
+  <div class="tiles" id="tiles"></div>
+  <div id="tbl"></div>
+  <p class="note">Every episode in the free public No Such Thing As A Fish podcast feed is included, once it has
+    been transcribed. Club Fish extras that aren't in the public feed are left out, and so are the XL versions:
+    the stats use the regular episode everyone can hear. New episodes are added a few days after they come out.</p>
+</div>
+<footer class="fan">Fish Stats is an unofficial fan project. It isn't made or endorsed by No Such Thing As A Fish or QI. The numbers are worked out from automatic transcripts of the free public episodes. <a href="https://www.nosuchthingasafish.com/">Listen to the show</a>.</footer>
+<script src="site.js?v=5ed52cef"></script>
+<script src="episode-links.js?v=3767e14c"></script>
+<script src="site-config.js?v=3af975ec"></script>
+<script src="statistics/stats.js?v=f6e16ff7"></script>
+<script>
+const { $ } = Site;
+let rows = [], T, q = S.state.get("q", "");
+const KIND = { Main: "Main", "Little Fish": "Little Fish", Special: "Special", Bonus: "Bonus", Compilation: "Compilation", "Drop Us A Line": "Drop Us A Line" };
+function render() {
+  const words = q.toLowerCase().split(/\s+/).filter(Boolean);
+  const shown = rows.filter(r => words.every(w => (r.t + " " + r.n + " " + r.d).toLowerCase().includes(w)));
+  const cols = [
+    { key: "d", label: "Date", fmt: r => S.fmtDate(r.d) },
+    { key: "n", label: "No.", num: true, cls: "lo", sort: r => r.n ? +r.n : null, fmt: r => S.esc(r.n || "") },
+    { key: "t", label: "Episode", cls: "long", fmt: r => `<a href="${S.esc(r.u)}">${S.esc(r.t)}</a>` },
+    { key: "k", label: "Kind", cls: "lo", fmt: r => S.esc(KIND[r.k] || r.k || "") },
+  ];
+  if (T) T.set(shown); else T = S.table($("tbl"), cols, shown, { sort: "d", dir: "asc", page: 100 });
+}
+S.page(S.load("statistics/episodes"), d => {
+  S.built(d);
+  rows = d.episodes;
+  const hours = Math.round(d.episodes.reduce((s, r) => s + (r.s || 0), 0) / 3600);
+  $("lede").textContent = `The ${S.num(rows.length)} episodes (${S.num(hours)} hours) the stats are worked out from. Each links to its official page.`;
+  S.tiles($("tiles"), [
+    ["Episodes", S.num(rows.length), "transcribed and counted"],
+    ["Newest", rows.length ? S.fmtDate(rows.reduce((a, r) => r.d > a ? r.d : a, "")) : "–", ""],
+  ]);
+  const box = $("q"); box.value = q;
+  box.oninput = () => { q = box.value.trim(); S.state.set("q", q); render(); };
+  render();
+});
+</script>
+</body>
+</html>
